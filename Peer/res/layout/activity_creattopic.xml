@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+     <LinearLayout
+        android:id="@+id/ll1"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal" >
+
+      <include layout="@layout/layout_titlebar"/>
+    </LinearLayout>
+    <LinearLayout 
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" 
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            >
+            <RadioButton 
+                android:text="标签名一"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/widgeheight"
+                />
+            <View 
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray"
+                />
+			 <RadioButton 
+                android:text="标签名一"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/widgeheight"
+                />
+        <View 
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray"
+                />
+        <RadioButton 
+                android:text="标签名一"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/widgeheight"
+                />
+            <View 
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray"
+                />
+			 <RadioButton 
+                android:text="标签名一"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/widgeheight"
+                />
+			 <View 
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray"
+                />
+			 <RadioButton 
+                android:text="标签名一"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/widgeheight"
+                />
+         	<View 
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray"
+                />
+        </RadioGroup> 
+    </LinearLayout>
+
+    <EditText
+        android:layout_marginTop="16dp"
+        android:id="@+id/editText1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/widgeheight_max"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        >
+
+        <requestFocus />
+    </EditText>
+
+    <LinearLayout
+	    android:layout_marginTop="16dp" 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:gravity="center"
+	    >
+	    <Button
+	        android:id="@+id/bt_complete_registe"
+	        android:layout_width="fill_parent"
+	        android:layout_height="48dp"
+	        android:layout_marginLeft="8dp"
+	        android:layout_marginRight="8dp"
+	        android:text="创建话题"
+	        android:background="@drawable/selector_commit"
+	        android:textSize="@dimen/textsize_large" />
+
+	</LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,175 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white" >
+
+    <RelativeLayout
+        android:id="@+id/rl_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:background="@color/title_backcolor"
+        android:orientation="horizontal" >                   
+		<LinearLayout 
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical"
+	    >
+           <include layout="@layout/layout_back"/>
+      </LinearLayout>
+        <TextView
+            android:id="@+id/tv_tagname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="小说吧"
+            android:textColor="@color/white"
+            android:textSize="@dimen/textsize_large" />
+
+        <ImageView
+        android:clickable="true"
+        android:id="@+id/im_downview"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/selector_back"
+        android:gravity="center"
+        android:src="@drawable/icon_chatroom_menu"
+        />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/rl_bottom"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/chat_input_back" >
+        <Button
+            android:id="@+id/btn_send"
+            android:layout_width="50dp"
+            android:layout_height="32dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/selector_back"
+            android:textSize="@dimen/textsize_small"
+            android:textColor="@color/white"
+            android:text="发送" />
+
+        <EditText
+            android:id="@+id/et_sendmessage"
+            android:layout_width="fill_parent"
+            android:layout_height="32dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_toLeftOf="@+id/btn_send"
+            android:layout_toRightOf="@+id/chatting_biaoqing_btn"
+            android:background="@drawable/input_editext"
+            android:singleLine="true"
+            android:lines="1"
+            android:paddingLeft="5dp"
+            android:textSize="18sp" />
+
+        <ImageButton
+            android:layout_marginLeft="8dp"
+            android:id="@+id/chatting_biaoqing_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_alignParentLeft="true"
+            android:background="@null"
+            android:minWidth="0.0dip"
+            android:src="@drawable/addfile"
+            android:visibility="visible" />
+    </RelativeLayout>
+    <ScrollView  
+        android:id="@+id/scrollContent"  
+        android:layout_width="match_parent"  
+        android:layout_height="match_parent"  
+        android:layout_below="@+id/host_imfor"
+     	android:layout_above="@+id/rl_bottom"
+     	 android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:fadeScrollbars="true"  
+        android:fillViewport="true" >
+
+    <ListView
+        android:id="@+id/lv_selflistview"
+        android:layout_width="match_parent"
+        android:layout_height="297dp"        
+        android:background="@color/white"       
+        android:cacheColorHint="#00000000"
+        android:divider="@null"
+        android:dividerHeight="5dp"
+        android:scrollbars="none" />
+
+    </ScrollView>
+<RelativeLayout
+    android:id="@+id/host_imfor"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:layout_alignParentLeft="true"
+    android:layout_below="@+id/rl_layout"
+    android:background="@drawable/icon_chatroomback" >
+
+    <LinearLayout
+        android:id="@+id/host_imfor_main"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@+id/tv_seemember"
+        android:layout_toRightOf="@+id/host_image"
+        android:layout_weight="1.0"
+        android:gravity="center_vertical"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tv_nikename"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="离尘之影"
+            android:textColor="@color/white"
+            android:textSize="@dimen/textsize_middle" />
+
+        <TextView
+            android:id="@+id/theme_chat"
+            android:layout_width="206dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="怎样快速创业凤凰山看见和富士康"
+            android:textColor="@color/white"
+            android:textSize="@dimen/textsize_middle" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/host_image"
+        android:clickable="true"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@drawable/ad_background"
+        />
+
+    <TextView
+        android:id="@+id/tv_seemember"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="14dp"
+        android:clickable="true"
+        android:textSize="@dimen/textsize_large"
+        android:textColor="@color/white"
+        android:text="查看" />
+
+</RelativeLayout>
+</RelativeLayout>

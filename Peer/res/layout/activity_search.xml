@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+    <LinearLayout
+        android:id="@+id/ll1"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal" >
+
+        <RelativeLayout
+            android:id="@+id/rl1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/title_backcolor" >
+		<LinearLayout 
+		    android:id="@+id/ll_leftof_editext"
+	    android:layout_width="wrap_content"
+	    android:layout_height="match_parent"
+	    android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical"
+	    >
+          <include layout="@layout/layout_back"/>
+      </LinearLayout>
+           
+ <LinearLayout 
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerVertical="true"
+    android:layout_toLeftOf="@+id/tv_search_search"
+    android:layout_toRightOf="@+id/ll_leftof_editext"
+    android:layout_marginLeft="8dp"
+    android:orientation="horizontal">
+		<LinearLayout
+		    android:gravity="center" 
+		    android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+		    >
+        <TextView
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:layout_marginTop="6dp"
+            android:paddingTop="8dp"
+            android:id="@+id/searchtag"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:text="搜技能"
+            android:textColor="@color/white"
+            android:textSize="@dimen/textsize_large" 
+            
+            />
+
+     </LinearLayout>
+        <LinearLayout
+		    android:gravity="center" 
+		    android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+		    >
+     	 <TextView
+     	     android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:layout_marginTop="6dp"
+            android:paddingTop="8dp"
+     	    android:id="@+id/search_user"
+     	    android:textSize="@dimen/textsize_large"
+     	    android:textColor="@color/seachbluetext"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="搜用户"
+            android:clickable="true"
+            />
+     	 </LinearLayout>
+    </LinearLayout>
+            <Button
+                android:textColor="@color/white"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:background="@drawable/selector_back"
+                android:gravity="center"                
+                android:id="@+id/tv_search_search"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"                
+                android:layout_alignParentRight="true"
+                android:text="搜索" 
+                android:textSize="@dimen/textsize_large"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="4dp"/>
+        </RelativeLayout>
+
+    </LinearLayout> 
+	<LinearLayout
+	    android:orientation="vertical" 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:background="@color/gray"
+	    >
+	<LinearLayout 
+	android:background="@drawable/border"
+	android:layout_marginTop="8dp"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:orientation="horizontal">
+        
+        <!-- 输入的搜索信息 -->
+
+       <EditText
+           android:layout_marginLeft="8dp"
+           android:layout_marginRight="8dp"
+           android:id="@+id/et_contentsearch"
+           android:layout_width="0dp"
+           android:layout_height="fill_parent"
+           android:layout_weight="4.63"
+           android:background="@null"
+            android:lines="1"
+           android:drawableLeft="@drawable/searchicon38"
+           android:gravity="center_vertical"
+           android:hint="搜索"
+           android:imeOptions="actionSearch"
+           android:singleLine="true"
+           android:textColor="@color/black"           
+           android:textSize="@dimen/textsize_middle" />
+       
+       <!-- 清空搜索文字按钮 -->
+       <LinearLayout 
+           android:id="@+id/layout_clear_search_text"
+           android:layout_weight="0.5"
+           android:layout_width="0dp"
+           android:layout_height="fill_parent"
+           android:visibility="gone"
+           android:orientation="horizontal">
+       <Button
+           android:gravity="center" 
+           android:id="@+id/btn_clear_search_text"
+           android:layout_width="20dp"
+           android:layout_height="20dp"
+           android:layout_gravity="right|center_vertical"
+           android:background="@drawable/selector_search_clear"
+         />
+        </LinearLayout>
+    </LinearLayout>
+    <View 
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/lightgray"
+        />
+    </LinearLayout>
+    <TableLayout 
+        android:id="@+id/tl_skillrecomend"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:stretchColumns="all"
+        android:shrinkColumns="all"
+        >
+    <TableRow 
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/widgeheight_max" 
+        android:layout_marginTop="8dp"       
+        >
+       <LinearLayout 
+           android:orientation="horizontal"
+           android:layout_width="match_parent"
+           android:layout_height="@dimen/widgeheight_max"
+           android:layout_marginLeft="8dp" 
+           >
+
+           <TextView
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:background="#663399"
+               android:textColor="@color/white"
+               android:textSize="@dimen/textsize_large"
+               android:paddingLeft="4dp"
+               android:paddingTop="4dp"
+               android:text="IT程序编程" />
+			
+          </LinearLayout>
+          <LinearLayout 
+           android:orientation="horizontal"
+           android:layout_width="match_parent"
+           android:layout_height="@dimen/widgeheight_max"
+           android:layout_marginLeft="8dp" 
+           >       
+       <TextView  
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"      	   
+           android:text="房产销售"
+           android:background="#006699" 
+           android:textColor="@color/white"
+               android:textSize="@dimen/textsize_large"
+               android:paddingLeft="4dp"
+               android:paddingTop="4dp"         
+           />			
+          </LinearLayout>
+    </TableRow>
+    
+    <TableRow 
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/widgeheight"
+        android:layout_marginTop="8dp" 
+        >	
+       <LinearLayout 
+           android:orientation="horizontal"
+           android:layout_width="176dp"
+           android:layout_height="@dimen/widgeheight_max"
+           >       
+
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:layout_marginLeft="8dp"
+           android:background="#99ff99"
+           android:textColor="@color/white"
+               android:textSize="@dimen/textsize_large"
+               android:paddingLeft="4dp"
+               android:paddingTop="4dp"
+           android:text="自由职业" />
+			
+          </LinearLayout>
+          <LinearLayout 
+           android:orientation="horizontal"
+           android:layout_width="176dp"
+           android:layout_height="@dimen/widgeheight_max"
+           >       
+
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:layout_marginLeft="8dp"
+           android:background="#339900"
+           android:textColor="@color/white"
+               android:textSize="@dimen/textsize_large"
+               android:paddingLeft="4dp"
+               android:paddingTop="4dp"
+           android:text="体育爱好" />
+			
+          </LinearLayout>
+    </TableRow>
+         <TableRow 
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/widgeheight"
+        android:layout_marginTop="8dp" 
+        >	
+       <LinearLayout 
+           android:orientation="horizontal"
+           android:layout_width="176dp"
+           android:layout_height="@dimen/widgeheight_max"
+           >       
+
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:layout_marginLeft="8dp"
+           android:background="#006666"
+           android:textColor="@color/white"
+               android:textSize="@dimen/textsize_large"
+               android:paddingLeft="4dp"
+               android:paddingTop="4dp"
+           android:text="游戏大牛" />
+			
+          </LinearLayout>
+          <LinearLayout 
+           android:orientation="horizontal"
+           android:layout_width="176dp"
+           android:layout_height="@dimen/widgeheight_max"
+           >       
+
+       <TextView
+           android:layout_weight="1"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:layout_marginLeft="8dp"
+           android:background="#9900ff"
+           android:textColor="@color/white"
+               android:textSize="@dimen/textsize_large"
+               android:paddingLeft="4dp"
+               android:paddingTop="4dp"
+           android:text="摄影" />
+       <TextView
+           android:layout_weight="1"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:layout_marginLeft="8dp"
+           android:background="#6600cc"
+           android:textColor="@color/white"
+               android:textSize="@dimen/textsize_large"
+               android:paddingLeft="4dp"
+               android:paddingTop="4dp"
+           android:text="演绎" />
+			
+          </LinearLayout>
+    </TableRow>
+        <TableRow 
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/widgeheight"
+        android:layout_marginTop="8dp" 
+        >	
+       <LinearLayout 
+           android:orientation="horizontal"
+           android:layout_width="176dp"
+           android:layout_height="@dimen/widgeheight_max"
+           >       
+
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:layout_marginLeft="8dp"
+           android:background="#f00fff"
+           android:textColor="@color/white"
+               android:textSize="@dimen/textsize_large"
+               android:paddingLeft="4dp"
+               android:paddingTop="4dp"
+           android:text="新兴职业" />
+			
+          </LinearLayout>
+          <LinearLayout 
+           android:orientation="horizontal"
+           android:layout_width="176dp"
+           android:layout_height="@dimen/widgeheight_max"
+           >       
+
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:layout_marginLeft="8dp"
+           android:background="#f00fff"
+           android:textColor="@color/white"
+               android:textSize="@dimen/textsize_large"
+               android:paddingLeft="4dp"
+               android:paddingTop="4dp"
+           android:text="写作大神" />
+			
+          </LinearLayout>
+    </TableRow>   
+        
+    </TableLayout>
+</LinearLayout>

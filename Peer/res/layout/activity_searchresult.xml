@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+     <LinearLayout
+        android:id="@+id/ll1"
+        android:layout_width="fill_parent"
+        android:layout_height="48dip"
+        android:orientation="horizontal" >
+        <include layout="@layout/layout_titlebar"/>
+    </LinearLayout>
+    <ListView
+        android:id="@+id/lv_searchresult" 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >        
+    </ListView>  
+
+</LinearLayout>
