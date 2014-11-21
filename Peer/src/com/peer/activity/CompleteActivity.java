@@ -7,6 +7,7 @@ import java.util.Calendar;
 
 import com.peer.R;
 import com.peer.activitymain.HomePageActivity;
+import com.peer.util.ManagerActivity;
 import com.peer.util.Tools;
 
 import android.app.AlertDialog;
@@ -133,6 +134,8 @@ public class CompleteActivity extends BasicActivity{
 		case R.id.bt_login_complete:
 			Intent intent=new Intent(CompleteActivity.this,HomePageActivity.class);
 			startActivity(intent);
+			ManagerActivity.getAppManager().finishActivity(RegisterTagActivity.class);
+			ManagerActivity.getAppManager().finishActivity(CompleteActivity.class);
 //			uploadepic_complete.getDrawingCache();
 //			photo=uploadepic_complete.getDrawingCache();
 //			img=getBitmapByte(photo);

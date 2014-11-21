@@ -58,25 +58,8 @@
 	        android:text="内容" />
 
 	    <TextView
-	        android:id="@+id/tv_access"
-	        android:clickable="true"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_centerVertical="true"
-	        android:layout_marginRight="8dp"
-	        android:layout_toLeftOf="@+id/tv_refuse"
-	        android:background="@drawable/selector_back"
-	        android:textSize="@dimen/textsize_middle"
-	         android:paddingBottom="4dp"
-	        android:paddingLeft="8dp"
-	        android:paddingRight="8dp"
-	        android:paddingTop="4dp"
-	        android:visibility="gone"
-	         android:textColor="@color/white"
-	        android:text="同意" />
-
-	    <TextView
-	        android:id="@+id/tv_refuse"
+	         android:id="@+id/tv_access"
+	        
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_alignParentRight="true"
@@ -87,7 +70,27 @@
 	        android:paddingLeft="8dp"
 	        android:paddingRight="8dp"
 	        android:paddingTop="4dp"
+	         
+	       android:visibility="gone"
+	        android:text="同意"
+	        android:textColor="@color/white"
+	        android:textSize="@dimen/textsize_middle" />
+
+	    <TextView
 	         android:visibility="gone"
+	        android:id="@+id/tv_refuse"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignBaseline="@+id/tv_access"
+	        android:layout_alignBottom="@+id/tv_access"
+	        android:layout_marginRight="18dp"
+	        android:layout_toLeftOf="@+id/tv_access"
+	        android:background="@drawable/selector_back"
+	        android:clickable="true"
+	        android:paddingBottom="4dp"
+	        android:paddingLeft="8dp"
+	        android:paddingRight="8dp"
+	        android:paddingTop="4dp"
 	        android:text="拒绝"
 	        android:textColor="@color/white"
 	        android:textSize="@dimen/textsize_middle" />

@@ -40,15 +40,16 @@ public class ChatRoomActivity extends BasicActivity {
 	}
 	private void init() {
 		// TODO Auto-generated method stub
-		titlePopup = new TitlePopup(this, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		popupwindow();
-		
+		titlePopup = new TitlePopup(this, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);	
 		rl_owner=(RelativeLayout)findViewById(R.id.host_imfor);
 		if(ChatRoomTypeUtil.getInstance().getChatroomtype()==Constant.MULTICHAT){
+			titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.exitroom), R.color.white));
 			rl_owner.setVisibility(View.VISIBLE);
 		}else if(ChatRoomTypeUtil.getInstance().getChatroomtype()==Constant.SINGLECHAT){
 			rl_owner.setVisibility(View.GONE);
+			titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.deletemes), R.color.white));
 		}
+		popupwindow();
 		
 		ScrollView mScrollView = (ScrollView)findViewById(R.id.scrollContent);  
 		mScrollView.setVerticalScrollBarEnabled(false);  
@@ -81,9 +82,8 @@ public class ChatRoomActivity extends BasicActivity {
 		
 	}
 	private void popupwindow() {
-		// TODO Auto-generated method stub
-		titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.look), R.color.white));
-		titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.exitroom), R.color.white));
+		// TODO Auto-generated method stub		
+		
 		titlePopup.setItemOnClickListener(new OnItemOnClickListener() {
 			
 			@Override

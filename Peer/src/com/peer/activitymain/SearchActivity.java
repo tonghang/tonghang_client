@@ -2,6 +2,8 @@ package com.peer.activitymain;
 
 import com.peer.R;
 import com.peer.activity.BasicActivity;
+import com.peer.constant.Constant;
+import com.peer.util.SearchUtil;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,14 +20,14 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 public class SearchActivity extends BasicActivity {
-	private boolean isSearchSkill=true;
+	public boolean isSearchSkill=true;
 	private TextView searchtag,searchuser;
 	private Button clean;
 	private Button search_search;
 	private EditText contentsearch;
 	private LinearLayout back,mLayoutClearSearchText;
 	private InputMethodManager imm;
-	private TableLayout tbl_skill;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -34,9 +36,20 @@ public class SearchActivity extends BasicActivity {
 		init();
 		
 	}
+	@Override
+	protected void onRestart() {
+		// TODO Auto-generated method stub
+		super .onRestart();
+		if(isSearchSkill){
+			SearchUtil.getInstance().setSearchtype(Constant.SEARCHSKILL);
+		}else{
+			SearchUtil.getInstance().setSearchtype(Constant.SEARCHUSER);
+		}
+	}
 	private void init() {
 		// TODO Auto-generated method stub
-		tbl_skill=(TableLayout)findViewById(R.id.tl_skillrecomend);
+		SearchUtil.getInstance().setSearchtype(Constant.SEARCHSKILL);
+		
 		
 		searchtag=(TextView)findViewById(R.id.searchtag);
 		searchtag.setOnClickListener(this);
@@ -96,8 +109,9 @@ public class SearchActivity extends BasicActivity {
 	 
 	private void SearchSkill() {
 			// TODO Auto-generated method stub
+		SearchUtil.getInstance().setSearchtype(Constant.SEARCHSKILL);
 		isSearchSkill=true;
-		tbl_skill.setVisibility(View.VISIBLE);
+		
 		  searchtag.setTextColor(getResources().getColor(R.color.black));
 		  searchtag.setBackgroundDrawable(getResources().getDrawable(R.drawable.searchborder));
 		  searchuser.setTextColor(getResources().getColor(R.color.seachbluetext));
@@ -105,8 +119,8 @@ public class SearchActivity extends BasicActivity {
 	  }
 	private void SearchUser() {
 			// TODO Auto-generated method stub
-		tbl_skill.setVisibility(View.GONE);
-		isSearchSkill=false;
+		SearchUtil.getInstance().setSearchtype(Constant.SEARCHUSER);
+				isSearchSkill=false;
 		  searchuser.setTextColor(getResources().getColor(R.color.black));
 		  searchuser.setBackgroundDrawable(getResources().getDrawable(R.drawable.searchborder));
 		  searchtag.setTextColor(getResources().getColor(R.color.seachbluetext));
@@ -114,11 +128,12 @@ public class SearchActivity extends BasicActivity {
 		}
 	 private void Search() {
 			// TODO Auto-generated method stub
+		 imm.hideSoftInputFromWindow(contentsearch.getWindowToken(), 0);
 		 Intent intent=new Intent(SearchActivity.this, SearchResultActivity.class);
 		 startActivity(intent);
-			if(isSearchSkill){//判断搜索技能还是搜索用户
-				
-			}
+//			if(isSearchSkill){//判断搜索技能还是搜索用户
+//				
+//			}
 		}
 	 TextWatcher watcher=new TextWatcher() {
 		

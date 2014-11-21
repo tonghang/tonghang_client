@@ -8,6 +8,7 @@ import com.peer.R;
 import com.peer.activity.BasicActivity;
 import com.peer.adapter.SkillAdapter;
 import com.peer.constant.Constant;
+import com.peer.util.ChatRoomTypeUtil;
 import com.peer.util.PersonpageUtil;
 
 import android.app.Activity;
@@ -71,6 +72,16 @@ public class PersonalPageActivity extends BasicActivity {
 			bt.setText(getResources().getString(R.string.sendmsg));
 			bt.setBackgroundResource(R.drawable.selector_commit);	
 			bt.setLayoutParams(params);
+			bt.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View arg0) {
+					// TODO Auto-generated method stub
+					ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.SINGLECHAT);
+					Intent intent=new Intent(PersonalPageActivity.this,ChatRoomActivity.class);
+					startActivity(intent);
+				}
+			});
 			
 			Button bt2=new Button(this);
 			bt2.setText(getResources().getString(R.string.addfriends));
@@ -78,6 +89,15 @@ public class PersonalPageActivity extends BasicActivity {
 			bt2.setLayoutParams(params);
 			bottomline.addView(bt);
 			bottomline.addView(bt2);
+			bt2.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View arg0) {
+					// TODO Auto-generated method stub					
+					Intent intent=new Intent(PersonalPageActivity.this,AddFriendsActivity.class);
+					startActivity(intent);
+				}
+			});
 			break;
 		case Constant.FRIENDSPAGE:
 			topic_whose.setText(getResources().getString(R.string.topic_other));
@@ -89,6 +109,16 @@ public class PersonalPageActivity extends BasicActivity {
 			bt3.setBackgroundResource(R.drawable.selector_commit);
 			bt3.setLayoutParams(params);
 			bottomline.addView(bt3);
+			bt3.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View arg0) {
+					// TODO Auto-generated method stub
+					ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.SINGLECHAT);
+					Intent intent=new Intent(PersonalPageActivity.this,ChatRoomActivity.class);
+					startActivity(intent);
+				}
+			});
 			break;
 		case Constant.OWNPAGE:
 			topic_whose.setText(getResources().getString(R.string.topic_owen));

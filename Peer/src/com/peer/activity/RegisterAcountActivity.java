@@ -59,7 +59,8 @@ public class RegisterAcountActivity extends BasicActivity{
 		case R.id.bt_complete_registe:
 			Intent intent=new Intent(RegisterAcountActivity.this,RegisterTagActivity.class);
 			startActivity(intent);
-			//			Register();			
+			//			Register();		
+			finish();
 			break;
 		default:
 			break;

@@ -7,6 +7,6 @@
           android:bottomRightRadius="-10dp"
           />
     <!-- 圆角，你也可以对不同的角设置不同的数值 -->
-    <solid android:color="@color/gray" />
+    <solid android:color="@color/lightgray" />
 
 </shape>

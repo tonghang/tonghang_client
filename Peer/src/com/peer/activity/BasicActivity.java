@@ -31,7 +31,7 @@ public class BasicActivity extends Activity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 	     
 	    ManagerActivity.getAppManager().addActivity(this);
-		HomeKeyWatcher();				
+						
 	}
 	@Override
 	protected void onResume() {
@@ -41,30 +41,7 @@ public class BasicActivity extends Activity implements OnClickListener{
 //			ShowMessage(getResources().getString(R.string.Broken_network_prompt));
 		}
 	}
-	/**
-	 * homekey listner
-	 */
-	private void HomeKeyWatcher() {
-		// TODO Auto-generated method stub
-		HomeWatcher mHomeWatcher = new HomeWatcher(this);		
-		mHomeWatcher.setOnHomePressedListener(new OnHomePressedListener() {
-			
-			@Override
-			public void onHomePressed() {
-				// TODO Auto-generated method stub
-//				 Log.e(TAG, "onHomePressed..............");
-//				Intent intent = new Intent(BasicActivity.this, FxService.class);
-//				stopService(intent);
-//				Log.e(TAG, "onHomePressed.....fhskhfkash.."); 
-			}			
-			@Override
-			public void onHomeLongPressed() {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-		mHomeWatcher.startWatch();
-	}
+	
 	/**
 	 *  Prompt information to user
 	 */

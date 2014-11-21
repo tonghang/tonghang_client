@@ -56,6 +56,7 @@ public class LoginActivity extends BasicActivity{
 		case R.id.bt_login_login:
 			Intent home=new Intent(LoginActivity.this,HomePageActivity.class);
 			startActivity(home);
+			finish();
 //			String email=email_login.getText().toString().trim();
 //			String password=password_login.getText().toString().trim();
 //			

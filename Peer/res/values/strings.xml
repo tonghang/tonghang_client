@@ -6,7 +6,7 @@
     <string name="hello_world">Hello world!</string>
     
     <!-- 聊天室下拉选择项 -->
-    <string name="look">查看成员</string>
+    <string name="deletemes">删除聊天记录</string>
     <string name="exitroom">退出</string>
     
     <string name="Broken_network_prompt">您的网络未链接，请检查网络设置！</string>
@@ -37,7 +37,7 @@
     <string name="chatroommember">聊天室成员</string>
     <string name="topic_other">他的话题</string>
       <string name="topic_owen">我的话题</string>
-    
+    <string name="addfriends">身份验证</string>
     <!-- 提示用语 -->
     <string name="erroroldpsw">旧密码不正确</string>
     <string name="errorpswformat">密码格式不正确</string>
@@ -53,6 +53,7 @@
     <string name="sdcard">未找到存储卡，无法存储照片！</string>
     
     <string name="commit">提交成功</string>
+    <string name="addfriendssuccess">发送成功</string>
     
     <string name="skillname">秀场名不能超过六个中文</string>
     <string name="repetskill">不能有重复技能</string>

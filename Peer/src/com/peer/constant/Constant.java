@@ -12,6 +12,9 @@ public interface Constant {
 	/*chatroom type*/
 	public int SINGLECHAT=1;
 	public int MULTICHAT=2;
+	/*search tyoe*/
+	public int SEARCHSKILL=1;
+	public int SEARCHUSER=2;
 	/*web server*/
 	 String SERVER_ADDRESS = "72.52.82.223";
 	 int WEB_SERVER_PORT = 3000;
