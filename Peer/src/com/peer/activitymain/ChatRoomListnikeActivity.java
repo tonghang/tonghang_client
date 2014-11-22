@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.peer.R;
 import com.peer.activity.BasicActivity;
+import com.peer.adapter.FriendsAdapter;
 
 
 public class ChatRoomListnikeActivity extends BasicActivity {
@@ -26,10 +27,14 @@ public class ChatRoomListnikeActivity extends BasicActivity {
 	}
 	private void init() {
 		// TODO Auto-generated method stub
+		
 		title=(TextView)findViewById(R.id.tv_title);
 		title.setText(getResources().getString(R.string.chatroommember));
 		back=(LinearLayout)findViewById(R.id.ll_back);
 		back.setOnClickListener(this);
 		listnike_chatroom=(ListView)findViewById(R.id.lv_listnike_chatroom);
+		
+		FriendsAdapter adapter=new FriendsAdapter(this);
+		listnike_chatroom.setAdapter(adapter);
 	}
 }

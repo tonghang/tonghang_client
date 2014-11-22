@@ -98,22 +98,23 @@ public class UpdatePasswordActivity extends BasicActivity {
 	}
 	private void UpdatePassword() {
 		// TODO Auto-generated method stub
+		ShowMessage("密码修改成功");
 		String old=oldpasw.getText().toString().trim();
 		String newpasws=newpasw.getText().toString().trim();
 		String testnew=reputpasw.getText().toString().trim();
 		String password="";
-		if(!old.equals(password)){
-			remind.setText(getResources().getString(R.string.erroroldpsw));
-			return;
-		}else if(!newpasws.matches("^[a-zA-Z0-9_]{5,17}$")){
-			remind.setText(getResources().getString(R.string.errorpswformat));
-			return;
-		}else if(!newpasws.equals(testnew)){
-			remind.setText(getResources().getString(R.string.notmatchpsw));
-			return;
-		}else{
-			
-		}
+//		if(!old.equals(password)){
+//			remind.setText(getResources().getString(R.string.erroroldpsw));
+//			return;
+//		}else if(!newpasws.matches("^[a-zA-Z0-9_]{5,17}$")){
+//			remind.setText(getResources().getString(R.string.errorpswformat));
+//			return;
+//		}else if(!newpasws.equals(testnew)){
+//			remind.setText(getResources().getString(R.string.notmatchpsw));
+//			return;
+//		}else{
+//			
+//		}
 	}
 	
 	

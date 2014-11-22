@@ -1,7 +1,17 @@
 package com.peer.adapter;
 
+import java.util.List;
+
 import com.peer.R;
+import com.peer.activitymain.PersonalPageActivity;
+import com.peer.constant.Constant;
+import com.peer.event.NewFriensEvent;
+import com.peer.util.PersonpageUtil;
+
+import de.greenrobot.event.EventBus;
+
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,17 +19,20 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class NewfriendsAdapter extends BaseAdapter {
 	private Context mContext;	
-	public NewfriendsAdapter(Context mContext){
+	private List<String> mlist;
+	public NewfriendsAdapter(Context mContext,List<String> mlist){
 		this.mContext=mContext;
+		this.mlist=mlist;
 	}
 
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
-		return 3;
+		return mlist.size();
 	}
 
 	@Override
@@ -35,7 +48,7 @@ public class NewfriendsAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parentgroup) {
+	public View getView(final int position, View convertView, ViewGroup parentgroup) {
 		// TODO Auto-generated method stub
 		ViewHolder viewHolder;
 		if(convertView==null){
@@ -55,7 +68,34 @@ public class NewfriendsAdapter extends BaseAdapter {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 		viewHolder.nikename.setText("昵称");
-		viewHolder.descripe.setText("请求加为好友");		
+		viewHolder.descripe.setText("请求加为好友");	
+		viewHolder.refuse.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				 EventBus.getDefault().post(new NewFriensEvent(position));
+				 Toast.makeText(mContext, "拒绝添加为好友", 0).show();
+			}
+		});
+		viewHolder.access.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				 EventBus.getDefault().post(new NewFriensEvent(position));
+			}
+		});
+		viewHolder.click.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
+				Intent intent=new Intent(mContext,PersonalPageActivity.class);
+				mContext.startActivity(intent);
+			}
+		});
 		return convertView;
 	}
 	private class ViewHolder{

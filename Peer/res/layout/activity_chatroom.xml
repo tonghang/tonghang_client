@@ -75,8 +75,9 @@
             android:singleLine="true"
             android:lines="1"
             android:paddingLeft="5dp"
-            android:textSize="18sp" />
-
+            android:textSize="18sp" >
+     	<requestFocus />
+    </EditText>
         <ImageButton
             android:layout_marginLeft="8dp"
             android:id="@+id/chatting_biaoqing_btn"

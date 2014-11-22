@@ -37,7 +37,7 @@
     <string name="chatroommember">聊天室成员</string>
     <string name="topic_other">他的话题</string>
       <string name="topic_owen">我的话题</string>
-    <string name="addfriends">身份验证</string>
+    <string name="checkfriends">身份验证</string>
     <!-- 提示用语 -->
     <string name="erroroldpsw">旧密码不正确</string>
     <string name="errorpswformat">密码格式不正确</string>
@@ -66,7 +66,11 @@
     
     <string name="sendmsg">发信</string>
     <string name="addfriends">加好友</string>
+    <string name="deletechatmsg">聊天记录已删除</string>
     
+    <string name="deletethisskill">是否删除该技能</string>
+    <string name="deleteskill">删除技能</string>
+    <string name="updateskill">修改技能</string>
     
     
     

@@ -36,7 +36,9 @@ public class MessageNotifyActivity extends BasicActivity {
 		end=(TextView)findViewById(R.id.end);
 		end.setOnClickListener(this);
 		sound=(CheckBox)findViewById(R.id.cb_sound);
+		sound.setChecked(true);
 		vibrate=(CheckBox)findViewById(R.id.cb_vibrate);
+		vibrate.setChecked(true);
 //		if(LocalStorage.getBoolean(this, "sound")){
 //			sound.setChecked(true);
 //		}else{

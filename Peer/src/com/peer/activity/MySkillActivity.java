@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import com.peer.R;
 import com.peer.adapter.SkillAdapter;
+import com.peer.event.NewFriensEvent;
+import com.peer.event.SkillEvent;
+
+import de.greenrobot.event.EventBus;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -21,12 +25,17 @@ public class MySkillActivity extends BasicActivity {
 	private LinearLayout creatTag,back;
 	public static Handler handler;
 	private TextView title;
+	private EventBus mBus;
+	private SkillAdapter adapter;
+	private List<String> mlist;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_myskill);
-		init();		
+		initdata();
+		init();	
+		registEventBus();
 	}
 	private void init() {
 		// TODO Auto-generated method stub
@@ -37,7 +46,7 @@ public class MySkillActivity extends BasicActivity {
 		creatTag=(LinearLayout)findViewById(R.id.ll_createTag_mytag);
 		creatTag.setOnClickListener(this);
 		mytaglistview=(ListView)findViewById(R.id.lv_myskill);
-		SkillAdapter adapter=new SkillAdapter(this);
+		adapter=new SkillAdapter(this,mlist);
 		mytaglistview.setAdapter(adapter);
 	}
 	@Override
@@ -46,6 +55,7 @@ public class MySkillActivity extends BasicActivity {
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.ll_createTag_mytag:
+			CreateTag();
 			if(Hadtag>4){
 				ShowMessage("您已经有五个标签，不能再创建了");
 				break;
@@ -67,7 +77,7 @@ public class MySkillActivity extends BasicActivity {
 		final EditText inputServer = new EditText(MySkillActivity.this);
         inputServer.setFocusable(true);
         AlertDialog.Builder builder = new AlertDialog.Builder(MySkillActivity.this);
-        builder.setTitle("创建秀场").setView(inputServer).setNegativeButton(
+        builder.setTitle(getResources().getString(R.string.register_tag)).setView(inputServer).setNegativeButton(
         		getResources().getString(R.string.cancel), null);
         builder.setPositiveButton(getResources().getString(R.string.sure),
                 new DialogInterface.OnClickListener() {
@@ -85,5 +95,29 @@ public class MySkillActivity extends BasicActivity {
                 });
         builder.show();			
 	}
-	
+	private void initdata() {
+		// TODO Auto-generated method stub
+		mlist=new ArrayList<String>();
+		for(int i=0;i<5;i++){
+			mlist.add("friends");
+		}
+	}
+	private void registEventBus() {
+		// TODO Auto-generated method stub
+		 mBus=EventBus.getDefault();
+		/*
+		 * Registration: three parameters are respectively, message subscriber (receiver), receiving method name, event classes
+		 */
+		 mBus.register(this, "getSkillEvent",SkillEvent.class);
+	}
+	private void getSkillEvent(SkillEvent event){
+		mlist.remove(event.getPosition());
+		adapter.notifyDataSetChanged();
+	}
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		mBus.unregister(this);
+	}
 }

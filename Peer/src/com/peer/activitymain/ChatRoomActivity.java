@@ -89,6 +89,11 @@ public class ChatRoomActivity extends BasicActivity {
 			@Override
 			public void onItemClick(ActionItem item, int position) {
 				// TODO Auto-generated method stub
+				if(item.mTitle.equals(getResources().getString(R.string.exitroom))){
+					finish();
+				}else if(item.mTitle.equals(getResources().getString(R.string.deletemes))){
+					ShowMessage(getResources().getString(R.string.deletechatmsg));
+				}
 					
 			}
 		});

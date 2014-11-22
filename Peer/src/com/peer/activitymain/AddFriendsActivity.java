@@ -23,10 +23,11 @@ public class AddFriendsActivity extends BasicActivity {
 	private void init() {
 		// TODO Auto-generated method stub
 		title=(TextView)findViewById(R.id.tv_title);
-		title.setText(getResources().getString(R.string.addfriends));
+		title.setText(getResources().getString(R.string.checkfriends));
 		back=(LinearLayout)findViewById(R.id.ll_back);
 		back.setOnClickListener(this);
 		send=(Button)findViewById(R.id.bt_send);
+		send.setOnClickListener(this);
 	}
 	@Override
 	public void onClick(View v) {

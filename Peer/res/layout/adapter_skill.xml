@@ -29,7 +29,7 @@
                 android:paddingTop="4dp"
                 android:text="修改"
                 android:textColor="@color/white"
-                android:textSize="@dimen/textsize_small" />
+                android:textSize="@dimen/textsize_middle" />
 
             <TextView
                 android:id="@+id/tv_delete"
@@ -47,7 +47,7 @@
                 android:paddingTop="4dp"
                 android:text="删除"
                 android:textColor="@color/white"
-                android:textSize="@dimen/textsize_small" />
+                android:textSize="@dimen/textsize_middle" />
 
             <TextView
                 android:id="@+id/tv_skill"

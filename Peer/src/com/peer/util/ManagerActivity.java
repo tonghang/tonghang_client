@@ -1,6 +1,9 @@
 package com.peer.util;
 
 import java.util.Stack;
+
+import com.peer.activity.LoginActivity;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -140,10 +143,10 @@ public class ManagerActivity {
 
 		// Intent i = context.getPackageManager().getLaunchIntentForPackage(
 		// context.getPackageName());
-//		Intent i = new Intent(context, LoginActivity.class);
-//		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-//				| Intent.FLAG_ACTIVITY_NEW_TASK);
-//		context.startActivity(i);
+		Intent i = new Intent(context, LoginActivity.class);
+		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+				| Intent.FLAG_ACTIVITY_NEW_TASK);
+		context.startActivity(i);
 
 	}
 }
