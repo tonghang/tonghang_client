@@ -2,6 +2,7 @@ package com.peer.activity;
 
 import com.peer.R;
 import com.peer.activitymain.HomePageActivity;
+import com.peer.activitymain.MainActivity;
 import com.peer.client.ISessionListener;
 import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
@@ -54,7 +55,7 @@ public class LoginActivity extends BasicActivity{
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.bt_login_login:
-			Intent home=new Intent(LoginActivity.this,HomePageActivity.class);
+			Intent home=new Intent(LoginActivity.this,MainActivity.class);
 			startActivity(home);
 			finish();
 //			String email=email_login.getText().toString().trim();

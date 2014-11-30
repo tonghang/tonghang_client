@@ -22,6 +22,7 @@
             android:ellipsize="end"
             android:textSize="@dimen/textsize_middle"
             android:text="标题"
+            android:textColor="@color/black"
             />
 
         <TextView

@@ -45,6 +45,7 @@
 	        android:textSize="@dimen/textsize_middle"
 	        android:lines="1"
 	        android:ellipsize="end"
+	        android:textColor="@color/black"
 	        />
 
 	    <TextView

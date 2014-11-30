@@ -44,6 +44,7 @@
 	        android:ellipsize="end"
 	        android:textSize="@dimen/textsize_middle"
 	        android:text="昵称"
+	        android:textColor="@color/black"
 	        />
 	    <TextView
 	        android:id="@+id/tv_descripe"
