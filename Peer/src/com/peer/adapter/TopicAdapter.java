@@ -2,6 +2,7 @@ package com.peer.adapter;
 
 import com.peer.R;
 import com.peer.activitymain.ChatRoomActivity;
+import com.peer.activitymain.TopicHistoryActivity;
 import com.peer.constant.Constant;
 import com.peer.util.ChatRoomTypeUtil;
 
@@ -62,8 +63,8 @@ public class TopicAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.MULTICHAT);
-				Intent intent=new Intent(mContext,ChatRoomActivity.class);
+//				ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.MULTICHAT);
+				Intent intent=new Intent(mContext,TopicHistoryActivity.class);
 				mContext.startActivity(intent);
 			}
 		});

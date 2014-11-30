@@ -49,6 +49,16 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/textsize_large" />
 
+            <ImageView
+                android:id="@+id/im_downview"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/icon_chatroom_menu" />
+
   </RelativeLayout>
 
 </LinearLayout>

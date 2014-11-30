@@ -8,6 +8,9 @@ import com.peer.R;
 import com.peer.activity.BasicActivity;
 import com.peer.adapter.SkillAdapter;
 import com.peer.constant.Constant;
+import com.peer.titlepopwindow.ActionItem;
+import com.peer.titlepopwindow.TitlePopup;
+import com.peer.titlepopwindow.TitlePopup.OnItemOnClickListener;
 import com.peer.util.ChatRoomTypeUtil;
 import com.peer.util.PersonpageUtil;
 
@@ -28,7 +31,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class PersonalPageActivity extends BasicActivity {
-	private ImageView personhead;
+	private TitlePopup titlePopup;
+	private ImageView personhead,delete;
 	private TextView nikename,title,topic_whose;
 	private RelativeLayout topic_click;
 	private LinearLayout back,bottomline;
@@ -44,6 +48,12 @@ public class PersonalPageActivity extends BasicActivity {
 	
 	private void init() {
 		// TODO Auto-generated method stub
+		titlePopup = new TitlePopup(this, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);	
+		titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.deletefriends), R.color.white));
+		
+		delete=(ImageView)findViewById(R.id.im_downview);
+		delete.setOnClickListener(this);
+		
 		topic_whose=(TextView)findViewById(R.id.tv_topic);
 		title=(TextView)findViewById(R.id.tv_title);
 		topic_click=(RelativeLayout)findViewById(R.id.rl_topic);
@@ -56,7 +66,23 @@ public class PersonalPageActivity extends BasicActivity {
 		skillllist=(ListView)findViewById(R.id.lv_pageskill);
 		SkillAdapter adapter=new SkillAdapter(this,"page");
 		skillllist.setAdapter(adapter);		
-		ViewType();		
+		ViewType();	
+		popupwindow();
+	}
+	private void popupwindow() {
+		// TODO Auto-generated method stub		
+		
+		titlePopup.setItemOnClickListener(new OnItemOnClickListener() {
+			
+			@Override
+			public void onItemClick(ActionItem item, int position) {
+				// TODO Auto-generated method stub
+				if(item.mTitle.equals(getResources().getString(R.string.deletefriends))){
+					finish();
+				}
+					
+			}
+		});
 	}
 	private void ViewType() {
 		// TODO Auto-generated method stub
@@ -100,6 +126,7 @@ public class PersonalPageActivity extends BasicActivity {
 			});
 			break;
 		case Constant.FRIENDSPAGE:
+			delete.setVisibility(View.VISIBLE);
 			topic_whose.setText(getResources().getString(R.string.topic_other));
 			params.rightMargin=(int) getResources().getDimension(R.dimen.marginsize_around);
 			params.leftMargin=(int) getResources().getDimension(R.dimen.marginsize_around);
@@ -138,6 +165,9 @@ public class PersonalPageActivity extends BasicActivity {
 		case R.id.rl_topic:
 			Intent intent=new Intent(PersonalPageActivity.this,TopicActivity.class);
 			startActivity(intent);			
+			break;
+		case R.id.im_downview:
+			titlePopup.show(v);
 			break;
 
 		default:
