@@ -55,15 +55,15 @@ public class LoginActivity extends BasicActivity{
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.bt_login_login:
-			Intent home=new Intent(LoginActivity.this,MainActivity.class);
-			startActivity(home);
-			finish();
-//			String email=email_login.getText().toString().trim();
-//			String password=password_login.getText().toString().trim();
-//			
-//			LoginTask task=new LoginTask();
-//			task.execute(email,password);
-//			
+//			Intent home=new Intent(LoginActivity.this,MainActivity.class);
+//			startActivity(home);
+//			finish();
+			String email=email_login.getText().toString().trim();
+			String password=password_login.getText().toString().trim();
+			
+			LoginTask task=new LoginTask();
+			task.execute(email,password);
+			
 			break;
 		case R.id.tv_register_login:
 			Intent regist=new Intent(LoginActivity.this,RegisterAcountActivity.class);
