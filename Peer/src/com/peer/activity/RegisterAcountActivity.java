@@ -2,7 +2,9 @@ package com.peer.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -11,7 +13,14 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.easemob.EMError;
+import com.easemob.chat.EMChatManager;
+import com.easemob.exceptions.EaseMobException;
 import com.peer.R;
+import com.peer.IMimplements.IM;
+import com.peer.IMinterface.RingLetterImp;
+import com.peer.client.service.SessionListener;
+import com.peer.client.ui.PeerUI;
 
 
 public class RegisterAcountActivity extends BasicActivity{
@@ -57,10 +66,11 @@ public class RegisterAcountActivity extends BasicActivity{
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.bt_complete_registe:
-			Intent intent=new Intent(RegisterAcountActivity.this,RegisterTagActivity.class);
-			startActivity(intent);
-			//			Register();		
-			finish();
+//			Intent intent=new Intent(RegisterAcountActivity.this,RegisterTagActivity.class);
+//			startActivity(intent);
+			
+//			Register();		
+//			finish();
 			break;
 		default:
 			break;
@@ -74,6 +84,7 @@ public class RegisterAcountActivity extends BasicActivity{
 		String password=password_registe.getText().toString().trim();
 		String repassword=repasword_registe.getText().toString().trim();		
 		String nikename=nike_registe.getText().toString().trim();
+		
 		if(!email.matches(format)){
 			registe_remind.setText(getResources().getString(R.string.erroremail));
 			return ;
@@ -87,8 +98,9 @@ public class RegisterAcountActivity extends BasicActivity{
 			registe_remind.setText(getResources().getString(R.string.errornike));
 			return ;
 		}else{
-			
-		}			
+			RegisterTask task=new RegisterTask();
+			task.execute(email,password,nikename);
+		}		
 	}	
 	 TextWatcher textwatcher=new TextWatcher() {
 
@@ -123,4 +135,27 @@ public class RegisterAcountActivity extends BasicActivity{
 			complete_registe.setEnabled(false);
 		}
 	}
+	private class RegisterTask extends AsyncTask<String, String, String>{
+
+		@Override
+		protected String doInBackground(String... paramer) {
+			// TODO Auto-generated method stub	
+			RingLetterImp.getInstance().register(paramer[0], paramer[1], paramer[2]);
+			
+			SessionListener callback=new SessionListener();
+			try {
+				PeerUI.getInstance().getISessionManager().register(paramer[0], paramer[1], paramer[2], callback);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}						
+			return callback.getMessage();
+		}
+		@Override
+		protected void onPostExecute(String result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+		}
+	}
+
 }

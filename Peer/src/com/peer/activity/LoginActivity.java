@@ -1,6 +1,7 @@
 package com.peer.activity;
 
 import com.peer.R;
+import com.peer.IMinterface.RingLetterImp;
 import com.peer.activitymain.HomePageActivity;
 import com.peer.activitymain.MainActivity;
 import com.peer.client.ISessionListener;
@@ -81,14 +82,16 @@ public class LoginActivity extends BasicActivity{
 
 		@Override
 		protected String doInBackground(String... paramer) {
-			// TODO Auto-generated method stub			
+			// TODO Auto-generated method stub		
+			RingLetterImp.getInstance().login(paramer[0], paramer[1]);
+			
 			SessionListener callback=new SessionListener();
-			try {
-				PeerUI.getInstance().getISessionManager().login(paramer[0], paramer[1], callback);
-			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//			try {
+//				PeerUI.getInstance().getISessionManager().login(paramer[0], paramer[1], callback);
+//			} catch (RemoteException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 			return callback.getMessage();
 		}
 		@Override

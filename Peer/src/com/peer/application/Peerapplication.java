@@ -1,5 +1,6 @@
 package com.peer.application;
 
+import com.easemob.chat.EMChat;
 import com.peer.client.ServiceAction;
 import com.peer.client.ui.PeerUI;
 import com.peer.util.HomeWatcher;
@@ -14,10 +15,10 @@ public class Peerapplication extends Application {
 	public void onCreate() {
 		// TODO Auto-generated method stub	
 		instance=this;	
-		initsevice();
-//		HomeKeyWatcher();
-	}
-	private void initsevice() {
+		initwebsevice();
+		initEMChat();
+	}	
+	private void initwebsevice() {
 		// TODO Auto-generated method stub
 		 Intent serviceIntent = new Intent(ServiceAction.ACTION_SERVICE);
 		 startService(serviceIntent);
@@ -26,28 +27,9 @@ public class Peerapplication extends Application {
 	public static Peerapplication getInstance() {
 		return instance;
 	}
-	/**
-	 * homekey listner
-	 */
-	private void HomeKeyWatcher() {
+	/*初始化环信sdk*/
+	private void initEMChat() {
 		// TODO Auto-generated method stub
-		HomeWatcher mHomeWatcher = new HomeWatcher(this);		
-		mHomeWatcher.setOnHomePressedListener(new OnHomePressedListener() {
-			
-			@Override
-			public void onHomePressed() {
-				// TODO Auto-generated method stub
-//				 Log.e(TAG, "onHomePressed..............");
-//				Intent intent = new Intent(BasicActivity.this, FxService.class);
-//				stopService(intent);
-//				Log.e(TAG, "onHomePressed.....fhskhfkash.."); 
-			}			
-			@Override
-			public void onHomeLongPressed() {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-		mHomeWatcher.startWatch();
+		EMChat.getInstance().init(instance);
 	}
 }

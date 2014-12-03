@@ -7,6 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import android.os.RemoteException;
+
+import com.peer.IMimplements.IM;
+import com.peer.IMinterface.RingLetterImp;
 import com.peer.client.ISessionListener;
 import com.peer.client.ISessionManager;
 import com.peer.client.User;
@@ -14,7 +17,7 @@ import com.peer.client.util.DataUtil;
 import com.peer.constant.Constant;
 
 public class SessionManager extends ISessionManager.Stub {
-
+	
 	@Override
 	public void login(String username, String password,
 			ISessionListener callback) throws RemoteException {
@@ -49,7 +52,7 @@ public class SessionManager extends ISessionManager.Stub {
 	}
 
 	@Override
-	public void register(String email, String username, String password,
+	public void register(String email, String password, String username,
 			ISessionListener callback) throws RemoteException {
 		// TODO Auto-generated method stub
 		MultiValueMap<String, String> parts = new LinkedMultiValueMap<String, String>();
@@ -70,9 +73,9 @@ public class SessionManager extends ISessionManager.Stub {
 				user.get("email");
 				user.get("password");
 				user.get("username");								
-				message = (String) body.get("code");
+//				message = (String) body.get("code");
 			} else {
-				message = (String) body.get("code");
+//				message = (String) body.get("code");
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -184,6 +187,13 @@ public class SessionManager extends ISessionManager.Stub {
 
 	@Override
 	public void forgetPassword(String tagetId) throws RemoteException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updatePassword(String tagetId, String newPassword)
+			throws RemoteException {
 		// TODO Auto-generated method stub
 		
 	}

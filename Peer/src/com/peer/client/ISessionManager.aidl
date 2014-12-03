@@ -9,7 +9,7 @@ interface ISessionManager {
 
     void login(String username, String password, ISessionListener callback);    
     
-    void register(String email, String username, String password, ISessionListener callback);
+    void register(String email, String password, String username, ISessionListener callback);
    
     void registerLabel(in List<String> labels, ISessionListener callback);
  	
@@ -40,5 +40,7 @@ interface ISessionManager {
  	void chatHistory(String topicId);
  	
  	void forgetPassword(String tagetId);
+ 	
+ 	void updatePassword(String tagetId,String newPassword);
  	
 }

@@ -19,4 +19,5 @@ public interface Constant {
 	 String SERVER_ADDRESS = "72.52.82.223";
 	 int WEB_SERVER_PORT = 3000;
 	 String WEB_SERVER_ADDRESS="http://" + SERVER_ADDRESS+"/";
+	 
 }
