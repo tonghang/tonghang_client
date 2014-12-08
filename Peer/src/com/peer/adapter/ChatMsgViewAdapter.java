@@ -76,8 +76,7 @@ public class ChatMsgViewAdapter extends BaseAdapter {
 				viewHolder = new ViewHolder();
 				viewHolder.tvSendTime = (TextView) convertView
 						.findViewById(R.id.tv_sendtime);
-				viewHolder.tvUserName = (TextView) convertView
-						.findViewById(R.id.tv_username);
+		
 				viewHolder.tvContent = (TextView) convertView
 						.findViewById(R.id.tv_chatcontent);
 				viewHolder.heapic=(ImageView)convertView.findViewById(R.id.iv_ownerhead);
@@ -89,8 +88,7 @@ public class ChatMsgViewAdapter extends BaseAdapter {
 				viewHolder = new ViewHolder();
 				viewHolder.tvSendTime = (TextView) convertView
 						.findViewById(R.id.tv_sendtime);
-				viewHolder.tvUserName = (TextView) convertView
-						.findViewById(R.id.tv_username);
+				
 				viewHolder.tvContent = (TextView) convertView
 						.findViewById(R.id.tv_chatcontent);
 				viewHolder.heapic=(ImageView)convertView.findViewById(R.id.iv_userhead);
@@ -121,16 +119,12 @@ public class ChatMsgViewAdapter extends BaseAdapter {
 					}		
 				}
 			});
-		}else{
-			viewHolder.tvUserName.setText(entity.getName()+":");
-			viewHolder.tvContent.setText(entity.getMessage());
-		}		
+		}	
 		return convertView;
 	}
 	static class ViewHolder {
 		public ImageView heapic;
 		public TextView tvSendTime;
-		public TextView tvUserName;
 		public TextView tvContent;
 		public int isComMsg;
 	}

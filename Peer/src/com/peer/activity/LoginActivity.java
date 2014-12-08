@@ -1,25 +1,31 @@
 package com.peer.activity;
 
 import com.peer.R;
-import com.peer.IMinterface.RingLetterImp;
+import com.peer.IMimplements.RingLetterImp;
 import com.peer.activitymain.HomePageActivity;
 import com.peer.activitymain.MainActivity;
 import com.peer.client.ISessionListener;
 import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
+import com.peer.constant.Constant;
+import com.peer.event.NewFriensEvent;
 import com.peer.util.ManagerActivity;
+
+import de.greenrobot.event.EventBus;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class LoginActivity extends BasicActivity{
 	private EditText email_login,password_login;
@@ -30,7 +36,8 @@ public class LoginActivity extends BasicActivity{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		init();		
+		init();	
+		
 	}
 	
 	private void init() {
@@ -42,7 +49,7 @@ public class LoginActivity extends BasicActivity{
 		password_login.addTextChangedListener(textwatcher);
 		
 		login_login=(Button)findViewById(R.id.bt_login_login);
-//		login_login.setEnabled(false);
+		login_login.setEnabled(false);
 		register_login=(TextView)findViewById(R.id.tv_register_login);
 		forget_login=(TextView)findViewById(R.id.tv_forgetpasw_login);
 		login_remind=(TextView)findViewById(R.id.tv_remind_login);
@@ -51,6 +58,7 @@ public class LoginActivity extends BasicActivity{
 		forget_login.setOnClickListener(this);
 		login_login.setOnClickListener(this);
 	}
+	
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -59,11 +67,16 @@ public class LoginActivity extends BasicActivity{
 //			Intent home=new Intent(LoginActivity.this,MainActivity.class);
 //			startActivity(home);
 //			finish();
-			String email=email_login.getText().toString().trim();
-			String password=password_login.getText().toString().trim();
+			if(checkNetworkState()){
+				String email=email_login.getText().toString().trim();
+				String password=password_login.getText().toString().trim();
+				
+				LoginTask task=new LoginTask();
+				task.execute(email,password);
+			}else{
+				ShowMessage(getResources().getString(R.string.Broken_network_prompt));
+			}
 			
-			LoginTask task=new LoginTask();
-			task.execute(email,password);
 			
 			break;
 		case R.id.tv_register_login:
@@ -78,11 +91,11 @@ public class LoginActivity extends BasicActivity{
 			break;
 		}
 	}
-	private class LoginTask extends AsyncTask<String, String, String>{
-
+	private class LoginTask extends AsyncTask<String, String, String>{		
 		@Override
 		protected String doInBackground(String... paramer) {
-			// TODO Auto-generated method stub		
+			// TODO Auto-generated method stub
+			
 			RingLetterImp.getInstance().login(paramer[0], paramer[1]);
 			
 			SessionListener callback=new SessionListener();
@@ -92,13 +105,17 @@ public class LoginActivity extends BasicActivity{
 //				// TODO Auto-generated catch block
 //				e.printStackTrace();
 //			}
-			return callback.getMessage();
+			
+			
+			return "";
 		}
 		@Override
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
-			super.onPostExecute(result);
+				Intent home=new Intent(LoginActivity.this,MainActivity.class);
+				startActivity(home);			
 		}
+		
 	}
 
 	@Override
@@ -117,7 +134,7 @@ public class LoginActivity extends BasicActivity{
 			// TODO Auto-generated method stub
 			String email=email_login.getText().toString().trim();
 			String password=password_login.getText().toString().trim();
-			if(!email.equals("")&&!password.equals("")){
+			if(!TextUtils.isEmpty(email)&&!TextUtils.isEmpty(password)){
 				login_login.setEnabled(true);
 			}else{
 				login_login.setEnabled(false);

@@ -1,15 +1,16 @@
-package com.peer.IMinterface;
+package com.peer.IMimplements;
 
 import com.easemob.EMCallBack;
 import com.easemob.EMError;
-import com.easemob.chat.EMChatConfig;
+import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.TextMessageBody;
 import com.easemob.chat.EMMessage.ChatType;
 import com.easemob.exceptions.EaseMobException;
-import com.peer.IMimplements.IM;
+import com.peer.IMinterface.IM;
 import com.peer.constant.Constant;
+
 
 /**
  * Encapsulation ring letter implementation method
@@ -17,6 +18,7 @@ import com.peer.constant.Constant;
  * */
 public class RingLetterImp implements IM{
 	private static RingLetterImp ringletter=null;
+	
 	
 	private RingLetterImp(){
 		
@@ -40,7 +42,8 @@ public class RingLetterImp implements IM{
 			@Override
 			public void onSuccess() {
 				// TODO Auto-generated method stub
-				System.out.println();
+				 System.out.println("环信登录成功");
+				
 			}
 			
 			@Override
@@ -52,17 +55,18 @@ public class RingLetterImp implements IM{
 			@Override
 			public void onError(int arg0, String arg1) {
 				// TODO Auto-generated method stub
-				
+				System.out.println("环信登录错误---->");
 			}
 		});
 	}
 
 	@Override
-	public void register(String email, String password, String username) {
+	public boolean register(String email, String password, String username) {
 		// TODO Auto-generated method stub
 		try {
 			EMChatManager.getInstance().createAccountOnServer(email, password);
 			System.out.println("注册成功");
+			return true;
 		} catch (EaseMobException e) {
 			// TODO Auto-generated catch block			
 			int errorCode=e.getErrorCode();
@@ -74,9 +78,9 @@ public class RingLetterImp implements IM{
 				System.out.println("注册失败，无权限！");				
 			}else{
 				System.out.println("注册失败: " + e.getMessage());
-			}
-			
+			}			
 			e.printStackTrace();
+			return false;
 		}
 	}
 	@Override
@@ -97,6 +101,12 @@ public class RingLetterImp implements IM{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	@Override
+	public void setAppInited() {
+		// TODO Auto-generated method stub
+		// 通知sdk，UI 已经初始化完毕，注册了相应的receiver和listener, 可以接受broadcast了
+		EMChat.getInstance().setAppInited();
 	}
 
 }

@@ -23,5 +23,7 @@
     
     <color name="seachbluetext">#4a6daf</color>
     <color name="chat_input_back">#dddddd</color>
+    
+    <color name="error_item_color">#F6EBE6</color>
    
 </resources>

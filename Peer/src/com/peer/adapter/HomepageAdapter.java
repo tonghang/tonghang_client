@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class HomepageAdapter extends BaseAdapter {
@@ -61,7 +60,7 @@ public class HomepageAdapter extends BaseAdapter {
 				viewHolder.descripe=(TextView)convertView.findViewById(R.id.tv_descripe);
 				viewHolder.click=(LinearLayout)convertView.findViewById(R.id.ll_clike);
 				viewHolder.nikename.setText("昵称");
-				viewHolder.descripe.setText("聊天内容，在这里记录最后一次的内容");
+				viewHolder.descripe.setText("技能一，技能二，技能三，技能四，技能五");
 				viewHolder.click.setOnClickListener(new View.OnClickListener() {
 					
 					@Override

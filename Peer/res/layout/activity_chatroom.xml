@@ -101,7 +101,7 @@
         android:fillViewport="true" >
 
     <ListView
-        android:id="@+id/lv_selflistview"
+        android:id="@+id/lv_chat"
         android:layout_width="match_parent"
         android:layout_height="297dp"        
         android:background="@color/white"       

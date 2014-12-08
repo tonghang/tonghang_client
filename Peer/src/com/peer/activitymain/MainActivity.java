@@ -1,21 +1,31 @@
 package com.peer.activitymain;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import com.easemob.EMConnectionListener;
+import com.easemob.chat.EMChat;
+import com.easemob.chat.EMChatManager;
+import com.easemob.chat.EMMessage;
+import com.easemob.chat.TextMessageBody;
 import com.peer.R;
 import com.peer.fragment.ComeMsgFragment;
 import com.peer.fragment.FriendsFragment;
 import com.peer.fragment.HomeFragment;
 import com.peer.fragment.MyFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+
+import de.greenrobot.event.EventBus;
 
 public class MainActivity extends FragmentActivity{
 	private HomeFragment homefragment;
@@ -29,12 +39,28 @@ public class MainActivity extends FragmentActivity{
 	private LinearLayout find,come,my,friends;
 	private TextView tv_find,tv_come,tv_my,tv_friends;
 	private ImageView findback,comeback,friendsback,myback;
+	
+	private EventBus mBus;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);		
-		init();		
+		setContentView(R.layout.activity_main);	
+		init();
+		registerEMchat();
+		
+	}
+	private void registerEMchat() {
+		// TODO Auto-generated method stub
+		if(EMChatManager.getInstance().isConnected()){
+			NewMessageBroadcastReceiver msgReceiver = new NewMessageBroadcastReceiver();
+			IntentFilter intentFilter = new IntentFilter(EMChatManager.getInstance().getNewMessageBroadcastAction());
+			intentFilter.setPriority(3);
+			registerReceiver(msgReceiver, intentFilter);
+			EMChatManager.getInstance().addConnectionListener(new IMconnectionListner());
+			
+			EMChat.getInstance().setAppInited();
+		}		
 	}
 	private void init() {
 		// TODO Auto-generated method stub
@@ -120,8 +146,6 @@ public class MainActivity extends FragmentActivity{
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// TODO Auto-generated method stub
 		  if (keyCode == KeyEvent.KEYCODE_BACK) {
-//			  	Intent intent1 = new Intent(HomePageActivity.this, FxService.class);
-//				stopService(intent1);
 		        Intent intent = new Intent(Intent.ACTION_MAIN);
 		        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		        intent.addCategory(Intent.CATEGORY_HOME);
@@ -129,5 +153,52 @@ public class MainActivity extends FragmentActivity{
 		        return true;
 		    }
 		    return super.onKeyDown(keyCode, event);
+	}
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+	}
+	private class NewMessageBroadcastReceiver extends BroadcastReceiver {
+	    @Override
+	    public void onReceive(Context context, Intent intent) {
+	        //消息id
+	        String msgId = intent.getStringExtra("msgid");
+	        //发消息的人的username(userid)
+	        String msgFrom = intent.getStringExtra("from");
+	        
+	        //消息类型，文本，图片，语音消息等,这里返回的值为msg.type.ordinal()。
+	        //所以消息type实际为是enum类型
+	        int msgType = intent.getIntExtra("type", 0);
+	        Log.d("main", "new message id:" + msgId + " from:" + msgFrom + " type:" + msgType);
+	        //更方便的方法是通过msgId直接获取整个message
+	        EMMessage message = EMChatManager.getInstance().getMessage(msgId);
+	        TextMessageBody txtBody = (TextMessageBody) message.getBody();
+	        System.out.println("收到的消息---->"+txtBody.getMessage());
+	        abortBroadcast();
+	        }
+	}
+	public class IMconnectionListner implements EMConnectionListener{
+
+		@Override
+		public void onConnected() {
+			// TODO Auto-generated method stub
+			runOnUiThread(new Runnable() {
+				public void run() {
+					homefragment.errorItem.setVisibility(View.GONE);
+				}
+			});
+		}
+
+		@Override
+		public void onDisconnected(int error) {
+			// TODO Auto-generated method stub
+			runOnUiThread(new Runnable() {
+				public void run() {
+					homefragment.errorItem.setVisibility(View.VISIBLE);
+				}
+			});
+		}
+
 	}
 }

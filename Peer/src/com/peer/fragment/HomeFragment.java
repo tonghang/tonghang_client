@@ -22,12 +22,16 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class HomeFragment extends BasicFragment{
 	private TextView createtopic;
 	private LinearLayout search;
 	private PullToRefreshListView mPullrefreshlistview;	
+	public RelativeLayout errorItem;
+	public TextView errorText;
+	
 	List<Map> list=new ArrayList<Map>();
 	HomepageAdapter adapter;
 	@Override
@@ -46,6 +50,8 @@ public class HomeFragment extends BasicFragment{
 	}
 	private void init() {
 		// TODO Auto-generated method stub
+		errorItem = (RelativeLayout) getView().findViewById(R.id.rl_error_item);
+		errorText = (TextView) errorItem.findViewById(R.id.tv_connect_errormsg);
 		
 		search=(LinearLayout)getView().findViewById(R.id.ll_search);		
 		createtopic=(TextView)getView().findViewById(R.id.tv_createtopic);
@@ -54,6 +60,7 @@ public class HomeFragment extends BasicFragment{
 		search.setOnClickListener(this);
 			
 		mPullrefreshlistview=(PullToRefreshListView)getView().findViewById(R.id.pull_refresh_homepage);
+		
 		adapter=new HomepageAdapter(getActivity(),list);
 		mPullrefreshlistview.setAdapter(adapter);
 //		RefreshListner();

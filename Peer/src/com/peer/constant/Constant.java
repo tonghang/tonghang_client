@@ -12,12 +12,22 @@ public interface Constant {
 	/*chatroom type*/
 	public int SINGLECHAT=1;
 	public int MULTICHAT=2;
-	/*search tyoe*/
+	/*msg from*/
+	public int OTHER=0;
+	public int SELF=1;
+	/*login status*/
+	public String LOGINSUCCESS="success";
+	public String LOGINFAIL="fail";
+	/*search type*/
 	public int SEARCHSKILL=1;
 	public int SEARCHUSER=2;
 	/*web server*/
 	 String SERVER_ADDRESS = "72.52.82.223";
 	 int WEB_SERVER_PORT = 3000;
 	 String WEB_SERVER_ADDRESS="http://" + SERVER_ADDRESS+"/";
+	 /*connection status*/
+	 String CONNECTION="connection";
+	 String DISCONNECTION="disconnection";
+	 
 	 
 }

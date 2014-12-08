@@ -13,6 +13,8 @@ interface ISessionManager {
    
     void registerLabel(in List<String> labels, ISessionListener callback);
  	
+ 	void profileUpdate(String nickName, String birthday, String city, String sex, String filename, in byte[] image, ISessionListener callback);
+ 	
  	void addFriends(String targetId,String reason,ISessionListener callback);
  	
  	void refuseAddFriends(String sourceId);
@@ -42,5 +44,7 @@ interface ISessionManager {
  	void forgetPassword(String tagetId);
  	
  	void updatePassword(String tagetId,String newPassword);
+ 	
+ 	void creatTopic(String label,String topic,String userId);
  	
 }

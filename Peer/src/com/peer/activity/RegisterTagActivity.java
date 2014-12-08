@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
@@ -37,11 +38,11 @@ public class RegisterTagActivity extends BasicActivity {
 		tagname3=(EditText)findViewById(R.id.et_tagname_3);
 		tagname4=(EditText)findViewById(R.id.et_tagname_4);
 		tagname5=(EditText)findViewById(R.id.et_tagname_5);
-//		tagname1.addTextChangedListener(watcher);
-//		tagname2.addTextChangedListener(watcher);
+		tagname1.addTextChangedListener(watcher);
+		tagname2.addTextChangedListener(watcher);
 		remind=(TextView)findViewById(R.id.tv_remind);
 		registe_tag=(Button)findViewById(R.id.bt_registe_tag);
-//		registe_tag.setEnabled(false);
+		registe_tag.setEnabled(false);
 		registe_tag.setOnClickListener(this);
 		back=(LinearLayout)findViewById(R.id.ll_back);
 		back.setOnClickListener(this);
@@ -53,7 +54,7 @@ public class RegisterTagActivity extends BasicActivity {
 			// TODO Auto-generated method stub
 			String t1=tagname1.getText().toString().trim();
 			String t2=tagname2.getText().toString().trim();
-			if(!t1.equals("")&&!t2.equals("")){
+			if(!TextUtils.isEmpty(t1)&&!TextUtils.isEmpty(t2)){
 				registe_tag.setEnabled(true);
 			}else{
 				registe_tag.setEnabled(false);
@@ -72,7 +73,7 @@ public class RegisterTagActivity extends BasicActivity {
 			// TODO Auto-generated method stub
 			String t1=tagname1.getText().toString().trim();
 			String t2=tagname2.getText().toString().trim();
-			if(!t1.equals("")&&!t2.equals("")){
+			if(!TextUtils.isEmpty(t1)&&!TextUtils.isEmpty(t2)){
 				registe_tag.setEnabled(true);
 			}else{
 				registe_tag.setEnabled(false);
@@ -85,9 +86,9 @@ public class RegisterTagActivity extends BasicActivity {
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.bt_registe_tag:
-			Intent intent=new Intent(RegisterTagActivity.this,CompleteActivity.class);
-			startActivity(intent);
-//			RegisteTag();
+//			Intent intent=new Intent(RegisterTagActivity.this,CompleteActivity.class);
+//			startActivity(intent);
+			RegisteTag();
 			break;
 		default:
 			break;
@@ -138,10 +139,10 @@ public class RegisterTagActivity extends BasicActivity {
 			}
 			
 			if(!sameTag&&!Tolong){			
-//				Intent intent=new Intent(RegisterTagActivity.this,CompleteActivity.class);
-//				intent.putStringArrayListExtra("tags", list);
-//				remind.setText("");
-//				startActivity(intent);							
+				Intent intent=new Intent(RegisterTagActivity.this,CompleteActivity.class);
+				intent.putStringArrayListExtra("tags", list);
+				remind.setText("");
+				startActivity(intent);							
 			}
 		}else{
 			remind.setText(getResources().getString(R.string.skillnull));

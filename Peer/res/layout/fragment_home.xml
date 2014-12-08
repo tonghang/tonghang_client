@@ -57,6 +57,23 @@
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll"
+        android:layout_below="@+id/ll_head_homepage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black"
+        android:orientation="vertical"
+        >
+
+      <include
+          android:id="@+id/rl_error_item"
+          android:layout_width="320dp"
+          layout="@layout/chat_neterror_item" 
+          android:visibility="gone"/>
+
+    </LinearLayout>
+    
      <com.handmark.pulltorefresh.library.PullToRefreshListView
        android:background="@color/white"
         android:id="@+id/pull_refresh_homepage"
@@ -70,7 +87,7 @@
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
         android:smoothScrollbar="true"
-        android:layout_below="@+id/ll_head_homepage"
+        android:layout_below="@+id/ll"
         /> 
 
 </RelativeLayout>
