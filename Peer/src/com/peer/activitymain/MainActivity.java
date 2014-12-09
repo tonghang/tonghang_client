@@ -20,6 +20,7 @@ import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.TextMessageBody;
 import com.peer.R;
+import com.peer.adapter.ChatHistoryAdapter;
 import com.peer.fragment.ComeMsgFragment;
 import com.peer.fragment.FriendsFragment;
 import com.peer.fragment.HomeFragment;
@@ -175,6 +176,7 @@ public class MainActivity extends FragmentActivity{
 	        EMMessage message = EMChatManager.getInstance().getMessage(msgId);
 	        TextMessageBody txtBody = (TextMessageBody) message.getBody();
 	        System.out.println("收到的消息---->"+txtBody.getMessage());
+	        comemsgfragment.refresh();
 	        abortBroadcast();
 	        }
 	}

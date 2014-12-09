@@ -46,6 +46,7 @@
 	        android:lines="1"
 	        android:ellipsize="end"
 	        android:textColor="@color/black"
+	      
 	        />
 
 	    <TextView
@@ -58,6 +59,7 @@
 	        android:ellipsize="end"
 	        android:textSize="@dimen/textsize_small"
 	        android:textColor="@color/deepgray"
+	        
 	        />
 
 	</RelativeLayout>	
