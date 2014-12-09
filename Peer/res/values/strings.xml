@@ -12,6 +12,7 @@
     <string name="deletefriends">删除好友</string>
     
     <string name="Broken_network_prompt">您的网络未链接，请检查网络设置！</string>
+    <string name="broken_net">与服务器断开连接，发送失败！请重新发送</string>
 	<!-- activity的标题显示文字 -->
     <string name="register_acount">注册账号</string>
     <string name="register_tag">创建秀场</string>

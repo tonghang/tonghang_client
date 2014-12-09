@@ -8,6 +8,9 @@ public interface IM {
 	
 	public boolean register(String email,String password,String username);
 	
-	public void sendMessage(String content,int chattype,String targetId);
+	public void sendMessage(String content,int chattype,String targetId,String imageUrl);
 	
+	public void clearConversation(String targetname);
+	
+	public void loadConversationsandGroups();
 }

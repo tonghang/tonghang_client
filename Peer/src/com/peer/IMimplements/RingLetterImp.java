@@ -4,12 +4,14 @@ import com.easemob.EMCallBack;
 import com.easemob.EMError;
 import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatManager;
+import com.easemob.chat.EMGroupManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.TextMessageBody;
 import com.easemob.chat.EMMessage.ChatType;
 import com.easemob.exceptions.EaseMobException;
 import com.peer.IMinterface.IM;
 import com.peer.constant.Constant;
+import com.peer.util.ChatRoomTypeUtil;
 
 
 /**
@@ -18,8 +20,6 @@ import com.peer.constant.Constant;
  * */
 public class RingLetterImp implements IM{
 	private static RingLetterImp ringletter=null;
-	
-	
 	private RingLetterImp(){
 		
 	}
@@ -84,7 +84,7 @@ public class RingLetterImp implements IM{
 		}
 	}
 	@Override
-	public void sendMessage(String content, int chattype,String targetId) {
+	public void sendMessage(String content, int chattype,String targetId,String imageUrl) {
 		// TODO Auto-generated method stub
 		EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
 		// 如果是群聊，设置chattype,默认是单聊
@@ -93,6 +93,9 @@ public class RingLetterImp implements IM{
 		TextMessageBody txtBody = new TextMessageBody(content);
 		// 设置消息body
 		message.addBody(txtBody);
+		//自定义扩展消息，用于头像
+		message.setAttribute(Constant.IMAGEURL, imageUrl);
+		
 		// 设置要发给谁,用户username或者群聊groupid
 		message.setReceipt(targetId);		
 		try {
@@ -107,6 +110,17 @@ public class RingLetterImp implements IM{
 		// TODO Auto-generated method stub
 		// 通知sdk，UI 已经初始化完毕，注册了相应的receiver和listener, 可以接受broadcast了
 		EMChat.getInstance().setAppInited();
+	}
+	@Override
+	public void loadConversationsandGroups() {
+		// TODO Auto-generated method stub
+		EMGroupManager.getInstance().loadAllGroups();
+		EMChatManager.getInstance().loadAllConversations();
+	}
+	@Override
+	public void clearConversation(String targetname) {
+		// TODO Auto-generated method stub
+		EMChatManager.getInstance().clearConversation(targetname);
 	}
 
 }

@@ -38,9 +38,7 @@ public class ComeMsgFragment extends Fragment {
 	}
 	private void init() {
 		// TODO Auto-generated method stub	
-		list=loadConversationsWithRecentChat();
-		
-		
+		list=loadConversationsWithRecentChat();		
 		ListView_come=(ListView)getView().findViewById(R.id.lv_come);	
 		adapter=new ChatHistoryAdapter(getActivity(),1, list);
 		ListView_come.setAdapter(adapter);

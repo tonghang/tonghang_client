@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.easemob.EMConnectionListener;
 import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatManager;
+import com.easemob.chat.EMGroupManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.TextMessageBody;
 import com.peer.R;
@@ -41,7 +42,7 @@ public class MainActivity extends FragmentActivity{
 	private TextView tv_find,tv_come,tv_my,tv_friends;
 	private ImageView findback,comeback,friendsback,myback;
 	
-	private EventBus mBus;
+	private NewMessageBroadcastReceiver msgReceiver;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -52,9 +53,9 @@ public class MainActivity extends FragmentActivity{
 		
 	}
 	private void registerEMchat() {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub		
 		if(EMChatManager.getInstance().isConnected()){
-			NewMessageBroadcastReceiver msgReceiver = new NewMessageBroadcastReceiver();
+			msgReceiver = new NewMessageBroadcastReceiver();
 			IntentFilter intentFilter = new IntentFilter(EMChatManager.getInstance().getNewMessageBroadcastAction());
 			intentFilter.setPriority(3);
 			registerReceiver(msgReceiver, intentFilter);
@@ -159,6 +160,7 @@ public class MainActivity extends FragmentActivity{
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
+		unregisterReceiver(msgReceiver);
 	}
 	private class NewMessageBroadcastReceiver extends BroadcastReceiver {
 	    @Override

@@ -6,9 +6,6 @@ import com.peer.activitymain.HomePageActivity;
 import com.peer.activitymain.MainActivity;
 import com.peer.client.ISessionListener;
 import com.peer.client.service.SessionListener;
-import com.peer.client.ui.PeerUI;
-import com.peer.constant.Constant;
-import com.peer.event.NewFriensEvent;
 import com.peer.util.ManagerActivity;
 
 import de.greenrobot.event.EventBus;
@@ -97,6 +94,7 @@ public class LoginActivity extends BasicActivity{
 			// TODO Auto-generated method stub
 			
 			RingLetterImp.getInstance().login(paramer[0], paramer[1]);
+			RingLetterImp.getInstance().loadConversationsandGroups();
 			
 			SessionListener callback=new SessionListener();
 //			try {

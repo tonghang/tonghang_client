@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,12 +20,13 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.view.ViewGroup.LayoutParams;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.easemob.chat.EMChatManager;
+import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.TextMessageBody;
-import com.easemob.chat.EMMessage.ChatType;
 import com.peer.R;
 import com.peer.IMimplements.RingLetterImp;
 import com.peer.activity.BasicActivity;
@@ -46,11 +48,12 @@ public class ChatRoomActivity extends BasicActivity {
 	private TextView tv_tagname,nikename,tv_theme,tv_seemember;
 	boolean isFirst=true;
 	private ListView selflistview;
-	private ChatMsgViewAdapter adapter;
-	
+	private ChatMsgViewAdapter adapter;	
 	private List<ChatMsgEntity> msgList=new ArrayList<ChatMsgEntity>();
 	
+	private EMConversation conversation;
 	private NewMessageBroadcastReceiver receiver;
+	private InputMethodManager manager;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -62,32 +65,18 @@ public class ChatRoomActivity extends BasicActivity {
 	
 	private void init() {
 		// TODO Auto-generated method stub
-		titlePopup = new TitlePopup(this, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);	
-		rl_owner=(RelativeLayout)findViewById(R.id.host_imfor);
-		if(ChatRoomTypeUtil.getInstance().getChatroomtype()==Constant.MULTICHAT){
-			titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.exitroom), R.color.white));
-			rl_owner.setVisibility(View.VISIBLE);
-		}else if(ChatRoomTypeUtil.getInstance().getChatroomtype()==Constant.SINGLECHAT){
-			rl_owner.setVisibility(View.GONE);
-			titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.deletemes), R.color.white));
-		}
-		popupwindow();
 		
+		titlePopup = new TitlePopup(this, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);	
+		rl_owner=(RelativeLayout)findViewById(R.id.host_imfor);		
+		popupwindow();
 		ScrollView mScrollView = (ScrollView)findViewById(R.id.scrollContent);  
 		mScrollView.setVerticalScrollBarEnabled(false);  
 		mScrollView.setHorizontalScrollBarEnabled(false);
 		downwindow=(ImageView)findViewById(R.id.im_downview);
-		downwindow.setOnClickListener(this);
-		
-		tv_tagname=(TextView)findViewById(R.id.tv_tagname);
-//		tv_tagname.setText(tagname);
-		
+		downwindow.setOnClickListener(this);		
+		tv_tagname=(TextView)findViewById(R.id.tv_tagname);		
 		nikename=(TextView)findViewById(R.id.tv_nikename);
-//		nikename.setText(ownernike);
-		
 		tv_theme=(TextView)findViewById(R.id.theme_chat);
-//		tv_theme.setText(theme);
-		
 		tv_seemember=(TextView)findViewById(R.id.tv_seemember);
 		tv_seemember.setOnClickListener(this);
 		
@@ -97,6 +86,8 @@ public class ChatRoomActivity extends BasicActivity {
 
 		messagebody=(EditText)findViewById(R.id.et_sendmessage);
 
+		manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		hideKeyboard();
 
 		sendmessage=(Button)findViewById(R.id.btn_send);
 		sendmessage.setOnClickListener(this);	
@@ -104,7 +95,20 @@ public class ChatRoomActivity extends BasicActivity {
 		adapter=new ChatMsgViewAdapter(this, msgList);
 		selflistview.setAdapter(adapter);
 		
-		
+		if(ChatRoomTypeUtil.getInstance().getChatroomtype()==Constant.MULTICHAT){
+			titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.exitroom), R.color.white));
+			rl_owner.setVisibility(View.VISIBLE);
+			tv_tagname.setText(ChatRoomTypeUtil.getInstance().getName());
+			nikename.setText(ChatRoomTypeUtil.getInstance().getNike());
+			tv_theme.setText(ChatRoomTypeUtil.getInstance().getTheme());
+		}else if(ChatRoomTypeUtil.getInstance().getChatroomtype()==Constant.SINGLECHAT){
+			rl_owner.setVisibility(View.GONE);
+			tv_tagname.setText(ChatRoomTypeUtil.getInstance().getName());
+			titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.deletemes), R.color.white));
+		}
+		conversation = EMChatManager.getInstance().getConversation(ChatRoomTypeUtil.getInstance().getName());
+		// 把此会话的未读数置为0
+		conversation.resetUnreadMsgCount();
 	}
 	private void initChatListener() {
 		// TODO Auto-generated method stub
@@ -127,7 +131,10 @@ public class ChatRoomActivity extends BasicActivity {
 				if(item.mTitle.equals(getResources().getString(R.string.exitroom))){
 					finish();
 				}else if(item.mTitle.equals(getResources().getString(R.string.deletemes))){
-					ShowMessage(getResources().getString(R.string.deletechatmsg));
+					RingLetterImp.getInstance().clearConversation(ChatRoomTypeUtil.getInstance().getName());
+					msgList.clear();
+					adapter.notifyDataSetChanged();
+			//		ShowMessage(getResources().getString(R.string.deletechatmsg));
 				}
 					
 			}
@@ -151,10 +158,17 @@ public class ChatRoomActivity extends BasicActivity {
 
 			break;
 		case R.id.btn_send:
+			sendMessage();
+			break;
+		default:
+			break;
+		}
+	}
+	private void sendMessage() {
+		// TODO Auto-generated method stub
+		if(EMChatManager.getInstance().isConnected()){
 			String content=messagebody.getText().toString().trim();			
-			RingLetterImp.getInstance().sendMessage(content, Constant.SINGLECHAT, "yzq");
-			
-			
+			RingLetterImp.getInstance().sendMessage(content, Constant.SINGLECHAT, "yzq","imagurl");			
 			SimpleDateFormat   formatter   =   new   SimpleDateFormat   ("yyyy年MM月dd日   HH:mm:ss     ");     
 			 Date   curDate   =   new   Date(System.currentTimeMillis());//获取当前时间     
 			String   str   =   formatter.format(curDate);     
@@ -164,12 +178,31 @@ public class ChatRoomActivity extends BasicActivity {
 			entity.setMsgType(Constant.SELF);					
 			msgList.add(entity);
 			adapter.notifyDataSetChanged();
-			selflistview.setSelection(selflistview.getCount() - 1);
-			
+			selflistview.setSelection(selflistview.getCount() - 1);		
 			messagebody.setText("");
-			break;
-		default:
-			break;
+		}else{
+			ShowMessage(getResources().getString(R.string.broken_net));
+		}
+	}
+
+	/**
+	 * 隐藏软键盘
+	 */
+	private void hideKeyboard() {
+		if (getWindow().getAttributes().softInputMode != WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {
+			if (getCurrentFocus() != null)
+				manager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+		}
+	}
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		try {
+			unregisterReceiver(receiver);
+			receiver = null;
+		} catch (Exception e) {
 		}
 	}
 	/**
@@ -187,8 +220,7 @@ public class ChatRoomActivity extends BasicActivity {
 			// 收到这个广播的时候，message已经在db和内存里了，可以通过id获取mesage对象
 			EMMessage message = EMChatManager.getInstance().getMessage(msgid);
 			// 如果是群聊消息，获取到group id
-			
-			
+						
 			//获取到消息
 			TextMessageBody txtBody = (TextMessageBody)message.getBody();
 			String msg=txtBody.getMessage();

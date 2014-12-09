@@ -8,8 +8,12 @@ import com.easemob.chat.EMGroupManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.TextMessageBody;
 import com.peer.R;
+import com.peer.activitymain.ChatRoomActivity;
+import com.peer.constant.Constant;
+import com.peer.util.ChatRoomTypeUtil;
 import com.readystatesoftware.viewbadger.BadgeView;
 import android.content.Context;
+import android.content.Intent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,7 +56,7 @@ public class ChatHistoryAdapter extends ArrayAdapter<EMConversation> {
 			// 获取与此用户/群组的会话
 			EMConversation conversation = getItem(position);
 			// 获取用户username或者群组groupid
-			String username = conversation.getUserName();
+			final String username = conversation.getUserName();
 			List<EMGroup> groups = EMGroupManager.getInstance().getAllGroups();
 			EMContact contact = null;
 			boolean isGroup = false;
@@ -88,7 +92,7 @@ public class ChatHistoryAdapter extends ArrayAdapter<EMConversation> {
 					params.rightMargin=(int) mContext.getResources().getDimension(R.dimen.marginsize_around);			
 					viewHolder.click.setLayoutParams(params);
 					
-					BadgeView bd=new BadgeView(mContext, viewHolder.click);
+					final BadgeView bd=new BadgeView(mContext, viewHolder.click);
 					if (conversation.getUnreadMsgCount() > 0) {				
 						bd.setText(String.valueOf(conversation.getUnreadMsgCount()));
 						bd.show();
@@ -101,6 +105,19 @@ public class ChatHistoryAdapter extends ArrayAdapter<EMConversation> {
 //						TextMessageBody txtBody = (TextMessageBody) lastMessage.getBody();
 //						viewHolder.descripe.setText(txtBody.getMessage());
 //					}
+					viewHolder.click.setOnClickListener(new View.OnClickListener() {
+						
+						@Override
+						public void onClick(View arg0) {
+							// TODO Auto-generated method stub
+							bd.hide();
+							ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.SINGLECHAT);
+							ChatRoomTypeUtil.getInstance().setName(username);
+							Intent intent=new Intent(mContext,ChatRoomActivity.class);
+							mContext.startActivity(intent);
+							
+						}
+					});
 					
 					convertView.setTag(viewHolder);
 				}

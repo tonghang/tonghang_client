@@ -28,6 +28,8 @@ public interface Constant {
 	 /*connection status*/
 	 String CONNECTION="connection";
 	 String DISCONNECTION="disconnection";
+	 /*imageurl*/
+	 String IMAGEURL="imageurl";
 	 
 	 
 }
