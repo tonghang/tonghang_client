@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,17 +16,16 @@ import android.widget.TextView;
 import com.easemob.EMConnectionListener;
 import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatManager;
-import com.easemob.chat.EMGroupManager;
 import com.easemob.chat.EMMessage;
-import com.easemob.chat.TextMessageBody;
+import com.easemob.chat.EMMessage.ChatType;
 import com.peer.R;
-import com.peer.adapter.ChatHistoryAdapter;
+import com.peer.IMimplements.RingLetterImp;
 import com.peer.fragment.ComeMsgFragment;
 import com.peer.fragment.FriendsFragment;
 import com.peer.fragment.HomeFragment;
 import com.peer.fragment.MyFragment;
+import com.readystatesoftware.viewbadger.BadgeView;
 
-import de.greenrobot.event.EventBus;
 
 public class MainActivity extends FragmentActivity{
 	private HomeFragment homefragment;
@@ -39,10 +37,11 @@ public class MainActivity extends FragmentActivity{
 	private int currentTabIndex;
 	/* bottom layout*/
 	private LinearLayout find,come,my,friends;
-	private TextView tv_find,tv_come,tv_my,tv_friends;
+	private TextView tv_find,tv_come,tv_my,tv_friends,unreadmsgnum;
 	private ImageView findback,comeback,friendsback,myback;
 	
 	private NewMessageBroadcastReceiver msgReceiver;
+	private BadgeView unredmsg;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -88,6 +87,8 @@ public class MainActivity extends FragmentActivity{
 		tv_come=(TextView)findViewById(R.id.tv_come);
 		tv_friends=(TextView)findViewById(R.id.tv_friends);
 		tv_my=(TextView)findViewById(R.id.tv_my);
+		unreadmsgnum=(TextView)findViewById(R.id.showmessgenum);
+		unredmsg=new BadgeView(this,unreadmsgnum);
 		
 		findback=(ImageView)findViewById(R.id.iv_backfind);
 		comeback=(ImageView)findViewById(R.id.iv_backcome);
@@ -162,6 +163,24 @@ public class MainActivity extends FragmentActivity{
 		super.onDestroy();
 		unregisterReceiver(msgReceiver);
 	}
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		updateUnreadLabel();
+	}
+	/**
+	 * 刷新未读消息数
+	 */
+	public void updateUnreadLabel() {
+		int count = RingLetterImp.getInstance().getUnreadMesTotal();
+		if (count > 0) {
+			unredmsg.setText(String.valueOf(count));
+			unredmsg.show();
+		} else {
+			unredmsg.hide();
+		}
+	}
 	private class NewMessageBroadcastReceiver extends BroadcastReceiver {
 	    @Override
 	    public void onReceive(Context context, Intent intent) {
@@ -169,17 +188,24 @@ public class MainActivity extends FragmentActivity{
 	        String msgId = intent.getStringExtra("msgid");
 	        //发消息的人的username(userid)
 	        String msgFrom = intent.getStringExtra("from");
-	        
-	        //消息类型，文本，图片，语音消息等,这里返回的值为msg.type.ordinal()。
-	        //所以消息type实际为是enum类型
-	        int msgType = intent.getIntExtra("type", 0);
-	        Log.d("main", "new message id:" + msgId + " from:" + msgFrom + " type:" + msgType);
 	        //更方便的方法是通过msgId直接获取整个message
-	        EMMessage message = EMChatManager.getInstance().getMessage(msgId);
-	        TextMessageBody txtBody = (TextMessageBody) message.getBody();
-	        System.out.println("收到的消息---->"+txtBody.getMessage());
-	        comemsgfragment.refresh();
+	        EMMessage message = EMChatManager.getInstance().getMessage(msgId);	       
+	        
+	        if (ChatRoomActivity.activityInstance != null) {
+				if (message.getChatType() == ChatType.GroupChat) {
+					if (message.getTo().equals(ChatRoomActivity.activityInstance.getToChatUsername()))
+						return;
+				} else {
+					if (msgFrom.equals(ChatRoomActivity.activityInstance.getToChatUsername()))
+						return;
+				}
+			}	        
 	        abortBroadcast();
+	        updateUnreadLabel();
+	        if (comemsgfragment!=null) {
+	        	comemsgfragment.refresh();
+			}
+	        
 	        }
 	}
 	public class IMconnectionListner implements EMConnectionListener{

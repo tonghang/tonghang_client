@@ -20,7 +20,7 @@ import com.peer.adapter.ChatHistoryAdapter;
 
 public class ComeMsgFragment extends Fragment {
 	private ListView ListView_come;
-	public static boolean isForeground = true;
+	private boolean hidden;
 	
 	private ChatHistoryAdapter adapter;
 	private List<EMConversation> list;
@@ -44,12 +44,14 @@ public class ComeMsgFragment extends Fragment {
 		ListView_come.setAdapter(adapter);
 	}
 	/**
-	 * 刷新页面
+	 * 刷新页面 待优化。。。
 	 */
 	public void refresh() {
-		list.clear();
+		list.clear();		
 		list.addAll(loadConversationsWithRecentChat());
-		adapter.notifyDataSetChanged();
+		adapter=new ChatHistoryAdapter(getActivity(),1, list);
+		ListView_come.setAdapter(adapter);
+//		adapter.notifyDataSetChanged();
 	}
 	/**
 	 * 获取所有会话
@@ -92,5 +94,21 @@ public class ComeMsgFragment extends Fragment {
 			}
 
 		});
+	}
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		super.onHiddenChanged(hidden);
+		this.hidden = hidden;
+		if (!hidden) {
+			refresh();
+		}
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (!hidden) {
+			refresh();
+		}
 	}
 }

@@ -78,6 +78,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_toRightOf="@+id/linearLayout1"
                     android:lines="1"
+                    android:textSize="@dimen/textsize_small"
                      />
 
             </RelativeLayout>

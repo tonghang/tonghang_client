@@ -13,4 +13,6 @@ public interface IM {
 	public void clearConversation(String targetname);
 	
 	public void loadConversationsandGroups();
+	
+	public int getUnreadMesTotal();
 }

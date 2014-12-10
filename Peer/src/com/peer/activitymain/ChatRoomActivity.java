@@ -27,6 +27,7 @@ import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.TextMessageBody;
+import com.easemob.util.DateUtils;
 import com.peer.R;
 import com.peer.IMimplements.RingLetterImp;
 import com.peer.activity.BasicActivity;
@@ -51,6 +52,8 @@ public class ChatRoomActivity extends BasicActivity {
 	private ChatMsgViewAdapter adapter;	
 	private List<ChatMsgEntity> msgList=new ArrayList<ChatMsgEntity>();
 	
+	private String toChatUsername;
+	public static ChatRoomActivity activityInstance = null;
 	private EMConversation conversation;
 	private NewMessageBroadcastReceiver receiver;
 	private InputMethodManager manager;
@@ -65,7 +68,7 @@ public class ChatRoomActivity extends BasicActivity {
 	
 	private void init() {
 		// TODO Auto-generated method stub
-		
+		toChatUsername=ChatRoomTypeUtil.getInstance().getName();
 		titlePopup = new TitlePopup(this, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);	
 		rl_owner=(RelativeLayout)findViewById(R.id.host_imfor);		
 		popupwindow();
@@ -92,8 +95,7 @@ public class ChatRoomActivity extends BasicActivity {
 		sendmessage=(Button)findViewById(R.id.btn_send);
 		sendmessage.setOnClickListener(this);	
 		
-		adapter=new ChatMsgViewAdapter(this, msgList);
-		selflistview.setAdapter(adapter);
+		
 		
 		if(ChatRoomTypeUtil.getInstance().getChatroomtype()==Constant.MULTICHAT){
 			titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.exitroom), R.color.white));
@@ -107,6 +109,27 @@ public class ChatRoomActivity extends BasicActivity {
 			titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.deletemes), R.color.white));
 		}
 		conversation = EMChatManager.getInstance().getConversation(ChatRoomTypeUtil.getInstance().getName());
+		for(int i=0;i<conversation.getMsgCount();i++){
+			EMMessage message =conversation.getMessage(i);
+			TextMessageBody body=(TextMessageBody) message.getBody();
+			String content=body.getMessage();			
+			String   time =DateUtils.getTimestampString(new Date(message.getMsgTime())) ; 
+				
+			ChatMsgEntity entity=new ChatMsgEntity();
+			entity.setMessage(content);
+			entity.setDate(time);
+			
+			if(message.direct==EMMessage.Direct.SEND){
+				entity.setMsgType(Constant.SELF);
+			}else{
+				entity.setMsgType(Constant.OTHER);
+			}			
+			msgList.add(entity);
+		}
+		
+		adapter=new ChatMsgViewAdapter(this, msgList);
+		selflistview.setAdapter(adapter);
+		selflistview.setSelection(selflistview.getCount() - 1);	
 		// 把此会话的未读数置为0
 		conversation.resetUnreadMsgCount();
 	}
@@ -238,5 +261,8 @@ public class ChatRoomActivity extends BasicActivity {
 			selflistview.setSelection(selflistview.getCount() - 1);
 
 		}
+	}
+	public String getToChatUsername() {
+		return toChatUsername;
 	}
 }

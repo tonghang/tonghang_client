@@ -122,5 +122,12 @@ public class RingLetterImp implements IM{
 		// TODO Auto-generated method stub
 		EMChatManager.getInstance().clearConversation(targetname);
 	}
+	@Override
+	public int getUnreadMesTotal() {
+		// TODO Auto-generated method stub
+		int unreadMsgCountTotal = 0;
+		unreadMsgCountTotal = EMChatManager.getInstance().getUnreadMsgsCount();
+		return unreadMsgCountTotal;
+	}
 
 }

@@ -1,5 +1,6 @@
 package com.peer.adapter;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.easemob.chat.EMContact;
 import com.easemob.chat.EMConversation;
@@ -19,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -29,23 +31,16 @@ import android.widget.LinearLayout.LayoutParams;
 public class ChatHistoryAdapter extends ArrayAdapter<EMConversation> {
 	private Context mContext;
 	private List<EMConversation> mList;
+	private List<EMConversation> copyConversationList;
+	private ConversationFilter conversationFilter;
+	
 	public ChatHistoryAdapter(Context mContext,int textViewResourceId,List<EMConversation> mList){
 		super(mContext, textViewResourceId, mList);		
 		this.mContext=mContext;
 		this.mList=mList;
+		copyConversationList = new ArrayList<EMConversation>();
+		copyConversationList.addAll(mList);
 	}
-
-	@Override
-	public int getCount() {
-		// TODO Auto-generated method stub
-		return mList.size();
-	}
-	@Override
-	public long getItemId(int arg0) {
-		// TODO Auto-generated method stub
-		return arg0;
-	}
-
 	@Override
 	public View getView(int position, View convertView, ViewGroup parentgroup) {
 		// TODO Auto-generated method stub
@@ -92,6 +87,10 @@ public class ChatHistoryAdapter extends ArrayAdapter<EMConversation> {
 					params.rightMargin=(int) mContext.getResources().getDimension(R.dimen.marginsize_around);			
 					viewHolder.click.setLayoutParams(params);
 					
+					viewHolder.nikename.setText(username);
+					EMMessage lastMessage = conversation.getLastMessage();
+					TextMessageBody body=(TextMessageBody) lastMessage.getBody();
+					viewHolder.descripe.setText(body.getMessage());
 					final BadgeView bd=new BadgeView(mContext, viewHolder.click);
 					if (conversation.getUnreadMsgCount() > 0) {				
 						bd.setText(String.valueOf(conversation.getUnreadMsgCount()));
@@ -134,5 +133,81 @@ public class ChatHistoryAdapter extends ArrayAdapter<EMConversation> {
 		ImageView headpic;
 		TextView nikename;
 		TextView descripe;
+	}	
+
+	@Override
+	public Filter getFilter() {
+		if (conversationFilter == null) {
+			conversationFilter = new ConversationFilter(mList);
+		}
+		return conversationFilter;
+	}
+	
+	private class ConversationFilter extends Filter {
+		List<EMConversation> mOriginalValues = null;
+
+		public ConversationFilter(List<EMConversation> mList) {
+			mOriginalValues = mList;
+		}
+
+		@Override
+		protected FilterResults performFiltering(CharSequence prefix) {
+			FilterResults results = new FilterResults();
+
+			if (mOriginalValues == null) {
+				mOriginalValues = new ArrayList<EMConversation>();
+			}
+			if (prefix == null || prefix.length() == 0) {
+				results.values = copyConversationList;
+				results.count = copyConversationList.size();
+			} else {
+				String prefixString = prefix.toString();
+				final int count = mOriginalValues.size();
+				final ArrayList<EMConversation> newValues = new ArrayList<EMConversation>();
+
+				for (int i = 0; i < count; i++) {
+					final EMConversation value = mOriginalValues.get(i);
+					String username = value.getUserName();
+					
+					EMGroup group = EMGroupManager.getInstance().getGroup(username);
+					if(group != null){
+						username = group.getGroupName();
+					}
+
+					// First match against the whole ,non-splitted value
+					if (username.startsWith(prefixString)) {
+						newValues.add(value);
+					} else{
+						  final String[] words = username.split(" ");
+	                        final int wordCount = words.length;
+
+	                        // Start at index 0, in case valueText starts with space(s)
+	                        for (int k = 0; k < wordCount; k++) {
+	                            if (words[k].startsWith(prefixString)) {
+	                                newValues.add(value);
+	                                break;
+	                            }
+	                        }
+					}
+				}
+
+				results.values = newValues;
+				results.count = newValues.size();
+			}
+			return results;
+		}
+
+		@Override
+		protected void publishResults(CharSequence constraint, FilterResults results) {
+			mList.clear();
+			mList.addAll((List<EMConversation>) results.values);
+			if (results.count > 0) {
+				notifyDataSetChanged();
+			} else {
+				notifyDataSetInvalidated();
+			}
+
+		}
+
 	}
 }
