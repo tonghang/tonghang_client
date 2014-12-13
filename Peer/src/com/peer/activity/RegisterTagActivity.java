@@ -38,11 +38,11 @@ public class RegisterTagActivity extends BasicActivity {
 		tagname3=(EditText)findViewById(R.id.et_tagname_3);
 		tagname4=(EditText)findViewById(R.id.et_tagname_4);
 		tagname5=(EditText)findViewById(R.id.et_tagname_5);
-		tagname1.addTextChangedListener(watcher);
-		tagname2.addTextChangedListener(watcher);
+//		tagname1.addTextChangedListener(watcher);
+//		tagname2.addTextChangedListener(watcher);
 		remind=(TextView)findViewById(R.id.tv_remind);
 		registe_tag=(Button)findViewById(R.id.bt_registe_tag);
-		registe_tag.setEnabled(false);
+//		registe_tag.setEnabled(false);
 		registe_tag.setOnClickListener(this);
 		back=(LinearLayout)findViewById(R.id.ll_back);
 		back.setOnClickListener(this);
@@ -86,9 +86,9 @@ public class RegisterTagActivity extends BasicActivity {
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.bt_registe_tag:
-//			Intent intent=new Intent(RegisterTagActivity.this,CompleteActivity.class);
-//			startActivity(intent);
-			RegisteTag();
+			Intent intent=new Intent(RegisterTagActivity.this,CompleteActivity.class);
+			startActivity(intent);
+//			RegisteTag();
 			break;
 		default:
 			break;

@@ -16,7 +16,7 @@ public class LabelDao {
 		sqlhelper=MySQLiteHelper.getInstance(context);
 	}
 	/**
-	 * adduser 方法添加一个用户 参数为要添加用户的信息
+	 * addLabel 添加一个用户标签
 	 * 该方法用于注册时使用
 	 */
 	public void addLabel(String email,List<String> labels){ 
@@ -28,6 +28,31 @@ public class LabelDao {
 			db.insert(TABEL_NAME, null, values);
 		}
 		
+		db.close();
+	}
+	/**
+	 * 更新用户的某个标签
+	 * @param email
+	 * @param oldLabel
+	 * @param newLabel
+	 */
+	public void updateLabel(String email,String oldLabel,String newLabel){
+		SQLiteDatabase db=sqlhelper.getWritableDatabase();		
+		ContentValues values = new ContentValues();
+		values.put(COLUMN_NAME_LABLENAME, newLabel);
+		db.update(TABEL_NAME, values,COLUMN_NAME_EMAIL+"=?and"+ COLUMN_NAME_LABLENAME+"=?", new String[]{email,oldLabel});
+		db.close();
+	}
+	/**
+	 * 删除某个标签
+	 * @param email
+	 * @param targetLabel
+	 */
+	public void deleteLabel(String email,String targetLabel){
+		SQLiteDatabase db=sqlhelper.getWritableDatabase();		
+		ContentValues values = new ContentValues();
+		values.put(COLUMN_NAME_LABLENAME, targetLabel);
+		db.delete(TABEL_NAME, COLUMN_NAME_EMAIL+"=?", new String[]{email});
 		db.close();
 	}
 

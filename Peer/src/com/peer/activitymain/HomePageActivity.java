@@ -38,10 +38,8 @@ public class HomePageActivity extends BasicActivity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_homepage);
 		initdata();
-		init();
-		
-	}	
-	
+		init();		
+	}		
 	private void init() {
 		// TODO Auto-generated method stub
 		tv_find=(TextView)findViewById(R.id.tv_find);

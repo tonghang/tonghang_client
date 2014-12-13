@@ -80,6 +80,9 @@
     <string name="deleteskill">删除技能</string>
     <string name="updateskill">修改技能</string>
     
+    <string name="selectsex">请选择性别</string>
+    <string name="selectbirthday">请选择出生日期</string>
+    <string name="committing">提交中请稍候。。。</string>
     
     
 </resources>

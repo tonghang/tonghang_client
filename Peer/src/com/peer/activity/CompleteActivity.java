@@ -7,6 +7,9 @@ import java.util.Calendar;
 
 import com.peer.R;
 import com.peer.activitymain.HomePageActivity;
+import com.peer.activitymain.MainActivity;
+import com.peer.client.service.SessionListener;
+import com.peer.client.ui.PeerUI;
 import com.peer.util.ManagerActivity;
 import com.peer.util.Tools;
 
@@ -24,6 +27,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -66,10 +70,6 @@ public class CompleteActivity extends BasicActivity{
 		setContentView(R.layout.activity_complete);
 		
 		items = getResources().getStringArray(R.array.pictrue);
-		final Calendar c = Calendar.getInstance();
-		mYear = c.get(Calendar.YEAR);  
-	    mMonth = c.get(Calendar.MONTH);  
-	    mDay = c.get(Calendar.DAY_OF_MONTH);
 		init();
 		setDateTime();		
 	}
@@ -90,6 +90,7 @@ public class CompleteActivity extends BasicActivity{
 		
 		Intent intent=getIntent();
 		tags=intent.getStringArrayListExtra("tags");
+		
 		infor_Layout=(LinearLayout)findViewById(R.id.ll_imfor_complete); 
 		uploadepic=(LinearLayout)findViewById(R.id.ll_uploadepic);
 		uploadepic.setOnClickListener(this);
@@ -132,20 +133,53 @@ public class CompleteActivity extends BasicActivity{
 			SexSelect();
 			break;
 		case R.id.bt_login_complete:
-			Intent intent=new Intent(CompleteActivity.this,HomePageActivity.class);
+			Intent intent=new Intent(CompleteActivity.this,MainActivity.class);
 			startActivity(intent);
 			ManagerActivity.getAppManager().finishActivity(RegisterTagActivity.class);
 			ManagerActivity.getAppManager().finishActivity(CompleteActivity.class);
+			
 //			uploadepic_complete.getDrawingCache();
 //			photo=uploadepic_complete.getDrawingCache();
 //			img=getBitmapByte(photo);
 //			if(checkNetworkState()){
-//				
+//				CommiteToServer();
 //			}else{
-//				ShowMessage("��ǰ����δ���ӣ�������������");
-//			}			
+//				ShowMessage(getResources().getString(R.string.Broken_network_prompt));
+//			}				
 			break;
 		}
+	}
+	private void CommiteToServer() {
+		// TODO Auto-generated method stub
+		if(TextUtils.isEmpty(sex.getText().toString())){
+			remind.setText(getResources().getString(R.string.selectsex));
+			return;
+		}else if(TextUtils.isEmpty(birthday.getText().toString())){
+			remind.setText(getResources().getString(R.string.selectbirthday));
+			return;
+		}else{
+			pd = ProgressDialog.show(CompleteActivity.this,"", getResources().getString(R.string.commit));
+			Thread t=new Thread(){
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					String message = null;
+					int code = 1;
+					SessionListener callback=new SessionListener();
+					try {
+						PeerUI.getInstance().getISessionManager().registerLabel(tags, callback);
+						PeerUI.getInstance().getISessionManager().profileUpdate("",birthday.getText().toString(), cityselect.getText().toString(), sex.getText().toString(),IMAGE_FILE_NAME, img, callback);					
+					} catch (RemoteException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}								
+					if("ok".equals(message)){
+						pd.dismiss();						
+					}
+				}
+			};
+			t.start();
+		}				
 	}
 	private void SexSelect() {
 		// TODO Auto-generated method stub
@@ -284,10 +318,9 @@ public class CompleteActivity extends BasicActivity{
 	
  private void setDateTime(){
        final Calendar c = Calendar.getInstance();  
-       mYear = c.get(Calendar.YEAR);  
-       mMonth = c.get(Calendar.MONTH);  
-       mDay = c.get(Calendar.DAY_OF_MONTH); 
-
+       mYear = 1993;  
+       mMonth = 1;  
+       mDay = 1; 
  }
 
  private void updateDateDisplay(){

@@ -48,13 +48,13 @@ public class RegisterAcountActivity extends BasicActivity{
 		repasword_registe=(EditText)findViewById(R.id.et_repassword_registe);
 		nike_registe=(EditText)findViewById(R.id.et_nike_registe);
 		
-		email_registe.addTextChangedListener(textwatcher);
-		password_registe.addTextChangedListener(textwatcher);
-		repasword_registe.addTextChangedListener(textwatcher);
-		nike_registe.addTextChangedListener(textwatcher);
+//		email_registe.addTextChangedListener(textwatcher);
+//		password_registe.addTextChangedListener(textwatcher);
+//		repasword_registe.addTextChangedListener(textwatcher);
+//		nike_registe.addTextChangedListener(textwatcher);
 		
 		complete_registe=(Button)findViewById(R.id.bt_complete_registe);
-		complete_registe.setEnabled(false);
+//		complete_registe.setEnabled(false);
 		complete_registe.setOnClickListener(this);
 		
 		back=(LinearLayout)findViewById(R.id.ll_back);
@@ -67,12 +67,15 @@ public class RegisterAcountActivity extends BasicActivity{
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.bt_complete_registe:
-			if(checkNetworkState()){
-				Register();
-				finish();
-			}else{
-				ShowMessage(getResources().getString(R.string.Broken_network_prompt));
-			}
+			Intent intent=new Intent(RegisterAcountActivity.this,RegisterTagActivity.class);
+			startActivity(intent);
+			
+//			if(checkNetworkState()){
+//				Register();
+//				finish();
+//			}else{
+//				ShowMessage(getResources().getString(R.string.Broken_network_prompt));
+//			}
 //			String email=email_registe.getText().toString().trim();
 //			String password=password_registe.getText().toString().trim();
 //			

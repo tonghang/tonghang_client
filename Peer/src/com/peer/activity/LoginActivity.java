@@ -111,7 +111,8 @@ public class LoginActivity extends BasicActivity{
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
 				Intent home=new Intent(LoginActivity.this,MainActivity.class);
-				startActivity(home);			
+				startActivity(home);
+				finish();
 		}
 		
 	}

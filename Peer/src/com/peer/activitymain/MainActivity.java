@@ -1,17 +1,22 @@
 package com.peer.activitymain;
 
+import java.util.List;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.text.format.DateUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import com.easemob.EMConnectionListener;
 import com.easemob.chat.EMChat;
@@ -20,6 +25,7 @@ import com.easemob.chat.EMMessage;
 import com.easemob.chat.EMMessage.ChatType;
 import com.peer.R;
 import com.peer.IMimplements.RingLetterImp;
+import com.peer.activity.BasicActivity;
 import com.peer.fragment.ComeMsgFragment;
 import com.peer.fragment.FriendsFragment;
 import com.peer.fragment.HomeFragment;
@@ -27,7 +33,7 @@ import com.peer.fragment.MyFragment;
 import com.readystatesoftware.viewbadger.BadgeView;
 
 
-public class MainActivity extends FragmentActivity{
+public class MainActivity extends BasicActivity{
 	private HomeFragment homefragment;
 	private ComeMsgFragment comemsgfragment;
 	private FriendsFragment friendsfragment;
@@ -99,6 +105,7 @@ public class MainActivity extends FragmentActivity{
 		findback.setImageResource(R.drawable.find_label_press);
 				
 	}
+	
 	public void onTabClicked(View v) {
 		// TODO Auto-generated method stub	
 		tv_find.setTextColor(getResources().getColor(R.color.bottomtextgray));	
@@ -202,6 +209,7 @@ public class MainActivity extends FragmentActivity{
 			}	        
 	        abortBroadcast();
 	        updateUnreadLabel();
+	        notifyNewMessage(message);
 	        if (comemsgfragment!=null) {
 	        	comemsgfragment.refresh();
 			}

@@ -4,24 +4,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.peer.R;
-import com.peer.activitymain.CreatTopicActivity;
-import com.peer.activitymain.HomePageActivity;
-import com.peer.activitymain.SearchActivity;
 import com.peer.adapter.HomepageAdapter;
-
-import android.app.ProgressDialog;
-import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -63,7 +58,33 @@ public class HomeFragment extends BasicFragment{
 		
 		adapter=new HomepageAdapter(getActivity(),list);
 		mPullrefreshlistview.setAdapter(adapter);
-//		RefreshListner();
+		RefreshListner();
+	}
+	private void RefreshListner() {
+		// TODO Auto-generated method stub
+		mPullrefreshlistview.setOnRefreshListener(new OnRefreshListener2<ListView>() {
+			@Override
+			public void onPullDownToRefresh(
+					PullToRefreshBase<ListView> refreshView) {
+				// TODO Auto-generated method stub				
+				String label = DateUtils.formatDateTime(getActivity().getApplicationContext(), System.currentTimeMillis(),
+						DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+				refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+				RefreshTask task=new RefreshTask();
+				task.execute("DownToRefresh");				
+			}
+
+			@Override
+			public void onPullUpToRefresh(
+					PullToRefreshBase<ListView> refreshView) {
+				// TODO Auto-generated method stub				
+				String label = DateUtils.formatDateTime(getActivity().getApplicationContext(), System.currentTimeMillis(),
+						DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);				
+				refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+				RefreshTask task=new RefreshTask();
+				task.execute("UpToRefresh");
+			}			
+		});
 	}
 	private void initdata() {
 		// TODO Auto-generated method stub
@@ -98,5 +119,46 @@ public class HomeFragment extends BasicFragment{
 		for(int i=0;i<10;i++){
 			list.add(m);
 		}	
+	}
+	private class RefreshTask extends AsyncTask<String, String, Void>{
+
+		@Override
+		protected Void doInBackground(String... arg0) {
+			// TODO Auto-generated method stub
+			try {
+				Thread.sleep(500);														
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			if(arg0[0].equals("up")){
+				freshdata();	
+			}else{
+				initdata();
+			}		
+			return null;
+		}
+		@Override
+		protected void onPostExecute(Void result) {
+			// TODO Auto-generated method stub
+			adapter.notifyDataSetChanged();
+			mPullrefreshlistview.onRefreshComplete();
+		}		
+	}
+	private class RecommendTask extends AsyncTask<Void, Void, List>{
+
+		@Override
+		protected List doInBackground(Void... arg0) {
+			// TODO Auto-generated method stub
+			String message = null;
+            int code = 1;
+           
+			return list;
+		}
+		@Override
+		protected void onPostExecute(List result) {
+			// TODO Auto-generated method stub
+		
+		}
 	}
 }
