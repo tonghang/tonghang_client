@@ -26,10 +26,11 @@ public class SessionManager extends ISessionManager.Stub {
 		String message = null;
 		int code=1;
 		try {
-			parts.add("email", email);
-			parts.add("password", password);
+			parts.add("email", "liusong1111@gmail.com");
+			parts.add("password", "aaaaaa");
 			
-			ResponseEntity<Map> result =DataUtil.postJson(Constant.WEB_SERVER_ADDRESS + "login.json", parts, Map.class);			
+			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "login.json"
+					,parts, Map.class);			
 			
 			Map body = result.getBody();
 			
