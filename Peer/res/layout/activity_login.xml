@@ -17,14 +17,15 @@
             android:background="@drawable/logo"
             />
     </LinearLayout>
-    <TextView 
-        android:id="@+id/tv_remind_login"
+    <CheckBox 
+        android:id="@+id/cb_testui"
         android:layout_marginTop="@dimen/margintopsize_middle" 
  	    android:layout_width="match_parent"
  	    android:layout_height="32dp"
- 	    android:gravity="center"
+ 	    android:layout_marginLeft="80dp"
  	    android:textSize="@dimen/textsize_small"
  	    android:textColor="@color/red"
+ 	    android:text="是否调试界面"
  	    />
    <LinearLayout 
         android:layout_marginLeft="16dp"

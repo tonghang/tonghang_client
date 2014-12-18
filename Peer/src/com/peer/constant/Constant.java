@@ -22,7 +22,7 @@ public interface Constant {
 	public int SEARCHSKILL=1;
 	public int SEARCHUSER=2;
 	/*web server*/
-	 String SERVER_ADDRESS = "72.52.82.223";
+	 String SERVER_ADDRESS = "10.0.2.2:3000";
 	 int WEB_SERVER_PORT = 3000;
 	 String WEB_SERVER_ADDRESS="http://" + SERVER_ADDRESS+"/";
 	 /*connection status*/

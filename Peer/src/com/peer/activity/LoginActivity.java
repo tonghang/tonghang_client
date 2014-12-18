@@ -1,15 +1,5 @@
 package com.peer.activity;
 
-import com.peer.R;
-import com.peer.IMimplements.RingLetterImp;
-import com.peer.activitymain.HomePageActivity;
-import com.peer.activitymain.MainActivity;
-import com.peer.client.ISessionListener;
-import com.peer.client.service.SessionListener;
-import com.peer.util.ManagerActivity;
-
-import de.greenrobot.event.EventBus;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,14 +10,27 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.peer.R;
+import com.peer.IMimplements.RingLetterImp;
+import com.peer.activitymain.HomePageActivity;
+import com.peer.activitymain.MainActivity;
+import com.peer.client.service.SessionListener;
+import com.peer.client.ui.PeerUI;
+import com.peer.localDB.LocalStorage;
+import com.peer.util.ManagerActivity;
 
 public class LoginActivity extends BasicActivity{
 	private EditText email_login,password_login;
 	private Button login_login;
-	private TextView remind_login,register_login,forget_login,login_remind;
+	private TextView register_login,forget_login,login_remind;
+	private CheckBox testUI;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -38,7 +41,7 @@ public class LoginActivity extends BasicActivity{
 	}
 	
 	private void init() {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub		
 		email_login=(EditText)findViewById(R.id.et_email_login);
 		password_login=(EditText)findViewById(R.id.et_password_login);
 		
@@ -46,14 +49,38 @@ public class LoginActivity extends BasicActivity{
 		password_login.addTextChangedListener(textwatcher);
 		
 		login_login=(Button)findViewById(R.id.bt_login_login);
-		login_login.setEnabled(false);
+//		login_login.setEnabled(false);
 		register_login=(TextView)findViewById(R.id.tv_register_login);
 		forget_login=(TextView)findViewById(R.id.tv_forgetpasw_login);
-		login_remind=(TextView)findViewById(R.id.tv_remind_login);
+//		login_remind=(TextView)findViewById(R.id.tv_remind_login);
 		
 		register_login.setOnClickListener(this);
 		forget_login.setOnClickListener(this);
 		login_login.setOnClickListener(this);
+		
+		testUI=(CheckBox)findViewById(R.id.cb_testui);
+		if(LocalStorage.getBoolean(this, "istestui")){
+			testUI.setChecked(true);
+			login_login.setEnabled(true);
+		}else{
+			testUI.setChecked(false);
+			login_login.setEnabled(false);
+		}
+		
+		testUI.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton arg0, boolean isChecked) {
+				// TODO Auto-generated method stub
+				if(isChecked){
+					LocalStorage.saveBoolean(LoginActivity.this, "istestui", true);
+					login_login.setEnabled(true);
+				}else{
+					LocalStorage.saveBoolean(LoginActivity.this, "istestui", false);
+					login_login.setEnabled(false);
+				}
+			}
+		});
 	}
 	
 	@Override
@@ -61,20 +88,21 @@ public class LoginActivity extends BasicActivity{
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.bt_login_login:
-//			Intent home=new Intent(LoginActivity.this,MainActivity.class);
-//			startActivity(home);
-//			finish();
-			if(checkNetworkState()){
-				String email=email_login.getText().toString().trim();
-				String password=password_login.getText().toString().trim();
-				
-				LoginTask task=new LoginTask();
-				task.execute(email,password);
+			if(LocalStorage.getBoolean(this, "istestui")){
+				Intent home=new Intent(LoginActivity.this,HomePageActivity.class);
+				startActivity(home);
+				finish();
 			}else{
-				ShowMessage(getResources().getString(R.string.Broken_network_prompt));
-			}
-			
-			
+				if(checkNetworkState()){
+					String email=email_login.getText().toString().trim();
+					String password=password_login.getText().toString().trim();
+					
+					LoginTask task=new LoginTask();
+					task.execute(email,password);
+				}else{
+					ShowMessage(getResources().getString(R.string.Broken_network_prompt));
+				}			
+			}			
 			break;
 		case R.id.tv_register_login:
 			Intent regist=new Intent(LoginActivity.this,RegisterAcountActivity.class);
@@ -93,26 +121,21 @@ public class LoginActivity extends BasicActivity{
 		protected String doInBackground(String... paramer) {
 			// TODO Auto-generated method stub
 			
-			RingLetterImp.getInstance().login(paramer[0], paramer[1]);
-			RingLetterImp.getInstance().loadConversationsandGroups();
-			
+//			RingLetterImp.getInstance().login(paramer[0], paramer[1]);
+//			RingLetterImp.getInstance().loadConversationsandGroups();			
 			SessionListener callback=new SessionListener();
-//			try {
-//				PeerUI.getInstance().getISessionManager().login(paramer[0], paramer[1], callback);
-//			} catch (RemoteException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-			
-			
+			try {
+				PeerUI.getInstance().getISessionManager().login(paramer[0], paramer[1], callback);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
 			return "";
 		}
 		@Override
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
-				Intent home=new Intent(LoginActivity.this,MainActivity.class);
-				startActivity(home);
-				finish();
+				
 		}
 		
 	}
@@ -146,7 +169,6 @@ public class LoginActivity extends BasicActivity{
 			// TODO Auto-generated method stub
 			
 		}
-
 		@Override
 		public void onTextChanged(CharSequence arg0, int arg1, int arg2,
 				int arg3) {

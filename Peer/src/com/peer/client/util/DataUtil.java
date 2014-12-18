@@ -50,6 +50,10 @@ public class DataUtil {
 		return jsonTemplate.postForEntity(url, data, type, uriVariables);
 	}
 	
+	public static void putEntity(String url, Object data,  Object... uriVariables){						
+		 jsonTemplate.put(url, data, uriVariables);
+	}
+	
 	public static <T> ResponseEntity<T> postEntity(String url, Object data, Class<T> type,  Object... uriVariables){						
 		return jsonTemplate.postForEntity(url, data, type, uriVariables);
 	}

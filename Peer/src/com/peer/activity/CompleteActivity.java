@@ -10,6 +10,7 @@ import com.peer.activitymain.HomePageActivity;
 import com.peer.activitymain.MainActivity;
 import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
+import com.peer.localDB.LocalStorage;
 import com.peer.util.ManagerActivity;
 import com.peer.util.Tools;
 
@@ -133,19 +134,21 @@ public class CompleteActivity extends BasicActivity{
 			SexSelect();
 			break;
 		case R.id.bt_login_complete:
-			Intent intent=new Intent(CompleteActivity.this,MainActivity.class);
-			startActivity(intent);
-			ManagerActivity.getAppManager().finishActivity(RegisterTagActivity.class);
-			ManagerActivity.getAppManager().finishActivity(CompleteActivity.class);
-			
-//			uploadepic_complete.getDrawingCache();
-//			photo=uploadepic_complete.getDrawingCache();
-//			img=getBitmapByte(photo);
-//			if(checkNetworkState()){
-//				CommiteToServer();
-//			}else{
-//				ShowMessage(getResources().getString(R.string.Broken_network_prompt));
-//			}				
+			if(LocalStorage.getBoolean(this, "istestui")){
+				Intent intent=new Intent(CompleteActivity.this,HomePageActivity.class);
+				startActivity(intent);
+				ManagerActivity.getAppManager().finishActivity(RegisterTagActivity.class);
+				ManagerActivity.getAppManager().finishActivity(CompleteActivity.class);
+			}else{				
+				uploadepic_complete.getDrawingCache();
+				photo=uploadepic_complete.getDrawingCache();
+				img=getBitmapByte(photo);
+				if(checkNetworkState()){
+					CommiteToServer();
+				}else{
+					ShowMessage(getResources().getString(R.string.Broken_network_prompt));
+				}
+			}				
 			break;
 		}
 	}

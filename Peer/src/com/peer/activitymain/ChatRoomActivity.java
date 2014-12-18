@@ -34,6 +34,7 @@ import com.peer.activity.BasicActivity;
 import com.peer.adapter.ChatMsgViewAdapter;
 import com.peer.constant.Constant;
 import com.peer.entity.ChatMsgEntity;
+import com.peer.localDB.LocalStorage;
 import com.peer.titlepopwindow.ActionItem;
 import com.peer.titlepopwindow.TitlePopup;
 import com.peer.titlepopwindow.TitlePopup.OnItemOnClickListener;
@@ -108,30 +109,37 @@ public class ChatRoomActivity extends BasicActivity {
 			tv_tagname.setText(ChatRoomTypeUtil.getInstance().getName());
 			titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.deletemes), R.color.white));
 		}
-		conversation = EMChatManager.getInstance().getConversation(ChatRoomTypeUtil.getInstance().getName());
-		for(int i=0;i<conversation.getMsgCount();i++){
-			EMMessage message =conversation.getMessage(i);
-			TextMessageBody body=(TextMessageBody) message.getBody();
-			String content=body.getMessage();			
-			String   time =DateUtils.getTimestampString(new Date(message.getMsgTime())) ; 
-				
-			ChatMsgEntity entity=new ChatMsgEntity();
-			entity.setMessage(content);
-			entity.setDate(time);
+		
+		if(LocalStorage.getBoolean(this, "istestui")){
 			
-			if(message.direct==EMMessage.Direct.SEND){
-				entity.setMsgType(Constant.SELF);
-			}else{
-				entity.setMsgType(Constant.OTHER);
-			}			
-			msgList.add(entity);
+		}else{
+			conversation = EMChatManager.getInstance().getConversation(ChatRoomTypeUtil.getInstance().getName());
+			for(int i=0;i<conversation.getMsgCount();i++){
+				EMMessage message =conversation.getMessage(i);
+				TextMessageBody body=(TextMessageBody) message.getBody();
+				String content=body.getMessage();			
+				String   time =DateUtils.getTimestampString(new Date(message.getMsgTime())) ; 
+					
+				ChatMsgEntity entity=new ChatMsgEntity();
+				entity.setMessage(content);
+				entity.setDate(time);
+				
+				if(message.direct==EMMessage.Direct.SEND){
+					entity.setMsgType(Constant.SELF);
+				}else{
+					entity.setMsgType(Constant.OTHER);
+				}			
+				msgList.add(entity);
+			}
+			
+			adapter=new ChatMsgViewAdapter(this, msgList);
+			selflistview.setAdapter(adapter);
+			selflistview.setSelection(selflistview.getCount() - 1);	
+			// 把此会话的未读数置为0
+			conversation.resetUnreadMsgCount();
+			
 		}
 		
-		adapter=new ChatMsgViewAdapter(this, msgList);
-		selflistview.setAdapter(adapter);
-		selflistview.setSelection(selflistview.getCount() - 1);	
-		// 把此会话的未读数置为0
-		conversation.resetUnreadMsgCount();
 	}
 	private void initChatListener() {
 		// TODO Auto-generated method stub

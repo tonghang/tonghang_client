@@ -104,6 +104,8 @@ public class PersonalPageActivity extends BasicActivity {
 				public void onClick(View arg0) {
 					// TODO Auto-generated method stub
 					ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.SINGLECHAT);
+					ChatRoomTypeUtil.getInstance().setName("yzq");
+					
 					Intent intent=new Intent(PersonalPageActivity.this,ChatRoomActivity.class);
 					startActivity(intent);
 				}

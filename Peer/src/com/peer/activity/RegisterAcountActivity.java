@@ -22,6 +22,7 @@ import com.peer.IMimplements.RingLetterImp;
 import com.peer.IMinterface.IM;
 import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
+import com.peer.localDB.LocalStorage;
 
 
 public class RegisterAcountActivity extends BasicActivity{
@@ -46,19 +47,20 @@ public class RegisterAcountActivity extends BasicActivity{
 		email_registe=(EditText)findViewById(R.id.et_email_regist);
 		password_registe=(EditText)findViewById(R.id.et_password_registe);
 		repasword_registe=(EditText)findViewById(R.id.et_repassword_registe);
-		nike_registe=(EditText)findViewById(R.id.et_nike_registe);
-		
-//		email_registe.addTextChangedListener(textwatcher);
-//		password_registe.addTextChangedListener(textwatcher);
-//		repasword_registe.addTextChangedListener(textwatcher);
-//		nike_registe.addTextChangedListener(textwatcher);
-		
+		nike_registe=(EditText)findViewById(R.id.et_nike_registe);	
 		complete_registe=(Button)findViewById(R.id.bt_complete_registe);
-//		complete_registe.setEnabled(false);
-		complete_registe.setOnClickListener(this);
-		
+		complete_registe.setOnClickListener(this);		
 		back=(LinearLayout)findViewById(R.id.ll_back);
 		back.setOnClickListener(this);
+		if(LocalStorage.getBoolean(this, "istestui")){
+			complete_registe.setEnabled(true);
+		}else{			
+			email_registe.addTextChangedListener(textwatcher);
+			password_registe.addTextChangedListener(textwatcher);
+			repasword_registe.addTextChangedListener(textwatcher);
+			nike_registe.addTextChangedListener(textwatcher);
+			complete_registe.setEnabled(false);
+		}
 	}
 	
 	@Override
@@ -67,20 +69,17 @@ public class RegisterAcountActivity extends BasicActivity{
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.bt_complete_registe:
-			Intent intent=new Intent(RegisterAcountActivity.this,RegisterTagActivity.class);
-			startActivity(intent);
-			
-//			if(checkNetworkState()){
-//				Register();
-//				finish();
-//			}else{
-//				ShowMessage(getResources().getString(R.string.Broken_network_prompt));
-//			}
-//			String email=email_registe.getText().toString().trim();
-//			String password=password_registe.getText().toString().trim();
-//			
-//			RegisterTask task=new RegisterTask();
-//			task.execute(email,password);	
+			if(LocalStorage.getBoolean(this, "istestui")){
+				Intent intent=new Intent(RegisterAcountActivity.this,RegisterTagActivity.class);
+				startActivity(intent);	
+			}else{
+				if(checkNetworkState()){
+					Register();
+					finish();
+				}else{
+					ShowMessage(getResources().getString(R.string.Broken_network_prompt));
+				}
+			}	
 			break;
 		default:
 			break;
@@ -145,29 +144,29 @@ public class RegisterAcountActivity extends BasicActivity{
 			complete_registe.setEnabled(false);
 		}
 	}
-	private class RegisterTask extends AsyncTask<String, Boolean, Boolean>{
+	private class RegisterTask extends AsyncTask<String, String, String>{
 
 		@Override
-		protected Boolean doInBackground(String... paramer) {
+		protected String doInBackground(String... paramer) {
 			// TODO Auto-generated method stub	
-			boolean b=RingLetterImp.getInstance().register(paramer[0], paramer[1], "");
+//			boolean b=RingLetterImp.getInstance().register(paramer[0], paramer[1], "");
 			
 			SessionListener callback=new SessionListener();
-//			try {
-//				PeerUI.getInstance().getISessionManager().register(paramer[0], paramer[1], paramer[2], callback);
-//			} catch (RemoteException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}						
-			return b;
+			try {
+				PeerUI.getInstance().getISessionManager().register(paramer[0], paramer[1], paramer[2], callback);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}						
+			return "";
 		}
 		@Override
-		protected void onPostExecute(Boolean result) {
+		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
-			if(result){
-				Intent intent=new Intent(RegisterAcountActivity.this,RegisterTagActivity.class);
-				startActivity(intent);
-			}
+//			if(result){
+//				Intent intent=new Intent(RegisterAcountActivity.this,RegisterTagActivity.class);
+//				startActivity(intent);
+//			}
 		}
 	}
 

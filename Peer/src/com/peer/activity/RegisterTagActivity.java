@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.peer.R;
+import com.peer.localDB.LocalStorage;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,14 +39,21 @@ public class RegisterTagActivity extends BasicActivity {
 		tagname3=(EditText)findViewById(R.id.et_tagname_3);
 		tagname4=(EditText)findViewById(R.id.et_tagname_4);
 		tagname5=(EditText)findViewById(R.id.et_tagname_5);
-//		tagname1.addTextChangedListener(watcher);
-//		tagname2.addTextChangedListener(watcher);
+
 		remind=(TextView)findViewById(R.id.tv_remind);
 		registe_tag=(Button)findViewById(R.id.bt_registe_tag);
-//		registe_tag.setEnabled(false);
+
 		registe_tag.setOnClickListener(this);
 		back=(LinearLayout)findViewById(R.id.ll_back);
 		back.setOnClickListener(this);
+		
+		if(LocalStorage.getBoolean(this, "istestui")){
+			registe_tag.setEnabled(true);
+		}else{			
+			tagname1.addTextChangedListener(watcher);
+			tagname2.addTextChangedListener(watcher);
+			registe_tag.setEnabled(false);
+		}
 	}
 	TextWatcher watcher=new TextWatcher() {
 		
@@ -86,9 +94,12 @@ public class RegisterTagActivity extends BasicActivity {
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.bt_registe_tag:
-			Intent intent=new Intent(RegisterTagActivity.this,CompleteActivity.class);
-			startActivity(intent);
-//			RegisteTag();
+			if(LocalStorage.getBoolean(this, "istestui")){
+				Intent intent=new Intent(RegisterTagActivity.this,CompleteActivity.class);
+				startActivity(intent);
+			}else{
+				RegisteTag();
+			}
 			break;
 		default:
 			break;

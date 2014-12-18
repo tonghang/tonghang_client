@@ -19,19 +19,20 @@ import com.peer.constant.Constant;
 public class SessionManager extends ISessionManager.Stub {
 	/*web login*/
 	@Override
-	public void login(String username, String password,
+	public void login(String email, String password,
 			ISessionListener callback) throws RemoteException {
 		// TODO Auto-generated method stub
 		MultiValueMap<String, String> parts = new LinkedMultiValueMap<String, String>();
 		String message = null;
 		int code=1;
 		try {
-			parts.add("username", username);
+			parts.add("email", email);
 			parts.add("password", password);
 			
-			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "login.json", parts, Map.class);			
+			ResponseEntity<Map> result =DataUtil.postJson(Constant.WEB_SERVER_ADDRESS + "login.json", parts, Map.class);			
 			
 			Map body = result.getBody();
+			
 			if (result.getStatusCode() == HttpStatus.OK) {
 				code=0;
 				Map user=(Map) body.get("user");
@@ -63,7 +64,9 @@ public class SessionManager extends ISessionManager.Stub {
 			parts.add("username", username);
 			parts.add("password", password);
 			
-			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "users.json", parts, Map.class);			
+			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "users.json", parts, Map.class);		
+			
+//			DataUtil.putEntity(Constant.WEB_SERVER_ADDRESS + "users/3.json", parts, Map.class);			
 			
 			Map body = result.getBody();
 			if (result.getStatusCode() == HttpStatus.OK) {
@@ -210,6 +213,28 @@ public class SessionManager extends ISessionManager.Stub {
 	public void creatTopic(String label, String topic, String userId)
 			throws RemoteException {
 		// TODO Auto-generated method stub
-		
+		MultiValueMap<String, String> parts = new LinkedMultiValueMap<String, String>();			
+		String message = null;
+		int code=1;
+		try {
+			parts.add("subject", userId);
+			parts.add("body", topic);
+			parts.add("label_name", label);
+			
+			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "topics.json", parts, Map.class);			
+			Map body = result.getBody();
+			if (result.getStatusCode() == HttpStatus.OK) {
+				code = 0;
+				
+				List list=(List) body.get("labels");
+				
+				message = (String) result.getBody().get("message");
+			} else {
+				message = (String) result.getBody().get("message");
+			}
+		} catch (Exception e) {
+			// TODO log exception
+			e.printStackTrace();
+		}		
 	}
 }
