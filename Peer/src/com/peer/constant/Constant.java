@@ -30,6 +30,9 @@ public interface Constant {
 	 String DISCONNECTION="disconnection";
 	 /*imageurl*/
 	 String IMAGEURL="imageurl";
+	 /*callback status*/
+	 String CALLBACKSUCCESS="success";
+	 String CALLBACKFAIL="fail";
 	 
 	 
 }

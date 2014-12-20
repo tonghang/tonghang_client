@@ -7,7 +7,13 @@ import com.peer.client.User;
 
 interface ISessionManager {
 
-    void login(String username, String password, ISessionListener callback);    
+	String getToken();
+	
+	String getHuanxingUser();
+	
+	String getUserId();
+	
+    com.peer.client.User login(String username, String password, ISessionListener callback);    
     
     void register(String email, String password, String username, ISessionListener callback);
    
@@ -21,7 +27,7 @@ interface ISessionManager {
  	
  	void agreeAddFriends(String sourceId);
  	
- 	void deleteFriends(String targetId,ISessionListener callback);
+ 	void deleteFriends(String targetId);
  	
     List<String> search(String label);
     
@@ -31,15 +37,15 @@ interface ISessionManager {
  	
  //	recommendByPage(int page, ISessionListener callback);
  
- 	List<com.peer.client.User> myFriends(String targetId);
+ 	List<com.peer.client.User> myFriends();
  	
- 	List<com.peer.client.User> newFriends(String targetId);
+ 	List<com.peer.client.User> Invitations();
  	
  	com.peer.client.User personalPage(String targetId);
  	
  	List topicHistory(String targetId);
  	
- 	void chatHistory(String topicId);
+ 	void TopicchatHistory(String topicId);
  	
  	void forgetPassword(String tagetId);
  	

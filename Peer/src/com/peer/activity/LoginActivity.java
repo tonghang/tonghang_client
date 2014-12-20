@@ -20,8 +20,10 @@ import com.peer.R;
 import com.peer.IMimplements.RingLetterImp;
 import com.peer.activitymain.HomePageActivity;
 import com.peer.activitymain.MainActivity;
+import com.peer.client.User;
 import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
+import com.peer.constant.Constant;
 import com.peer.localDB.LocalStorage;
 import com.peer.util.ManagerActivity;
 
@@ -120,21 +122,30 @@ public class LoginActivity extends BasicActivity{
 		@Override
 		protected String doInBackground(String... paramer) {
 			// TODO Auto-generated method stub
-			
-//			RingLetterImp.getInstance().login(paramer[0], paramer[1]);
-//			RingLetterImp.getInstance().loadConversationsandGroups();			
+						
 			SessionListener callback=new SessionListener();
 			try {
-				PeerUI.getInstance().getISessionManager().login(paramer[0], paramer[1], callback);
+				User u=PeerUI.getInstance().getISessionManager().login(paramer[0], paramer[1], callback);
+				if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
+					String huanxinid=PeerUI.getInstance().getISessionManager().getHuanxingUser();
+//					RingLetterImp.getInstance().login(huanxinid, paramer[1]);
+//					RingLetterImp.getInstance().loadConversationsandGroups();					
+//本地存储操作。。。					
+				}
+			
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}			
-			return "";
+			return callback.getMessage();
 		}
 		@Override
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
+//			if(result.equals(Constant.CALLBACKSUCCESS)){
+//				Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+//				startActivity(intent);
+//			}
 				
 		}
 		

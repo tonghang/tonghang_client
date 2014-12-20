@@ -77,12 +77,14 @@ public class User implements Parcelable {
 		this.email = email;
 	}
 
-	public String getNickName() {
+	
+
+	public String getUsername() {
 		return username;
 	}
 
-	public void setNickName(String nickName) {
-		this.username = nickName;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getId() {
@@ -123,6 +125,14 @@ public class User implements Parcelable {
 
 	public void setCity(String city) {
 		this.city = city;
+	}
+
+	public List<String> getLabels() {
+		return labels;
+	}
+
+	public void setLabels(List<String> labels) {
+		this.labels = labels;
 	}
 
 }

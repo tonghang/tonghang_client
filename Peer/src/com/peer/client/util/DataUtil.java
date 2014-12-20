@@ -54,6 +54,10 @@ public class DataUtil {
 		 jsonTemplate.put(url, data, uriVariables);
 	}
 	
+	public static void deleteEntity(String url, Object... uriVariables){						
+		jsonTemplate.delete(url,uriVariables);
+	}
+	
 	public static <T> ResponseEntity<T> postEntity(String url, Object data, Class<T> type,  Object... uriVariables){						
 		return jsonTemplate.postForEntity(url, data, type, uriVariables);
 	}
