@@ -32,7 +32,5 @@ public interface Constant {
 	 String IMAGEURL="imageurl";
 	 /*callback status*/
 	 String CALLBACKSUCCESS="success";
-	 String CALLBACKFAIL="fail";
-	 
-	 
+	 String CALLBACKFAIL="fail"; 	 
 }

@@ -25,6 +25,7 @@ import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
 import com.peer.localDB.LocalStorage;
+import com.peer.localDB.UserDao;
 import com.peer.util.ManagerActivity;
 
 public class LoginActivity extends BasicActivity{
@@ -130,7 +131,21 @@ public class LoginActivity extends BasicActivity{
 					String huanxinid=PeerUI.getInstance().getISessionManager().getHuanxingUser();
 //					RingLetterImp.getInstance().login(huanxinid, paramer[1]);
 //					RingLetterImp.getInstance().loadConversationsandGroups();					
-//本地存储操作。。。					
+//本地存储操作。。。			
+					 LocalStorage.saveString(LoginActivity.this, "email", paramer[0]);
+					 UserDao userdao=new UserDao(LoginActivity.this);
+					 if(userdao.findOne(paramer[0])==null){
+						 com.peer.localDBbean.UserBean userbean=new com.peer.localDBbean.UserBean();
+						 userbean.setEmail(u.getEmail());
+						 userbean.setPassword(paramer[1]);
+						 userbean.setAge(u.getBirthday());
+						 userbean.setCity(u.getCity());
+						 userbean.setNikename(u.getUsername());
+						 userbean.setImage(u.getImage());
+						 userbean.setSex(u.getSex());
+						 userdao.addUser(userbean);
+					 }
+					 
 				}
 			
 			} catch (RemoteException e) {
@@ -142,10 +157,11 @@ public class LoginActivity extends BasicActivity{
 		@Override
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
-//			if(result.equals(Constant.CALLBACKSUCCESS)){
-//				Intent intent=new Intent(LoginActivity.this,MainActivity.class);
-//				startActivity(intent);
-//			}
+			if(result.equals(Constant.CALLBACKSUCCESS)){
+				Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+				startActivity(intent);
+				finish();
+			}
 				
 		}
 		

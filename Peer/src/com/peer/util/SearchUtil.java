@@ -2,6 +2,7 @@ package com.peer.util;
 
 public class SearchUtil {
 	private int searchtype;
+	private String searchname;
 	private static SearchUtil searchutil=null;
 	private SearchUtil(){}
 	public static SearchUtil getInstance(){
@@ -15,6 +16,12 @@ public class SearchUtil {
 	}
 	public void setSearchtype(int searchtype) {
 		this.searchtype = searchtype;
+	}
+	public String getSearchname() {
+		return searchname;
+	}
+	public void setSearchname(String searchname) {
+		this.searchname = searchname;
 	}
 
 }

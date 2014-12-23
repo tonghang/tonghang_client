@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -95,7 +96,12 @@ public class SearchActivity extends BasicActivity {
 			mLayoutClearSearchText.setVisibility(View.GONE);
 			break;
 		case R.id.tv_search_search:
-			Search();
+			String searchtaget=contentsearch.getText().toString().trim();
+			if(TextUtils.isEmpty(searchtaget)){
+				ShowMessage("搜索框不能为空");
+			}else{
+				Search(searchtaget);
+			}						
 			break;
 		case R.id.ll_back:
 			imm.hideSoftInputFromWindow(contentsearch.getWindowToken(), 0);
@@ -126,14 +132,16 @@ public class SearchActivity extends BasicActivity {
 		  searchtag.setTextColor(getResources().getColor(R.color.seachbluetext));
 		  searchtag.setBackgroundDrawable(getResources().getDrawable(R.drawable.searchbordernol));
 		}
-	 private void Search() {
+	 private void Search(String tagetname) {
 			// TODO Auto-generated method stub
 		 imm.hideSoftInputFromWindow(contentsearch.getWindowToken(), 0);
+		 SearchUtil.getInstance().setSearchname(tagetname);
+		 
 		 Intent intent=new Intent(SearchActivity.this, SearchResultActivity.class);
 		 startActivity(intent);
-//			if(isSearchSkill){//判断搜索技能还是搜索用户
+//		 if(isSearchSkill){//判断搜索技能还是搜索用户
 //				
-//			}
+//		 }
 		}
 	 TextWatcher watcher=new TextWatcher() {
 		

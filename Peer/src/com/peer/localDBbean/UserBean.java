@@ -1,7 +1,7 @@
 package com.peer.localDBbean;
 
 
-public class User {
+public class UserBean {
 	private int id;
 	private String image;
 	private String email;
@@ -11,10 +11,10 @@ public class User {
 	private String sex;
 	private String city;
 	private String isfirst;	
-	public User(){
+	public UserBean(){
 		
 	}
-	public User( String email, String password, String nikename,
+	public UserBean( String email, String password, String nikename,
 			String age, String sex, String city) {
 		this.email = email;
 		this.password = password;

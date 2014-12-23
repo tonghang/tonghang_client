@@ -10,6 +10,7 @@ import com.peer.activitymain.HomePageActivity;
 import com.peer.activitymain.MainActivity;
 import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
+import com.peer.constant.Constant;
 import com.peer.localDB.LocalStorage;
 import com.peer.util.ManagerActivity;
 import com.peer.util.Tools;
@@ -166,17 +167,17 @@ public class CompleteActivity extends BasicActivity{
 				@Override
 				public void run() {
 					// TODO Auto-generated method stub
-					String message = null;
-					int code = 1;
 					SessionListener callback=new SessionListener();
 					try {
 						PeerUI.getInstance().getISessionManager().registerLabel(tags, callback);
-						PeerUI.getInstance().getISessionManager().profileUpdate("",birthday.getText().toString(), cityselect.getText().toString(), sex.getText().toString(),IMAGE_FILE_NAME, img, callback);					
+						PeerUI.getInstance().getISessionManager().profileUpdate("",birthday.getText().toString(), cityselect.getText().toString(), sex.getText().toString(),IMAGE_FILE_NAME, img, callback);										
+						
+//						PeerUI.getInstance().getISessionManager().login(username, password, callback);
 					} catch (RemoteException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}								
-					if("ok".equals(message)){
+					if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
 						pd.dismiss();						
 					}
 				}

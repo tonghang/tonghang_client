@@ -1,6 +1,6 @@
 package com.peer.localDB;
 
-import com.peer.localDBbean.User;
+import com.peer.localDBbean.UserBean;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -26,12 +26,18 @@ public class UserDao {
 	 * adduser 方法添加一个用户 参数为要添加用户的信息
 	 * 该方法用于注册时使用
 	 */
-	public void addUser(User u){
+	public void addUser(UserBean u){
 		String email=u.getEmail();
 		String password=u.getPassword();
 		String nikename=u.getNikename(); 
 		SQLiteDatabase db=sqlhelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
+		if(!u.getImage().equals(null)){
+			values.put(COLUMN_NAME_SEX, u.getSex());
+			values.put(COLUMN_NAME_CITY, u.getCity());
+			values.put(COLUMN_NAME_BIRTHDAY, u.getAge());
+			values.put(COLUMN_NAME_IMAGE, u.getImage());
+		}
 		values.put(COLUMN_NAME_EMAIL, email);
 		values.put(COLUMN_NAME_PASSWORD, password);
 		values.put(COLUMN_NAME_NIKENAME, nikename);		
@@ -43,7 +49,7 @@ public class UserDao {
 	 * @param u
 	 * @return
 	 */
-	public boolean updateUser(User u){
+	public boolean updateUser(UserBean u){
 		String email=u.getEmail();
 		String sex=u.getSex();
 		String birthday=u.getAge();
@@ -83,7 +89,7 @@ public class UserDao {
 		Cursor cursor=db.query(TABEL_NAME, new String[]{COLUMN_NAME_PASSWORD}, COLUMN_NAME_EMAIL+"=?" , new String[]{email}, null, null, null, null);		
 		String password=null;
 		while(cursor.moveToNext()){
-			password=cursor.getString(cursor.getColumnIndex("password"));
+			password=cursor.getString(cursor.getColumnIndex(COLUMN_NAME_PASSWORD));
 		}
 		return password;
 	}
@@ -100,6 +106,24 @@ public class UserDao {
 		db.update(TABEL_NAME, values,COLUMN_NAME_EMAIL+"=?" , new String[]{email});
 		db.close();
 		return true;
+	}
+	public UserBean findOne(String email){
+		SQLiteDatabase db=sqlhelper.getReadableDatabase();
+		Cursor cursor=db.query(TABEL_NAME, new String[]{COLUMN_NAME_EMAIL,COLUMN_NAME_PASSWORD,COLUMN_NAME_NIKENAME,COLUMN_NAME_IMAGE,COLUMN_NAME_BIRTHDAY,COLUMN_NAME_SEX,COLUMN_NAME_CITY}, 
+				COLUMN_NAME_EMAIL+"=?" , new String[]{email}, null, null, null, null);		
+		String password=null;
+		UserBean u=null;
+		while(cursor.moveToNext()){
+			u=new UserBean();
+			u.setPassword(cursor.getString(cursor.getColumnIndex(COLUMN_NAME_PASSWORD)));
+			u.setAge(cursor.getString(cursor.getColumnIndex(COLUMN_NAME_BIRTHDAY)));
+			u.setCity(cursor.getString(cursor.getColumnIndex(COLUMN_NAME_CITY)));
+			u.setEmail(cursor.getString(cursor.getColumnIndex(COLUMN_NAME_EMAIL)));
+			u.setImage(cursor.getString(cursor.getColumnIndex(COLUMN_NAME_IMAGE)));
+			u.setSex(cursor.getString(cursor.getColumnIndex(COLUMN_NAME_SEX)));
+			u.setNikename(cursor.getString(cursor.getColumnIndex(COLUMN_NAME_NIKENAME)));		
+		}
+		return u;
 	}
 
 }

@@ -8,7 +8,12 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.peer.R;
+import com.peer.activitymain.CreatTopicActivity;
+import com.peer.activitymain.HomePageActivity;
+import com.peer.activitymain.SearchActivity;
 import com.peer.adapter.HomepageAdapter;
+
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.DateUtils;
@@ -59,6 +64,21 @@ public class HomeFragment extends BasicFragment{
 		adapter=new HomepageAdapter(getActivity(),list);
 		mPullrefreshlistview.setAdapter(adapter);
 		RefreshListner();
+	}
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		super.onClick(v);
+		switch (v.getId()) {
+		case R.id.ll_search:
+			Intent tosearch=new Intent(getActivity(),SearchActivity.class);
+			startActivity(tosearch);			
+			break;
+		case R.id.tv_createtopic:
+			Intent creat=new Intent(getActivity(),CreatTopicActivity.class);
+			startActivity(creat);
+			break;
+		}
 	}
 	private void RefreshListner() {
 		// TODO Auto-generated method stub

@@ -10,7 +10,7 @@ public class User implements Parcelable {
 	private String email;
 	private String username;
 	private String id;
-	
+	private String password;
 	private String image;
 	private String sex;
 	private String birthday;
@@ -35,6 +35,7 @@ public class User implements Parcelable {
 		sex = source.readString();
 		birthday = source.readString();
 		city = source.readString();
+		password=source.readString();
 		labels=new ArrayList<String>();
 		source.readList(labels, getClass().getClassLoader());
 	}  	
@@ -61,6 +62,7 @@ public class User implements Parcelable {
 		// TODO Auto-generated method stub
 		dest.writeString(email);
 		 dest.writeString(id);
+		 dest.writeString(password);
 	        dest.writeString(username);
 	        dest.writeString(image);
 	        dest.writeString(sex);
@@ -133,6 +135,14 @@ public class User implements Parcelable {
 
 	public void setLabels(List<String> labels) {
 		this.labels = labels;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 }

@@ -10,19 +10,19 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	
 	private static final String USERMESSAGE_TABLE_CREATE="CREATE TABLE "
 	+UserDao.TABEL_NAME+"("
-	+UserDao.COLUMN_NAME_ID+"integer primary key autoincrement,"
-	+UserDao.COLUMN_NAME_EMAIL+"text unique,"
-	+UserDao.COLUMN_NAME_PASSWORD+"text,"
-	+UserDao.COLUMN_NAME_NIKENAME+"text,"
-	+UserDao.COLUMN_NAME_IMAGE+"text,"
-	+UserDao.COLUMN_NAME_CITY+"text,"
-	+UserDao.COLUMN_NAME_SEX+"text,"
-	+UserDao.COLUMN_NAME_BIRTHDAY+"text);";
+	+UserDao.COLUMN_NAME_ID+" integer primary key autoincrement,"
+	+UserDao.COLUMN_NAME_EMAIL+" text unique,"
+	+UserDao.COLUMN_NAME_PASSWORD+" text,"
+	+UserDao.COLUMN_NAME_NIKENAME+" text,"
+	+UserDao.COLUMN_NAME_IMAGE+" text,"
+	+UserDao.COLUMN_NAME_CITY+" text,"
+	+UserDao.COLUMN_NAME_SEX+" text,"
+	+UserDao.COLUMN_NAME_BIRTHDAY+" text);";
 	private static final String USERLABEL_TABLE_CREATE="CREATE TABLE "
 			+LabelDao.TABEL_NAME + " ("
-			+LabelDao.COLUMN_NAME_ID+"integer primary key autoincrement,"
-			+LabelDao.COLUMN_NAME_EMAIL+"text,"
-			+LabelDao.COLUMN_NAME_LABLENAME+"text);"
+			+LabelDao.COLUMN_NAME_ID+" integer primary key autoincrement,"
+			+LabelDao.COLUMN_NAME_EMAIL+" text,"
+			+LabelDao.COLUMN_NAME_LABLENAME+" text);"
 			;
 	
 	

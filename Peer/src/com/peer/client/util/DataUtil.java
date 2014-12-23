@@ -25,6 +25,7 @@ public class DataUtil {
 	}
 	private final static RestTemplate formTemplate = new RestTemplate();
 	static {
+		
 		List<HttpMessageConverter<?>> formPartConverters = new ArrayList<HttpMessageConverter<?>>();
 		formPartConverters.add(new ByteArrayHttpMessageConverter());
 		StringHttpMessageConverter formStringHttpMessageConverter = new StringHttpMessageConverter(Charset.forName("UTF-8"));
@@ -51,7 +52,7 @@ public class DataUtil {
 	}
 	
 	public static void putEntity(String url, Object data,  Object... uriVariables){						
-		 jsonTemplate.put(url, data, uriVariables);
+		 formTemplate.put(url, data, uriVariables);
 	}
 	
 	public static void deleteEntity(String url, Object... uriVariables){						

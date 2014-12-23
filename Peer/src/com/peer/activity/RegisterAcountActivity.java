@@ -22,6 +22,7 @@ import com.peer.IMimplements.RingLetterImp;
 import com.peer.IMinterface.IM;
 import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
+import com.peer.constant.Constant;
 import com.peer.localDB.LocalStorage;
 
 
@@ -74,8 +75,7 @@ public class RegisterAcountActivity extends BasicActivity{
 				startActivity(intent);	
 			}else{
 				if(checkNetworkState()){
-					Register();
-					finish();
+					Register();					
 				}else{
 					ShowMessage(getResources().getString(R.string.Broken_network_prompt));
 				}
@@ -148,9 +148,7 @@ public class RegisterAcountActivity extends BasicActivity{
 
 		@Override
 		protected String doInBackground(String... paramer) {
-			// TODO Auto-generated method stub	
-//			boolean b=RingLetterImp.getInstance().register(paramer[0], paramer[1], "");
-			
+			// TODO Auto-generated method stub				
 			SessionListener callback=new SessionListener();
 			try {
 				PeerUI.getInstance().getISessionManager().register(paramer[0], paramer[1], paramer[2], callback);
@@ -158,15 +156,16 @@ public class RegisterAcountActivity extends BasicActivity{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}						
-			return "";
+			return callback.getMessage();
 		}
 		@Override
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
-//			if(result){
-//				Intent intent=new Intent(RegisterAcountActivity.this,RegisterTagActivity.class);
-//				startActivity(intent);
-//			}
+			if(result.equals(Constant.CALLBACKSUCCESS)){
+				Intent intent=new Intent(RegisterAcountActivity.this,RegisterTagActivity.class);
+				startActivity(intent);
+				finish();
+			}
 		}
 	}
 
