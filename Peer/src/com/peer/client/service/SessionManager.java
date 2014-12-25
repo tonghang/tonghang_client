@@ -44,8 +44,8 @@ public class SessionManager extends ISessionManager.Stub {
 		int code=1;
 		User user=null;
 		try {
-			parts.put("email", "wu@gmail.com");
-			parts.put("password", "aaaaaa");			
+			parts.put("email", email);
+			parts.put("password", password);			
 			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "login.json"
 					,parts, Map.class);						
 			Map body = result.getBody();			
@@ -139,7 +139,9 @@ public class SessionManager extends ISessionManager.Stub {
 		int code=1;
 		try {
 			parts.add("birth", birthday);
-			parts.add("username", nickName);
+			if(!nickName.equals("")){
+				parts.add("username", nickName);
+			}			
 			parts.add("sex", sex);
 			parts.add("image", imageFile);
 			parts.add("filename", "sign.jpg");
@@ -170,6 +172,8 @@ public class SessionManager extends ISessionManager.Stub {
 		    restTemplate.setMessageConverters(partConverters);
 						
 			ResponseEntity<Map> response=restTemplate.exchange(Constant.WEB_SERVER_ADDRESS + "users/"+userid+".json", HttpMethod.PUT, requestEntity, Map.class);
+			
+			
 			response.getBody();			
 			
 	//		DataUtil.putEntity(Constant.WEB_SERVER_ADDRESS + "users/"+userid+".json", parts, Map.class);
@@ -197,7 +201,7 @@ public class SessionManager extends ISessionManager.Stub {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		
+		callback.onCallBack(code, message);
 	}
 	/* delete friend*/
 	@Override
@@ -212,24 +216,31 @@ public class SessionManager extends ISessionManager.Stub {
 	}
 	/*search label 通过测试*/
 	@Override
-	public List<String> search(String label)
+	public List<String> search(String label,ISessionListener callback)
 			throws RemoteException {
 		// TODO Auto-generated method stub
 		List<String> mlist=new ArrayList<String>();
+		String message = null;
+		int code=1;	
 		try {
 			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"labels.json?q="+label,List.class);
-			List list= result.getBody();
+			List list= result.getBody();					
 			if (result.getStatusCode() == HttpStatus.OK) {
 				for(int i=0;i<list.size();i++){
 					Map m=(Map) list.get(i);
 					m.get("label_name");
 					mlist.add((String)m.get("label_name"));
 				}
+				code=0;
+				message=Constant.CALLBACKSUCCESS;
+			}else{
+				message=Constant.CALLBACKFAIL;
 			}
 		} catch (Exception e) {
 			// TODO log exception
 			e.printStackTrace();
 		}
+		callback.onCallBack(code, message);
 		return mlist;
 	}
 	/*refuse someone add as friend*/
@@ -258,20 +269,71 @@ public class SessionManager extends ISessionManager.Stub {
 	}
 	/*search user by label*/
 	@Override
-	public List<User> searchUserByLabel(String label) throws RemoteException {
+	public List<User> searchUserByLabel(String label,ISessionListener callback) throws RemoteException {
 		// TODO Auto-generated method stub
-		ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"users.json?q="+label,List.class);
-		List list= result.getBody();
-		
-		
-		return null;
+		List<User> mlist=new ArrayList<User>();
+		String message = null;
+		int code=1;
+		try {
+			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"users.json?q="+label,List.class);
+			List<Map> list= result.getBody();
+			
+			if(result.getStatusCode()==HttpStatus.OK){
+				for(Map m:list){
+					User user=new User();
+					user.setEmail((String)m.get("email"));
+					user.setUsername((String)m.get("username"));
+					user.setImage((String)m.get("image"));
+					user.setId(String.valueOf(m.get("id")));
+					user.setBirthday((String)m.get("birth"));
+					user.setLabels((List)m.get("labels"));
+					mlist.add(user);
+				}
+				code=0;
+				message=Constant.CALLBACKSUCCESS;
+			}else{
+				message=Constant.CALLBACKFAIL;
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		callback.onCallBack(code, message);	
+		return mlist;
 	}
 	/*search user by nike*/
 	@Override
-	public List<User> searchUsersByNickName(String username)
+	public List<User> searchUsersByNickName(String username,ISessionListener callback)
 			throws RemoteException {
 		// TODO Auto-generated method stub
-		return null;
+		List<User> mlist=new ArrayList<User>();
+
+		String message = null;
+		int code=1;
+		try{
+			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"users.json?q="+username+"",List.class);
+			List<Map> list= result.getBody();			
+			
+			if(result.getStatusCode()==HttpStatus.OK){
+				for(Map m:list){
+					User user=new User();
+					user.setEmail((String)m.get("email"));
+					user.setUsername((String)m.get("username"));
+					user.setImage((String)m.get("image"));
+					user.setId(String.valueOf(m.get("id")));
+					user.setBirthday((String)m.get("birth"));
+					user.setLabels((List)m.get("labels"));
+					mlist.add(user);
+				}
+				code=0;
+				message=Constant.CALLBACKSUCCESS;
+			}else{
+				message=Constant.CALLBACKFAIL;
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		callback.onCallBack(code, message);
+		return mlist;
 	}
 	/*get all friends*/
 	@Override
@@ -382,23 +444,42 @@ public class SessionManager extends ISessionManager.Stub {
 //		headers.set("x-token", token);
 //		RestTemplate test=new RestTemplate();
 		
-		Map<String, String> parts = new HashMap<String, String>();			
+		MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();			
 		String message = null;
 		int code=1;
 		try {
-			parts.put("body", topic);
-			parts.put("label_name", label);			
-			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "topics.json", parts, Map.class);			
-			Map body = result.getBody();
-			if (result.getStatusCode() == HttpStatus.OK) {
-				code = 0;
-				
-				List list=(List) body.get("labels");
-				
-//				message = (String) result.getBody().get("message");
-			} else {
-//				message = (String) result.getBody().get("message");
-			}
+			parts.add("subject", "这个事新建的话题");
+			parts.add("label_name", "美食");	
+			
+			HttpHeaders headers=new HttpHeaders();
+			Map<String, String> m=new HashMap<String, String>();
+			m.put("Content-Type", "application/json");
+			m.put("x-token", token);
+			headers.setAll(m);
+			
+//			headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+			
+			HttpEntity<MultiValueMap<String, Object>> requestEntity=
+					new HttpEntity<MultiValueMap<String,Object>>(parts,headers);			
+			RestTemplate restTemplate=new RestTemplate(true);	
+			
+			restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+			restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
+			restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
+						
+			ResponseEntity<Map> response=restTemplate.exchange(Constant.WEB_SERVER_ADDRESS + "topics.json", HttpMethod.POST, requestEntity, Map.class);
+			
+			
+			
+//			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "topics.json", parts, Map.class);			
+//			Map body = result.getBody();
+//			if (result.getStatusCode() == HttpStatus.OK) {
+//				code = 0;				
+//				List list=(List) body.get("labels");				
+////				message = (String) result.getBody().get("message");
+//			} else {
+////				message = (String) result.getBody().get("message");
+//			}
 		} catch (Exception e) {
 			// TODO log exception
 			e.printStackTrace();

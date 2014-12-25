@@ -1,5 +1,8 @@
 package com.peer.activitymain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -11,6 +14,8 @@ import com.peer.R;
 import com.peer.activity.BasicActivity;
 import com.peer.adapter.SeachResultAdapter;
 import com.peer.adapter.SearchSkillAdapter;
+import com.peer.client.ISessionListener;
+import com.peer.client.User;
 import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
@@ -21,6 +26,8 @@ public class SearchResultActivity extends BasicActivity {
 	private ListView mlistview;
 	private TextView title;
 	private LinearLayout back;
+	private List<String> labellist;
+	private List<User> userlist;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -30,6 +37,7 @@ public class SearchResultActivity extends BasicActivity {
 	}
 	private void init() {
 		// TODO Auto-generated method stub
+//		labellist=new ArrayList<String>();
 		String searchtarget=SearchUtil.getInstance().getSearchname();
 		title=(TextView)findViewById(R.id.tv_title);
 		title.setText(getResources().getString(R.string.searchresult));
@@ -37,24 +45,26 @@ public class SearchResultActivity extends BasicActivity {
 		back.setOnClickListener(this);
 		mlistview=(ListView)findViewById(R.id.lv_searchresult);
 		if(LocalStorage.getBoolean(this, "istestui")){
-			if(SearchUtil.getInstance().getSearchtype()==Constant.SEARCHSKILL){				
-				SearchSkillAdapter adapter=new SearchSkillAdapter(this);
-				mlistview.setAdapter(adapter);
-			}else if(SearchUtil.getInstance().getSearchtype()==Constant.SEARCHUSER){
-				SeachResultAdapter adapter=new SeachResultAdapter(this);
-				mlistview.setAdapter(adapter);
-			}	
+//			if(SearchUtil.getInstance().getSearchtype()==Constant.SEARCHSKILL){				
+//				SearchSkillAdapter adapter=new SearchSkillAdapter(this,labellist);
+//				mlistview.setAdapter(adapter);
+//			}else if(SearchUtil.getInstance().getSearchtype()==Constant.SEARCHUSER){
+//				SeachResultAdapter adapter=new SeachResultAdapter(this);
+//				mlistview.setAdapter(adapter);
+//			}	
 		}else{
 			if(SearchUtil.getInstance().getSearchtype()==Constant.SEARCHSKILL){				
 				SearchTask task=new SearchTask();
 				task.execute(searchtarget);
 				
-//				SearchSkillAdapter adapter=new SearchSkillAdapter(this);
-//				mlistview.setAdapter(adapter);
 			}else if(SearchUtil.getInstance().getSearchtype()==Constant.SEARCHUSER){
-				SeachResultAdapter adapter=new SeachResultAdapter(this);
-				mlistview.setAdapter(adapter);
-			}	
+				SearchTask task=new SearchTask();
+				task.execute(searchtarget);
+			}else if(SearchUtil.getInstance().getSearchtype()==Constant.SEARCHUSERBYLABEL){
+				SearchTask task=new SearchTask();
+				task.execute(searchtarget);
+				
+			}
 		}
 			
 	}
@@ -63,24 +73,40 @@ public class SearchResultActivity extends BasicActivity {
 		@Override
 		protected String doInBackground(String... paramer) {
 			// TODO Auto-generated method stub	
-//			boolean b=RingLetterImp.getInstance().register(paramer[0], paramer[1], "");
-			
 			SessionListener callback=new SessionListener();
 			try {
-				PeerUI.getInstance().getISessionManager().search(paramer[0]);
+				if(SearchUtil.getInstance().getSearchtype()==Constant.SEARCHUSER){
+					userlist=PeerUI.getInstance().getISessionManager().searchUsersByNickName(paramer[0],callback);
+				}else if(SearchUtil.getInstance().getSearchtype()==Constant.SEARCHSKILL){
+					labellist=PeerUI.getInstance().getISessionManager().search(paramer[0],callback);
+				}else if(SearchUtil.getInstance().getSearchtype()==Constant.SEARCHUSERBYLABEL){
+					userlist=PeerUI.getInstance().getISessionManager().searchUserByLabel(paramer[0],callback);
+				}
+				
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}						
-			return "";
+			return callback.getMessage();
 		}
 		@Override
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
-//			if(result){
-//				Intent intent=new Intent(RegisterAcountActivity.this,RegisterTagActivity.class);
-//				startActivity(intent);
-//			}
+			if(result.equals(Constant.CALLBACKSUCCESS)){
+				if(SearchUtil.getInstance().getSearchtype()==Constant.SEARCHSKILL){				
+					SearchSkillAdapter adapter=new SearchSkillAdapter(SearchResultActivity.this,labellist);
+					mlistview.setAdapter(adapter);
+				}else if(SearchUtil.getInstance().getSearchtype()==Constant.SEARCHUSER){
+					SeachResultAdapter adapter=new SeachResultAdapter(SearchResultActivity.this,userlist);
+					mlistview.setAdapter(adapter);
+				}else if(SearchUtil.getInstance().getSearchtype()==Constant.SEARCHUSERBYLABEL){
+					SeachResultAdapter adapter=new SeachResultAdapter(SearchResultActivity.this,userlist);
+					mlistview.setAdapter(adapter);
+				}
+			}else{
+				ShowMessage("未搜索到你想查找的内容！");
+			}
+			
 		}
 	}
 	

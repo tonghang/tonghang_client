@@ -1,5 +1,6 @@
 package com.peer.adapter;
 
+import java.util.List;
 import java.util.Random;
 
 import com.peer.R;
@@ -21,15 +22,21 @@ import android.widget.TextView;
 
 public class SearchSkillAdapter extends BaseAdapter {
 	private Context mContext;
+	private List<String> mlist;
 	
-	public SearchSkillAdapter(Context mContext){
+	public SearchSkillAdapter(Context mContext,List<String> list){
 		this.mContext=mContext;
+		this.mlist=list;
 	}
 
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
-		return 8;
+		if(mlist.size()%2==1){
+			return mlist.size()/2+1;
+		}else{
+			return mlist.size()/2;
+		}
 	}
 
 	@Override
@@ -56,8 +63,17 @@ public class SearchSkillAdapter extends BaseAdapter {
 			Random random=new Random();
 			int r=random.nextInt(255);
 			int g=random.nextInt(255);
-			int b=random.nextInt(255);
+			int b=random.nextInt(255);			
 			
+			int weizhi = 0;
+			if(position==0){
+				weizhi=0;
+			}else{
+				if(weizhi<mlist.size()-1){
+					weizhi=position+2;
+				}			
+			}			
+			viewHolder.view1.setText(mlist.get(weizhi));						
 			viewHolder.view1.setBackgroundResource(R.drawable.searchskillborder);		
 			GradientDrawable myGrad = (GradientDrawable)viewHolder.view1.getBackground();
 			myGrad.setColor(Color.rgb(r, g, b));
@@ -66,29 +82,34 @@ public class SearchSkillAdapter extends BaseAdapter {
 				@Override
 				public void onClick(View arg0) {
 					// TODO Auto-generated method stub
-					SearchUtil.getInstance().setSearchtype(Constant.SEARCHUSER);
+					SearchUtil.getInstance().setSearchtype(Constant.SEARCHUSERBYLABEL);
 					Intent intent=new Intent(mContext,SearchResultActivity.class);
 					mContext.startActivity(intent);
-					
+					((Activity) mContext).finish();
 				}
 			});			
 			int r2=random.nextInt(255);
 			int g2=random.nextInt(255);
 			int b2=random.nextInt(255);
-			viewHolder.view2.setBackgroundResource(R.drawable.searchskillborder);	
-			GradientDrawable myGrad2 = (GradientDrawable)viewHolder.view2.getBackground();
-			myGrad.setColor(Color.rgb(r2, g2, b2));
-			viewHolder.view2.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View arg0) {
-					// TODO Auto-generated method stub
-					SearchUtil.getInstance().setSearchtype(Constant.SEARCHUSER);
-					Intent intent=new Intent(mContext,SearchResultActivity.class);
-					mContext.startActivity(intent);
+			if(weizhi+1<mlist.size()){
+				viewHolder.view2.setText(mlist.get(weizhi+1));		
+				viewHolder.view2.setBackgroundResource(R.drawable.searchskillborder);	
+				GradientDrawable myGrad2 = (GradientDrawable)viewHolder.view2.getBackground();
+				myGrad.setColor(Color.rgb(r2, g2, b2));
+				viewHolder.view2.setOnClickListener(new View.OnClickListener() {
 					
-				}
-			});
+					@Override
+					public void onClick(View arg0) {
+						// TODO Auto-generated method stub
+						SearchUtil.getInstance().setSearchtype(Constant.SEARCHUSERBYLABEL);
+						Intent intent=new Intent(mContext,SearchResultActivity.class);
+						mContext.startActivity(intent);						
+						((Activity) mContext).finish();
+					}
+				});
+			}else{
+				viewHolder.view2.setVisibility(View.INVISIBLE);
+			}
 			
 			convertView.setTag(viewHolder);
 		}else{

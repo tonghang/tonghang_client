@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Map;
 import com.peer.R;
 import com.peer.activitymain.PersonalPageActivity;
+import com.peer.client.User;
 import com.peer.constant.Constant;
 import com.peer.util.PersonpageUtil;
+import com.peer.widgetutil.LoadImageUtil;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,16 +20,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class SeachResultAdapter extends BaseAdapter {
-	private List<Map> mlist;
+	private List<User> mlist;
 	private Context mContext;
-	public SeachResultAdapter(Context mContext){
+	public SeachResultAdapter(Context mContext,List<User> list){
 		this.mContext=mContext;
-		
+		this.mlist=list;
+		LoadImageUtil.initImageLoader(mContext);
 	}
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
-		return 10;
+		return mlist.size();
 	}
 
 	@Override
@@ -56,9 +59,20 @@ public class SeachResultAdapter extends BaseAdapter {
 			convertView.setTag(viewHolder);
 		}else {
 			viewHolder = (ViewHolder) convertView.getTag();
+		}		
+		LoadImageUtil.imageLoader.displayImage(mlist.get(position).getImage(), viewHolder.headpic,LoadImageUtil.options);
+		viewHolder.nikename.setText(mlist.get(position).getUsername());
+		List<String> list=mlist.get(position).getLabels();
+		String labels="";
+		for(String s:list){
+			if(labels.equals("")){
+				labels=s;	
+			}else{
+				labels=labels+","+s;
+			}			
 		}
-		viewHolder.nikename.setText("昵称");
-		viewHolder.descripe.setText("标签1,标签2,标签3,标签4,标签5");	
+		
+		viewHolder.descripe.setText(labels);	
 		viewHolder.click.setOnClickListener(new View.OnClickListener() {			
 			@Override
 			public void onClick(View arg0) {

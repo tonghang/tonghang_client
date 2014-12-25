@@ -29,11 +29,11 @@ interface ISessionManager {
  	
  	void deleteFriends(String targetId);
  	
-    List<String> search(String label);
+    List<String> search(String label,ISessionListener callback);
     
-    List<com.peer.client.User> searchUserByLabel(String label);
+    List<com.peer.client.User> searchUserByLabel(String label,ISessionListener callback);
     
-    List<com.peer.client.User> searchUsersByNickName(String username);
+    List<com.peer.client.User> searchUsersByNickName(String username,ISessionListener callback);
  	
  //	recommendByPage(int page, ISessionListener callback);
  

@@ -143,7 +143,7 @@ public class LoginActivity extends BasicActivity{
 						 userbean.setNikename(u.getUsername());
 						 userbean.setImage(u.getImage());
 						 userbean.setSex(u.getSex());
-						 userdao.addUser(userbean);
+//						 userdao.addUser(userbean);
 					 }
 					 
 				}

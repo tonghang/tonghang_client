@@ -32,7 +32,7 @@ public class UserDao {
 		String nikename=u.getNikename(); 
 		SQLiteDatabase db=sqlhelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
-		if(!u.getImage().equals(null)){
+		if(!(u.getImage()==null)){
 			values.put(COLUMN_NAME_SEX, u.getSex());
 			values.put(COLUMN_NAME_CITY, u.getCity());
 			values.put(COLUMN_NAME_BIRTHDAY, u.getAge());

@@ -21,6 +21,7 @@ public interface Constant {
 	/*search type*/
 	public int SEARCHSKILL=1;
 	public int SEARCHUSER=2;
+	public int SEARCHUSERBYLABEL=3;
 	/*web server*/
 	 String SERVER_ADDRESS = "10.0.2.2:3000";
 	 int WEB_SERVER_PORT = 3000;
