@@ -7,11 +7,19 @@ import java.io.File;
 import java.util.Calendar;
 
 import com.peer.R;
+import com.peer.client.service.SessionListener;
+import com.peer.client.ui.PeerUI;
+import com.peer.constant.Constant;
+import com.peer.localDB.LocalStorage;
+import com.peer.localDB.UserDao;
+import com.peer.localDBbean.UserBean;
 import com.peer.util.Tools;
+import com.peer.widgetutil.LoadImageUtil;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -24,6 +32,7 @@ import android.os.Message;
 import android.os.RemoteException;
 import android.provider.MediaStore;
 import android.sax.StartElementListener;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -38,7 +47,7 @@ public class PersonalMessageActivity extends BasicActivity implements OnClickLis
 	private ImageView headpic_personMSG;
 	private LinearLayout back,head,updatenike;
 	private Button update;
-	
+	private ProgressDialog pd;
 	private String[] items;
 	
 	private static final int CYTYSELECT=3;
@@ -63,10 +72,6 @@ public class PersonalMessageActivity extends BasicActivity implements OnClickLis
 		setContentView(R.layout.activity_personmessage);
 		init();
 		items = getResources().getStringArray(R.array.pictrue);
-		final Calendar c = Calendar.getInstance();
-		 mYear = c.get(Calendar.YEAR);  
-	     mMonth = c.get(Calendar.MONTH);  
-	     mDay = c.get(Calendar.DAY_OF_MONTH);
 		setDateTime();	
 	}
 
@@ -102,14 +107,14 @@ public class PersonalMessageActivity extends BasicActivity implements OnClickLis
 		update=(Button)findViewById(R.id.bt_update);
 		update.setOnClickListener(this);
 		
-//		String email=LocalStorage.getString(this, "email");
-//		UserDaoImp userdao=new UserDaoImp(this);
-//		User u=userdao.findOne(email);
-//		sex.setText(u.getSex());
-//		birthday.setText(u.getAge());
-//		address.setText(u.getCity());
-//		nikename.setText(u.getNikename());
-//		LoadImageUtil.imageLoader.displayImage(u.getImage(), headpic_personMSG, LoadImageUtil.options);
+		String email=LocalStorage.getString(this,Constant.EMAIL);
+		UserDao userdao=new UserDao(this);
+		UserBean u=userdao.findOne(email);
+		sex.setText(u.getSex());
+		birthday.setText(u.getAge());
+		address.setText(u.getCity());
+		nikename.setText(u.getNikename());
+		LoadImageUtil.imageLoader.displayImage(u.getImage(), headpic_personMSG, LoadImageUtil.options);
 				
 	}
 
@@ -140,7 +145,7 @@ public class PersonalMessageActivity extends BasicActivity implements OnClickLis
 			photo=headpic_personMSG.getDrawingCache();
 			img=getBitmapByte(photo);
 			if(checkNetworkState()){
-				
+				CommiteToServer();
 			}else{
 				ShowMessage(getResources().getString(R.string.Broken_network_prompt));
 			}			
@@ -149,7 +154,27 @@ public class PersonalMessageActivity extends BasicActivity implements OnClickLis
 			break;
 		}
 	}
-	
+	private void CommiteToServer() {
+		// TODO Auto-generated method stub
+			pd = ProgressDialog.show(PersonalMessageActivity.this,nikename.getText().toString().trim(), getResources().getString(R.string.committing));
+			Thread t=new Thread(){
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					SessionListener callback=new SessionListener();
+					try {
+						PeerUI.getInstance().getISessionManager().profileUpdate("",birthday.getText().toString(), address.getText().toString(), sex.getText().toString(),IMAGE_FILE_NAME, img, callback);										
+					} catch (RemoteException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}								
+					if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
+						pd.dismiss();						
+					}
+				}
+			};
+			t.start();				
+	}
 	
 	private void SexSelect() {
 		// TODO Auto-generated method stub
@@ -294,19 +319,16 @@ public class PersonalMessageActivity extends BasicActivity implements OnClickLis
 	    };
 	private void ChangBirthday() {
 		// TODO Auto-generated method stub
-		 Message msg = new Message(); 
-         
-         msg.what = SHOW_DATAPICK;  
-          
+		 Message msg = new Message();         
+         msg.what = SHOW_DATAPICK;            
          dateandtimeHandler.sendMessage(msg);
          }
 	
  private void setDateTime(){
-       final Calendar c = Calendar.getInstance();  
-       mYear = c.get(Calendar.YEAR);  
-       mMonth = c.get(Calendar.MONTH);  
-       mDay = c.get(Calendar.DAY_OF_MONTH); 
-//       updateDateDisplay(); 
+	 final Calendar c = Calendar.getInstance();  
+     mYear = 1993;  
+     mMonth = 1;  
+     mDay = 1; 
  }
 
  private void updateDateDisplay(){

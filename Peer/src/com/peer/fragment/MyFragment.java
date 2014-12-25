@@ -1,6 +1,12 @@
 package com.peer.fragment;
 
 import com.peer.R;
+import com.peer.activity.LoginActivity;
+import com.peer.constant.Constant;
+import com.peer.localDB.LocalStorage;
+import com.peer.localDB.UserDao;
+import com.peer.localDBbean.UserBean;
+import com.peer.widgetutil.LoadImageUtil;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,6 +21,8 @@ import android.widget.TextView;
 public class MyFragment extends BasicFragment {
 	private RelativeLayout myacount_my,personalpage;
 	private LinearLayout personmessage_my,mytag_my,setting_my;
+	private ImageView headpic;
+	private TextView tv_nikename,tv_email;
 	public static final int UPDATESUCESS=9;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -29,7 +37,7 @@ public class MyFragment extends BasicFragment {
 		init();
 	}
 	private void init() {
-		// TODO Auto-generated method stub
+		LoadImageUtil.initImageLoader(getActivity());
 		
 		personalpage=(RelativeLayout)getView().findViewById(R.id.rl_ponseralpage);		
 		myacount_my=(RelativeLayout)getView().findViewById(R.id.rl_myacount_my);
@@ -42,8 +50,17 @@ public class MyFragment extends BasicFragment {
 		personmessage_my.setOnClickListener(this);
 		mytag_my.setOnClickListener(this);
 		setting_my.setOnClickListener(this);
-				
 		
+		headpic=(ImageView)getView().findViewById(R.id.im_headpic);
+		tv_nikename=(TextView)getView().findViewById(R.id.tv_nikename);
+		tv_email=(TextView)getView().findViewById(R.id.tv_email);	
+		
+		String email=LocalStorage.getString(getActivity(),Constant.EMAIL);
+		UserDao u=new UserDao(getActivity());
+		UserBean user=u.findOne(email);
+		tv_nikename.setText(user.getNikename());
+		tv_email.setText(user.getEmail());
+		LoadImageUtil.imageLoader.displayImage(user.getImage(), headpic, LoadImageUtil.options);
 		
 	}
 }

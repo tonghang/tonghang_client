@@ -9,9 +9,11 @@ import com.peer.activitymain.CreatTopicActivity;
 import com.peer.activitymain.NewFriendsActivity;
 import com.peer.activitymain.PersonalPageActivity;
 import com.peer.activitymain.SearchActivity;
+import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
 import com.peer.util.PersonpageUtil;
 import android.content.Intent;
+import android.os.RemoteException;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -54,8 +56,16 @@ public class BasicFragment extends Fragment implements OnClickListener{
 			Intent setting=new Intent(getActivity(),SettingActivity.class);
 			startActivity(setting);
 			break;
-		case R.id.rl_ponseralpage:
+		case R.id.rl_ponseralpage:	
+			String userid=null;
+			try {
+				userid=PeerUI.getInstance().getISessionManager().getUserId();
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			PersonpageUtil.getInstance().setPersonpagetype(Constant.OWNPAGE);
+			PersonpageUtil.getInstance().setPersonid(userid);
 			Intent topersonalpage=new Intent(getActivity(),PersonalPageActivity.class);
 			startActivity(topersonalpage);
 			break;

@@ -5,6 +5,10 @@ package com.peer.constant;
  *
  */
 public interface Constant {
+	/*LocalStorage key*/
+	public String EMAIL="email";
+	
+	
 	/*personalpage type*/
 	public int OWNPAGE=1;
 	public int FRIENDSPAGE=2;
@@ -25,7 +29,7 @@ public interface Constant {
 	/*web server*/
 	 String SERVER_ADDRESS = "10.0.2.2:3000";
 	 int WEB_SERVER_PORT = 3000;
-	 String WEB_SERVER_ADDRESS="http://" + SERVER_ADDRESS+"/";
+	 String WEB_SERVER_ADDRESS="http://" + SERVER_ADDRESS;
 	 /*connection status*/
 	 String CONNECTION="connection";
 	 String DISCONNECTION="disconnection";

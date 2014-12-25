@@ -2,6 +2,7 @@ package com.peer.activity;
 
 
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -11,6 +12,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.peer.R;
+import com.peer.client.ui.PeerUI;
+import com.peer.constant.Constant;
+import com.peer.localDB.LocalStorage;
+import com.peer.localDB.UserDao;
 
 public class UpdatePasswordActivity extends BasicActivity {
 	private EditText oldpasw,newpasw,reputpasw;
@@ -46,6 +51,56 @@ public class UpdatePasswordActivity extends BasicActivity {
 		submit.setEnabled(false);
 		submit.setOnClickListener(this);
 	}
+	
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		super.onClick(v);
+		switch (v.getId()) {
+		case R.id.bt_changesubmite:
+			UpdatePassword();
+			break;
+
+		default:
+			break;
+		}
+	}
+	private void UpdatePassword() {
+		// TODO Auto-generated method stub		
+		String old=oldpasw.getText().toString().trim();
+		final String newpasws=newpasw.getText().toString().trim();
+		String testnew=reputpasw.getText().toString().trim();
+		String email=LocalStorage.getString(UpdatePasswordActivity.this, Constant.EMAIL);
+		UserDao udao=new UserDao(UpdatePasswordActivity.this);		
+		String password=udao.getPassord(email);
+		if(!old.equals(password)){
+			remind.setText(getResources().getString(R.string.erroroldpsw));
+			return;
+		}else if(!newpasws.matches("^[a-zA-Z0-9_]{5,17}$")){
+			remind.setText(getResources().getString(R.string.errorpswformat));
+			return;
+		}else if(!newpasws.equals(testnew)){
+			remind.setText(getResources().getString(R.string.notmatchpsw));
+			return;
+		}else{
+			new Thread(new Runnable() {
+				
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					try {
+						PeerUI.getInstance().getISessionManager().updatePassword(newpasws);
+						ShowMessage("密码更新成功");
+					} catch (RemoteException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						ShowMessage("密码更新失败");
+					}
+				}
+			}).start();
+		}
+	}
+	
 	private void CreateTextwatcher() {
 		// TODO Auto-generated method stub
 		textwatcher=new TextWatcher() {
@@ -83,39 +138,4 @@ public class UpdatePasswordActivity extends BasicActivity {
 			submit.setEnabled(false);
 		}
 	}
-	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		super.onClick(v);
-		switch (v.getId()) {
-		case R.id.bt_changesubmite:
-			UpdatePassword();
-			break;
-
-		default:
-			break;
-		}
-	}
-	private void UpdatePassword() {
-		// TODO Auto-generated method stub
-		ShowMessage("密码修改成功");
-		String old=oldpasw.getText().toString().trim();
-		String newpasws=newpasw.getText().toString().trim();
-		String testnew=reputpasw.getText().toString().trim();
-		String password="";
-//		if(!old.equals(password)){
-//			remind.setText(getResources().getString(R.string.erroroldpsw));
-//			return;
-//		}else if(!newpasws.matches("^[a-zA-Z0-9_]{5,17}$")){
-//			remind.setText(getResources().getString(R.string.errorpswformat));
-//			return;
-//		}else if(!newpasws.equals(testnew)){
-//			remind.setText(getResources().getString(R.string.notmatchpsw));
-//			return;
-//		}else{
-//			
-//		}
-	}
-	
-	
 }

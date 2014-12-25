@@ -43,7 +43,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="16dp"
-                        android:background="@drawable/ad_background"
+                       
                         android:textColor="@color/black"
                         android:textSize="@dimen/textsize_large" />
 
@@ -59,6 +59,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/linearLayout2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
@@ -74,22 +75,22 @@
                     </LinearLayout>
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/im_headpic"
-                        android:layout_alignLeft="@+id/textView1"
-                        android:layout_below="@+id/linearLayout2"
-                        android:text="6328174@qq.com"
-                        android:textColor="@color/black" />
-
-                    <TextView
-                        android:id="@+id/textView1"
+                        android:id="@+id/tv_nikename"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignTop="@+id/im_headpic"
                         android:layout_marginLeft="25dp"
                         android:layout_toRightOf="@+id/im_headpic"
-                        android:text="昵称"
+                        
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/tv_email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/tv_nikename"
+                        android:layout_below="@+id/linearLayout2"
+                        
                         android:textColor="@color/black" />
                 </RelativeLayout>
 

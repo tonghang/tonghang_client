@@ -30,17 +30,15 @@ public class SkillAdapter extends BaseAdapter {
 		this.mContext=mContext;
 		this.mlist=mlist;
 	}
-	public SkillAdapter(Context mContext,String type){
+	public SkillAdapter(Context mContext,String type,List<String> mlist){
 		this.mContext=mContext;
 		this.type=type;
+		this.mlist=mlist;
 	}
 
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
-		if(type.equals("page")){
-			return 5;
-		}
 		return mlist.size();
 	}
 
@@ -92,7 +90,8 @@ public class SkillAdapter extends BaseAdapter {
 			convertView.setTag(viewHolder);
 		}else{
 			convertView.getTag();
-		}		
+		}	
+		viewHolder.skillname.setText(mlist.get(position));
 		return convertView;
 	}
 	private void deleteSkill(final int position){

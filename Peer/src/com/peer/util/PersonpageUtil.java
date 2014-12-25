@@ -5,7 +5,8 @@ package com.peer.util;
  *
  */
 public class PersonpageUtil {
-	private int personpagetype;		
+	private int personpagetype;	
+	private String personid;
 	private static PersonpageUtil personpageutil;
 	private PersonpageUtil(){}
 	public static PersonpageUtil getInstance(){
@@ -20,4 +21,11 @@ public class PersonpageUtil {
 	public void setPersonpagetype(int personpagetype) {
 		this.personpagetype = personpagetype;
 	}
+	public String getPersonid() {
+		return personid;
+	}
+	public void setPersonid(String personid) {
+		this.personid = personid;
+	}
+	
 }

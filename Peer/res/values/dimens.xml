@@ -16,6 +16,7 @@
 	<dimen name="widgeheight">48dp</dimen><!-- 控件高度 -->
 	<dimen name="widgeheight_middle">56dp</dimen>
 	<dimen name="widgeheight_max">64dp</dimen>
-
+	<!-- 横线高度 -->
+	<dimen name="index_line">1dp</dimen>
 
 </resources>

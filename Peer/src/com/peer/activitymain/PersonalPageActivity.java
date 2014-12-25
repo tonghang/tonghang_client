@@ -3,21 +3,18 @@ package com.peer.activitymain;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import com.peer.R;
 import com.peer.activity.BasicActivity;
 import com.peer.adapter.SkillAdapter;
+import com.peer.client.User;
+import com.peer.client.service.SessionListener;
+import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
-import com.peer.titlepopwindow.ActionItem;
-import com.peer.titlepopwindow.TitlePopup;
-import com.peer.titlepopwindow.TitlePopup.OnItemOnClickListener;
 import com.peer.util.ChatRoomTypeUtil;
 import com.peer.util.PersonpageUtil;
+import com.peer.widgetutil.LoadImageUtil;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -31,9 +28,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class PersonalPageActivity extends BasicActivity {
-	private TitlePopup titlePopup;
 	private ImageView personhead,delete;
-	private TextView nikename,title,topic_whose;
+	private TextView nikename,title,topic_whose,acount,city;
 	private RelativeLayout topic_click;
 	private LinearLayout back,bottomline;
 	private ListView skillllist;
@@ -44,18 +40,18 @@ public class PersonalPageActivity extends BasicActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_personalpage);
 		init();
+		LoadImageUtil.initImageLoader(this);
+		PersonalTask task=new PersonalTask();
+		task.execute(PersonpageUtil.getInstance().getPersonid());		
 	}
 	
 	private void init() {
 		// TODO Auto-generated method stub
-		titlePopup = new TitlePopup(this, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);	
-		titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.deletefriends), R.color.white));
-		
-		delete=(ImageView)findViewById(R.id.im_downview);
-		delete.setOnClickListener(this);
 		
 		topic_whose=(TextView)findViewById(R.id.tv_topic);
 		title=(TextView)findViewById(R.id.tv_title);
+		acount=(TextView)findViewById(R.id.personcount);
+		city=(TextView)findViewById(R.id.city);
 		topic_click=(RelativeLayout)findViewById(R.id.rl_topic);
 		topic_click.setOnClickListener(this);
 		back=(LinearLayout)findViewById(R.id.ll_back);
@@ -63,27 +59,11 @@ public class PersonalPageActivity extends BasicActivity {
 		nikename=(TextView)findViewById(R.id.personnike);
 		personhead=(ImageView)findViewById(R.id.personhead);
 		bottomline=(LinearLayout)findViewById(R.id.ll_personpagebottom);
-		skillllist=(ListView)findViewById(R.id.lv_pageskill);
-		SkillAdapter adapter=new SkillAdapter(this,"page");
-		skillllist.setAdapter(adapter);		
+		skillllist=(ListView)findViewById(R.id.lv_pageskill);			
 		ViewType();	
-		popupwindow();
-	}
-	private void popupwindow() {
-		// TODO Auto-generated method stub		
 		
-		titlePopup.setItemOnClickListener(new OnItemOnClickListener() {
-			
-			@Override
-			public void onItemClick(ActionItem item, int position) {
-				// TODO Auto-generated method stub
-				if(item.mTitle.equals(getResources().getString(R.string.deletefriends))){
-					finish();
-				}
-					
-			}
-		});
 	}
+	
 	private void ViewType() {
 		// TODO Auto-generated method stub
 		LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
@@ -168,12 +148,37 @@ public class PersonalPageActivity extends BasicActivity {
 			Intent intent=new Intent(PersonalPageActivity.this,TopicActivity.class);
 			startActivity(intent);			
 			break;
-		case R.id.im_downview:
-			titlePopup.show(v);
-			break;
-
 		default:
 			break;
 		}
+	}
+	private class PersonalTask extends AsyncTask<String, Void, User>{
+
+		@Override
+		protected User doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			SessionListener callback=new SessionListener();
+			User user=null;
+			try {
+				user=PeerUI.getInstance().getISessionManager().personalPage(params[0], callback);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return user;
+		}
+		@Override
+		protected void onPostExecute(User user) {
+			// TODO Auto-generated method stub
+			if(user!=null){
+				LoadImageUtil.imageLoader.displayImage(user.getImage(), personhead, LoadImageUtil.options);
+				nikename.setText(user.getUsername());
+				acount.setText(user.getEmail());
+				city.setText(user.getCity());
+				SkillAdapter adapter=new SkillAdapter(PersonalPageActivity.this,"page",user.getLabels());
+				skillllist.setAdapter(adapter);	
+			}
+		}
+		
 	}
 }

@@ -55,18 +55,24 @@ public class UserDao {
 		String birthday=u.getAge();
 		String city=u.getCity();
 		String nikename=u.getNikename();
+		String image=u.getImage();
+		String password=u.getPassword();
+		
 		SQLiteDatabase db=sqlhelper.getWritableDatabase();
 		
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_NAME_SEX, sex);
 		values.put(COLUMN_NAME_BIRTHDAY, birthday);
 		values.put(COLUMN_NAME_CITY, city);
-		if(nikename==null){			
-			db.update(TABEL_NAME, values,COLUMN_NAME_EMAIL+"=?" , new String[]{email});
-		}else{
+		values.put(COLUMN_NAME_EMAIL, email);
+		values.put(COLUMN_NAME_IMAGE, image);
+		if(!(password==null)){
+			values.put(COLUMN_NAME_PASSWORD, password);
+		}
+		if(!(nikename==null)){			
 			values.put(COLUMN_NAME_NIKENAME, nikename);
-			db.update(TABEL_NAME, values,COLUMN_NAME_EMAIL+"=?" , new String[]{email});
-		}		
+		}
+		db.update(TABEL_NAME, values,COLUMN_NAME_EMAIL+"=?" , new String[]{email});
 		db.close();
 		return true;		
 	}

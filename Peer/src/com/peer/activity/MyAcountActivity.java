@@ -1,6 +1,9 @@
 package com.peer.activity;
 
 import com.peer.R;
+import com.peer.constant.Constant;
+import com.peer.localDB.LocalStorage;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -27,7 +30,7 @@ public class MyAcountActivity extends BasicActivity {
 		back.setOnClickListener(this);
 		
 		myemail=(TextView)findViewById(R.id.myeamil);
-//		myemail.setText(LocalStorage.getString(this, "email"));
+		myemail.setText(LocalStorage.getString(this, Constant.EMAIL));
 		
 		changepassword=(LinearLayout)findViewById(R.id.ll_changepassword);
 		changepassword.setOnClickListener(new View.OnClickListener() {

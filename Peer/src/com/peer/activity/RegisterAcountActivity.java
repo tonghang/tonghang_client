@@ -24,6 +24,8 @@ import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
 import com.peer.localDB.LocalStorage;
+import com.peer.localDB.UserDao;
+import com.peer.localDBbean.UserBean;
 
 
 public class RegisterAcountActivity extends BasicActivity{
@@ -152,6 +154,16 @@ public class RegisterAcountActivity extends BasicActivity{
 			SessionListener callback=new SessionListener();
 			try {
 				PeerUI.getInstance().getISessionManager().register(paramer[0], paramer[1], paramer[2], callback);
+				if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
+					LocalStorage.saveString(RegisterAcountActivity.this, Constant.EMAIL, paramer[0]);
+					UserBean u=new UserBean();
+					u.setEmail(paramer[0]);
+					u.setPassword(paramer[1]);
+					u.setNikename(paramer[2]);			
+					UserDao userdao=new UserDao(RegisterAcountActivity.this);
+					userdao.addUser(u);
+				}
+			
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -161,7 +173,7 @@ public class RegisterAcountActivity extends BasicActivity{
 		@Override
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
-			if(result.equals(Constant.CALLBACKSUCCESS)){
+			if(result.equals(Constant.CALLBACKSUCCESS)){				
 				Intent intent=new Intent(RegisterAcountActivity.this,RegisterTagActivity.class);
 				startActivity(intent);
 				finish();

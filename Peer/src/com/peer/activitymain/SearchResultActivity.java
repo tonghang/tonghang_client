@@ -104,7 +104,7 @@ public class SearchResultActivity extends BasicActivity {
 					mlistview.setAdapter(adapter);
 				}
 			}else{
-				ShowMessage("未搜索到你想查找的内容！");
+				ShowMessage("未搜索到您想查找的内容！");
 			}
 			
 		}

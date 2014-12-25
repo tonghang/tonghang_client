@@ -132,18 +132,22 @@ public class LoginActivity extends BasicActivity{
 //					RingLetterImp.getInstance().login(huanxinid, paramer[1]);
 //					RingLetterImp.getInstance().loadConversationsandGroups();					
 //本地存储操作。。。			
-					 LocalStorage.saveString(LoginActivity.this, "email", paramer[0]);
+					String userid=PeerUI.getInstance().getISessionManager().getUserId();
+					
+					 LocalStorage.saveString(LoginActivity.this, Constant.EMAIL, paramer[0]);
 					 UserDao userdao=new UserDao(LoginActivity.this);
-					 if(userdao.findOne(paramer[0])==null){
-						 com.peer.localDBbean.UserBean userbean=new com.peer.localDBbean.UserBean();
-						 userbean.setEmail(u.getEmail());
-						 userbean.setPassword(paramer[1]);
-						 userbean.setAge(u.getBirthday());
-						 userbean.setCity(u.getCity());
-						 userbean.setNikename(u.getUsername());
-						 userbean.setImage(u.getImage());
-						 userbean.setSex(u.getSex());
-//						 userdao.addUser(userbean);
+					 com.peer.localDBbean.UserBean userbean=new com.peer.localDBbean.UserBean();
+					 userbean.setEmail(u.getEmail());
+					 userbean.setPassword(paramer[1]);
+					 userbean.setAge(u.getBirthday());
+					 userbean.setCity(u.getCity());
+					 userbean.setNikename(u.getUsername());
+					 userbean.setImage(u.getImage());
+					 userbean.setSex(u.getSex());
+					 if(userdao.findOne(paramer[0])==null){						
+						 userdao.addUser(userbean);
+					 }else{
+						 userdao.updateUser(userbean);
 					 }
 					 
 				}

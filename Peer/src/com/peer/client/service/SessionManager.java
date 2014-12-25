@@ -34,6 +34,7 @@ public class SessionManager extends ISessionManager.Stub {
 	private String token=null;
 	private String huanxin_user=null;
 	private String userid=null;
+	private List<String> labels=null;
 	/*web login 通过测试*/
 	@Override
 	public User login(String email, String password,
@@ -46,12 +47,11 @@ public class SessionManager extends ISessionManager.Stub {
 		try {
 			parts.put("email", email);
 			parts.put("password", password);			
-			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "login.json"
+			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "/login.json"
 					,parts, Map.class);						
 			Map body = result.getBody();			
 			token=(String) body.get("token");
-			huanxin_user=(String)body.get("huanxin_user");						
-			
+			huanxin_user=(String)body.get("huanxin_user");									
 			if (result.getStatusCode() == HttpStatus.OK) {
 				code=0;
 				user=new User();
@@ -60,11 +60,18 @@ public class SessionManager extends ISessionManager.Stub {
 				userid=id;
 				user.setId(id);
 				user.setEmail((String)u.get("email"));
+				user.setBirthday((String)u.get("email"));
+				user.setImage(Constant.WEB_SERVER_ADDRESS+(String)u.get("image"));
+				user.setSex((String)u.get("sex"));
 //				user.setPassword((String)u.get("password"));
 				user.setUsername((String)u.get("username"));
-				user.setLabels((List) u.get("labels"));				
+				labels=(List) u.get("labels");
+				user.setLabels(labels);				
 				message = Constant.CALLBACKSUCCESS;
 			} else {
+				message = Constant.CALLBACKFAIL;
+			}
+			if(result.getStatusCode()==HttpStatus.UNAUTHORIZED){
 				message = Constant.CALLBACKFAIL;
 			}
 		} catch (Exception e) {
@@ -75,7 +82,7 @@ public class SessionManager extends ISessionManager.Stub {
 		callback.onCallBack(code, message);
 		return user;
 	}
-	/*user register acount*/
+	/*user register acount 通过测试*/
 	@Override
 	public void register(String email, String password, String username,
 			ISessionListener callback) throws RemoteException {
@@ -88,7 +95,7 @@ public class SessionManager extends ISessionManager.Stub {
 			parts.put("username", username);
 			parts.put("password", password);
 			
-			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "users.json"
+			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "/users.json"
 					, parts, Map.class);		
 					
 			Map body = result.getBody();
@@ -108,22 +115,19 @@ public class SessionManager extends ISessionManager.Stub {
 	}
 	/*register label 通过测试*/
 	@Override
-	public void registerLabel(List<String> labels, ISessionListener callback)
+	public void registerLabel(List<String> labels)
 			throws RemoteException {
 		// TODO Auto-generated method stub
 		Map<String, List> parts=new HashMap<String, List>();
-		String message = null;
-		int code=1;
 		try {
 			parts.put("labels", labels);
-			DataUtil.putEntity(Constant.WEB_SERVER_ADDRESS +"users/"+userid+"/update_labels.json", parts, Map.class);			
+			DataUtil.putEntity(Constant.WEB_SERVER_ADDRESS +"/users/"+userid+"/update_labels.json", parts, Map.class);			
 		} catch (Exception e) {
 			// TODO log exception
 			e.printStackTrace();
 		}
-		callback.onCallBack(code, message);
 	}
-	/*commite personal message*/
+	/*commite personal message 通过测试*/
 	@Override
 	public void profileUpdate(String nickName, String birthday, String city,
 			String sex, final String filename, byte[] image, ISessionListener callback)
@@ -141,7 +145,8 @@ public class SessionManager extends ISessionManager.Stub {
 			parts.add("birth", birthday);
 			if(!nickName.equals("")){
 				parts.add("username", nickName);
-			}			
+			}	
+			parts.add("city", city);
 			parts.add("sex", sex);
 			parts.add("image", imageFile);
 			parts.add("filename", "sign.jpg");
@@ -171,7 +176,7 @@ public class SessionManager extends ISessionManager.Stub {
 		    restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 		    restTemplate.setMessageConverters(partConverters);
 						
-			ResponseEntity<Map> response=restTemplate.exchange(Constant.WEB_SERVER_ADDRESS + "users/"+userid+".json", HttpMethod.PUT, requestEntity, Map.class);
+			ResponseEntity<Map> response=restTemplate.exchange(Constant.WEB_SERVER_ADDRESS + "/users/"+userid+".json", HttpMethod.PUT, requestEntity, Map.class);
 			
 			
 			response.getBody();			
@@ -196,7 +201,7 @@ public class SessionManager extends ISessionManager.Stub {
 		try {
 			parts.put("invitee_id", targetId);
 			parts.put("reason", reason);			
-			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "invitations.json", parts, Map.class);			
+			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "/invitations.json", parts, Map.class);			
 				
 		}catch(Exception e){
 			e.printStackTrace();
@@ -209,7 +214,7 @@ public class SessionManager extends ISessionManager.Stub {
 			throws RemoteException {
 		// TODO Auto-generated method stub
 		try {						
-			DataUtil.deleteEntity(Constant.WEB_SERVER_ADDRESS + "friends/"+targetId+".json", Map.class);
+			DataUtil.deleteEntity(Constant.WEB_SERVER_ADDRESS + "/friends/"+targetId+".json", Map.class);
 		}catch(Exception e){
 			e.printStackTrace();
 		}		
@@ -223,7 +228,7 @@ public class SessionManager extends ISessionManager.Stub {
 		String message = null;
 		int code=1;	
 		try {
-			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"labels.json?q="+label,List.class);
+			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/labels.json?q="+label,List.class);
 			List list= result.getBody();					
 			if (result.getStatusCode() == HttpStatus.OK) {
 				for(int i=0;i<list.size();i++){
@@ -248,7 +253,7 @@ public class SessionManager extends ISessionManager.Stub {
 	public void refuseAddFriends(String sourceId) throws RemoteException {
 		// TODO Auto-generated method stub
 		try {
-			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "invitations/"+sourceId+"/refuse.json", "", Map.class);			
+			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "/invitations/"+sourceId+"/refuse.json", "", Map.class);			
 			Map body = result.getBody();		
 		} catch (Exception e) {
 			// TODO log exception
@@ -260,14 +265,14 @@ public class SessionManager extends ISessionManager.Stub {
 	public void agreeAddFriends(String sourceId) throws RemoteException {
 		// TODO Auto-generated method stub
 		try {
-			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "invitations/"+sourceId+"/agree.json", "", Map.class);			
+			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "/invitations/"+sourceId+"/agree.json", "", Map.class);			
 			Map body = result.getBody();		
 		} catch (Exception e) {
 			// TODO log exception
 			e.printStackTrace();
 		}		
 	}
-	/*search user by label*/
+	/*search user by label 通过测试*/
 	@Override
 	public List<User> searchUserByLabel(String label,ISessionListener callback) throws RemoteException {
 		// TODO Auto-generated method stub
@@ -275,7 +280,7 @@ public class SessionManager extends ISessionManager.Stub {
 		String message = null;
 		int code=1;
 		try {
-			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"users.json?q="+label,List.class);
+			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/users.json?q="+label,List.class);
 			List<Map> list= result.getBody();
 			
 			if(result.getStatusCode()==HttpStatus.OK){
@@ -283,7 +288,7 @@ public class SessionManager extends ISessionManager.Stub {
 					User user=new User();
 					user.setEmail((String)m.get("email"));
 					user.setUsername((String)m.get("username"));
-					user.setImage((String)m.get("image"));
+					user.setImage(Constant.WEB_SERVER_ADDRESS+(String)m.get("image"));
 					user.setId(String.valueOf(m.get("id")));
 					user.setBirthday((String)m.get("birth"));
 					user.setLabels((List)m.get("labels"));
@@ -300,7 +305,7 @@ public class SessionManager extends ISessionManager.Stub {
 		callback.onCallBack(code, message);	
 		return mlist;
 	}
-	/*search user by nike*/
+	/*search user by nike 通过测试*/
 	@Override
 	public List<User> searchUsersByNickName(String username,ISessionListener callback)
 			throws RemoteException {
@@ -310,7 +315,7 @@ public class SessionManager extends ISessionManager.Stub {
 		String message = null;
 		int code=1;
 		try{
-			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"users.json?q="+username+"",List.class);
+			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/users.json?q="+username+"",List.class);
 			List<Map> list= result.getBody();			
 			
 			if(result.getStatusCode()==HttpStatus.OK){
@@ -318,7 +323,7 @@ public class SessionManager extends ISessionManager.Stub {
 					User user=new User();
 					user.setEmail((String)m.get("email"));
 					user.setUsername((String)m.get("username"));
-					user.setImage((String)m.get("image"));
+					user.setImage(Constant.WEB_SERVER_ADDRESS+(String)m.get("image"));
 					user.setId(String.valueOf(m.get("id")));
 					user.setBirthday((String)m.get("birth"));
 					user.setLabels((List)m.get("labels"));
@@ -340,7 +345,7 @@ public class SessionManager extends ISessionManager.Stub {
 	public List<User> myFriends() throws RemoteException {
 		// TODO Auto-generated method stub
 		try {
-			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "users/"+userid+"/friends.json", "", Map.class);			
+			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "/users/"+userid+"/friends.json", "", Map.class);			
 			Map body = result.getBody();		
 		} catch (Exception e) {
 			// TODO log exception
@@ -352,25 +357,27 @@ public class SessionManager extends ISessionManager.Stub {
 	@Override
 	public List<User> Invitations() throws RemoteException {
 		// TODO Auto-generated method stub
-		DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "users/"+userid+"/invitations.json", "", Map.class);
+		DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "/users/"+userid+"/invitations.json", "", Map.class);
 		return null;
 	}
-	/*someone personal page*/
+	/*someone personal page 通过测试*/
 	@Override
-	public User personalPage(String targetId) throws RemoteException {
+	public User personalPage(String targetId,ISessionListener callback) throws RemoteException {
 		// TODO Auto-generated method stub
 		List<String> mlist=new ArrayList<String>();
 		User user=new User();
 		try {
-			ResponseEntity<Map> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"users/"+targetId+".json",Map.class);
+			ResponseEntity<Map> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/users/"+targetId+".json",Map.class);
 			Map u= result.getBody();
 			if (result.getStatusCode() == HttpStatus.OK) {				
 				String id=String.valueOf(u.get("id"));
 				userid=id;
 				user.setId(id);
 				user.setEmail((String)u.get("email"));
-				user.setBirthday("birth");
-				user.setImage("image");
+				user.setBirthday((String)u.get("birth"));
+				user.setImage(Constant.WEB_SERVER_ADDRESS+(String)u.get("image"));
+				user.setSex((String)u.get("sex"));
+//				user.setCity((String)u.get("city"));
 //				u.get("password");
 				user.setUsername((String)u.get("username"));
 				user.setLabels((List) u.get("labels"));	
@@ -387,7 +394,7 @@ public class SessionManager extends ISessionManager.Stub {
 	public List<Map> topicHistory(String targetId) throws RemoteException {
 		// TODO Auto-generated method stub		
 		try {
-			ResponseEntity<Map> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS + "topics.json?user_id="+targetId+"&page=1", Map.class);			
+			ResponseEntity<Map> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS + "/topics.json?user_id="+targetId+"&page=1", Map.class);			
 			Map body = result.getBody();
 			if (result.getStatusCode() == HttpStatus.OK) {				
 				List list=(List) body.get("labels");
@@ -407,7 +414,7 @@ public class SessionManager extends ISessionManager.Stub {
 	public void TopicchatHistory(String topicId) throws RemoteException {
 		// TODO Auto-generated method stub
 		try {
-			ResponseEntity<Map> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS + "topics/"+topicId+ ".json", Map.class);			
+			ResponseEntity<Map> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS + "/topics/"+topicId+ ".json", Map.class);			
 			Map body = result.getBody();
 			if (result.getStatusCode() == HttpStatus.OK) {				
 				List list=(List) body.get("labels");
@@ -427,11 +434,19 @@ public class SessionManager extends ISessionManager.Stub {
 		// TODO Auto-generated method stub
 		
 	}
-	/*update password*/
+	/*update password 通过测试*/
 	@Override
-	public void updatePassword(String tagetId, String newPassword)
+	public void updatePassword(String newPassword)
 			throws RemoteException {
 		// TODO Auto-generated method stub
+		Map m=new HashMap<String, String>();
+		m.put("password", newPassword);
+		try{
+			DataUtil.putEntity(Constant.WEB_SERVER_ADDRESS + "/users/"+userid+".json", m);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
 		
 	}
 	
@@ -451,11 +466,8 @@ public class SessionManager extends ISessionManager.Stub {
 			parts.add("subject", "这个事新建的话题");
 			parts.add("label_name", "美食");	
 			
-			HttpHeaders headers=new HttpHeaders();
-			Map<String, String> m=new HashMap<String, String>();
-			m.put("Content-Type", "application/json");
-			m.put("x-token", token);
-			headers.setAll(m);
+			HttpHeaders headers=new HttpHeaders();			
+			headers.add("x-token", token);			
 			
 //			headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 			
@@ -467,7 +479,7 @@ public class SessionManager extends ISessionManager.Stub {
 			restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 			restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
 						
-			ResponseEntity<Map> response=restTemplate.exchange(Constant.WEB_SERVER_ADDRESS + "topics.json", HttpMethod.POST, requestEntity, Map.class);
+			ResponseEntity<Map> response=restTemplate.exchange(Constant.WEB_SERVER_ADDRESS + "/topics.json", HttpMethod.POST, requestEntity, Map.class);
 			
 			
 			
@@ -499,5 +511,10 @@ public class SessionManager extends ISessionManager.Stub {
 	public String getUserId() throws RemoteException {
 		// TODO Auto-generated method stub
 		return userid;
+	}
+	@Override
+	public List<String> getLabels() throws RemoteException {
+		// TODO Auto-generated method stub
+		return labels;
 	}
 }

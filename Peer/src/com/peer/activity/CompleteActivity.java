@@ -8,10 +8,12 @@ import java.util.Calendar;
 import com.peer.R;
 import com.peer.activitymain.HomePageActivity;
 import com.peer.activitymain.MainActivity;
+import com.peer.client.User;
 import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
 import com.peer.localDB.LocalStorage;
+import com.peer.localDB.UserDao;
 import com.peer.util.ManagerActivity;
 import com.peer.util.Tools;
 
@@ -162,23 +164,47 @@ public class CompleteActivity extends BasicActivity{
 			remind.setText(getResources().getString(R.string.selectbirthday));
 			return;
 		}else{
-			pd = ProgressDialog.show(CompleteActivity.this,"", getResources().getString(R.string.commit));
+			pd = ProgressDialog.show(CompleteActivity.this,"", getResources().getString(R.string.committing));
 			Thread t=new Thread(){
 				@Override
 				public void run() {
 					// TODO Auto-generated method stub
 					SessionListener callback=new SessionListener();
 					try {
-						PeerUI.getInstance().getISessionManager().registerLabel(tags, callback);
+						PeerUI.getInstance().getISessionManager().registerLabel(tags);
 						PeerUI.getInstance().getISessionManager().profileUpdate("",birthday.getText().toString(), cityselect.getText().toString(), sex.getText().toString(),IMAGE_FILE_NAME, img, callback);										
-						
-//						PeerUI.getInstance().getISessionManager().login(username, password, callback);
 					} catch (RemoteException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}								
 					if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
-						pd.dismiss();						
+						pd.dismiss();
+						SessionListener callback2=new SessionListener();
+						String email=LocalStorage.getString(CompleteActivity.this, Constant.EMAIL);
+						UserDao userdao=new UserDao(CompleteActivity.this);
+						String password=userdao.getPassord(email);											
+						try {
+//							pd = ProgressDialog.show(CompleteActivity.this,"", getResources().getString(R.string.committing));
+							User u=PeerUI.getInstance().getISessionManager().login(email, password, callback2);
+							if(callback2.getMessage().equals(Constant.CALLBACKSUCCESS)){
+								com.peer.localDBbean.UserBean userbean=new com.peer.localDBbean.UserBean();
+								 userbean.setEmail(u.getEmail());
+								 userbean.setAge(u.getBirthday());
+								 userbean.setCity(u.getCity());
+								 userbean.setNikename(u.getUsername());
+								 userbean.setImage(u.getImage());
+								 userbean.setSex(u.getSex());
+								 userdao.updateUser(userbean);
+//								 pd.dismiss();	
+								 Intent intent=new Intent(CompleteActivity.this,MainActivity.class);
+									startActivity(intent);
+									finish();
+							}
+							
+						} catch (RemoteException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 				}
 			};

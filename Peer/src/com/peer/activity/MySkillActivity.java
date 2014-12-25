@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import com.peer.R;
 import com.peer.adapter.SkillAdapter;
+import com.peer.client.service.SessionListener;
+import com.peer.client.ui.PeerUI;
 import com.peer.event.NewFriensEvent;
 import com.peer.event.SkillEvent;
 
@@ -13,6 +15,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.RemoteException;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -33,7 +37,7 @@ public class MySkillActivity extends BasicActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_myskill);
-		initdata();
+//		initdata();
 		init();	
 		registEventBus();
 	}
@@ -46,6 +50,12 @@ public class MySkillActivity extends BasicActivity {
 		creatTag=(LinearLayout)findViewById(R.id.ll_createTag_mytag);
 		creatTag.setOnClickListener(this);
 		mytaglistview=(ListView)findViewById(R.id.lv_myskill);
+		try {
+			mlist=PeerUI.getInstance().getISessionManager().getLabels();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		adapter=new SkillAdapter(this,mlist);
 		mytaglistview.setAdapter(adapter);
 	}
@@ -55,13 +65,12 @@ public class MySkillActivity extends BasicActivity {
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.ll_createTag_mytag:
-			CreateTag();
 			if(Hadtag>4){
 				ShowMessage("您已经有五个标签，不能再创建了");
 				break;
 			}else{
 				if(checkNetworkState()){
-					CreateTag();
+					CreateTagDialog();
 				}else{
 					ShowMessage(getResources().getString(R.string.Broken_network_prompt));
 				}					
@@ -72,7 +81,7 @@ public class MySkillActivity extends BasicActivity {
 			break;
 		}
 	}
-	private void CreateTag() {
+	private void CreateTagDialog() {
 		// TODO Auto-generated method stub
 		final EditText inputServer = new EditText(MySkillActivity.this);
         inputServer.setFocusable(true);
@@ -83,18 +92,50 @@ public class MySkillActivity extends BasicActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         String inputName = inputServer.getText().toString().trim();
-                       if(!inputName.equals("")){
-                    	   List<String> arr=new ArrayList<String>();
-                           arr.add(inputName);
-                        
+                       if(!TextUtils.isEmpty(inputName)){
+                    	   if(inputName.length()<7){
+	                      		 for(int i=0;i<mlist.size();i++){ 
+	                      			 if(mlist.get(i).equals(inputName)){
+	                      				 ShowMessage(getResources().getString(R.string.repetskill));
+	                      			 }else{
+	                      				createLable(inputName);
+	                      			 } 
+	                      		 }
+	                      	}else{
+	                      		ShowMessage(getResources().getString(R.string.skillname));
+	                      	}                       
                        }else{
                     	   ShowMessage("请输入秀场名");
-                       }
-                       
+                       }                       
                     }
                 });
         builder.show();			
 	}
+	public void createLable(String label){
+		final List<String> list=new ArrayList<String>();
+		list.add(label);
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				SessionListener callback=new SessionListener();
+				try {
+					PeerUI.getInstance().getISessionManager().registerLabel(list);
+					mlist.addAll(list);
+					adapter.notifyDataSetChanged();
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}).start();
+		
+		
+	}
+	
+	
+	
 	private void initdata() {
 		// TODO Auto-generated method stub
 		mlist=new ArrayList<String>();
