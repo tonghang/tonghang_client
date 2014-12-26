@@ -196,15 +196,27 @@ public class SessionManager extends ISessionManager.Stub {
 	@Override
 	public void addFriends(String targetId, String reason,
 			ISessionListener callback) throws RemoteException {
-		// TODO Auto-generated method stub
-		Map<String, String> parts = new HashMap<String, String>();
+		// TODO Auto-generated method stub		
+		MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();			
 		String message = null;
 		int code=1;
 		try {
-			parts.put("invitee_id", targetId);
-			parts.put("reason", reason);			
-			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "/invitations.json", parts, Map.class);			
-				
+			parts.add("invitee_id", targetId);
+			parts.add("reason", reason);	
+			
+			HttpHeaders headers=new HttpHeaders();			
+			headers.add("x-token", token);			
+			
+			HttpEntity<MultiValueMap<String, Object>> requestEntity=
+					new HttpEntity<MultiValueMap<String,Object>>(parts,headers);			
+			RestTemplate restTemplate=new RestTemplate(true);	
+			
+			restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+			restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
+			restTemplate.getMessageConverters().add(new StringHttpMessageConverter());			
+			
+			Map result=restTemplate.postForObject(Constant.WEB_SERVER_ADDRESS + "/invitations.json", requestEntity, Map.class);
+			result.get("last_insert_rowid()");
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -215,11 +227,25 @@ public class SessionManager extends ISessionManager.Stub {
 	public void deleteFriends(String targetId)
 			throws RemoteException {
 		// TODO Auto-generated method stub
-		try {						
-			DataUtil.deleteEntity(Constant.WEB_SERVER_ADDRESS + "/friends/"+targetId+".json", Map.class);
-		}catch(Exception e){
+		MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();			
+		String message = null;
+		int code=1;
+		try {
+			HttpHeaders headers=new HttpHeaders();			
+			headers.add("x-token", token);						
+			HttpEntity<MultiValueMap<String, Object>> requestEntity=
+					new HttpEntity<MultiValueMap<String,Object>>(parts,headers);			
+			RestTemplate restTemplate=new RestTemplate(true);	
+			
+			restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+			restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
+			restTemplate.getMessageConverters().add(new StringHttpMessageConverter());			
+			
+			restTemplate.delete(Constant.WEB_SERVER_ADDRESS + "/topics.json", requestEntity);		
+		} catch (Exception e) {
+			// TODO log exception
 			e.printStackTrace();
-		}		
+		}				
 	}
 	/*search label 通过测试*/
 	@Override
@@ -367,11 +393,12 @@ public class SessionManager extends ISessionManager.Stub {
 	public User personalPage(String targetId,ISessionListener callback) throws RemoteException {
 		// TODO Auto-generated method stub
 		List<String> mlist=new ArrayList<String>();
-		User user=new User();
+		User user=null;
 		try {
 			ResponseEntity<Map> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/users/"+targetId+".json",Map.class);
 			Map u= result.getBody();
-			if (result.getStatusCode() == HttpStatus.OK) {				
+			if (result.getStatusCode() == HttpStatus.OK &&result.getBody()!=null) {	
+				user=new User();
 				String id=String.valueOf(u.get("id"));
 				userid=id;
 				user.setId(id);
@@ -379,8 +406,7 @@ public class SessionManager extends ISessionManager.Stub {
 				user.setBirthday((String)u.get("birth"));
 				user.setImage(Constant.WEB_SERVER_ADDRESS+(String)u.get("image"));
 				user.setSex((String)u.get("sex"));
-//				user.setCity((String)u.get("city"));
-//				u.get("password");
+				user.setCity((String)u.get("city"));
 				user.setUsername((String)u.get("username"));
 				user.setLabels((List) u.get("labels"));	
 			}
@@ -391,29 +417,34 @@ public class SessionManager extends ISessionManager.Stub {
 		}		
 		return user;
 	}
-	/*label topic history*/
+	/*label topic history 测试通过*/
 	@Override
-	public List<Map> topicHistory(String targetId) throws RemoteException {
-		// TODO Auto-generated method stub		
+	public List<Map> topicHistory(String targetId,ISessionListener callback) throws RemoteException {
+		// TODO Auto-generated method stub				
+		List<Map> body=null;
+		String message=null;
+		int code=1;
 		try {
-			ResponseEntity<Map> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS + "/topics.json?user_id="+targetId+"&page=1", Map.class);			
-			Map body = result.getBody();
-			if (result.getStatusCode() == HttpStatus.OK) {				
-				List list=(List) body.get("labels");
-				
-//				message = (String) result.getBody().get("message");
-			} else {
-//				message = (String) result.getBody().get("message");
+			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS + "/topics.json?user_id="+targetId+"&page=1", List.class);						
+			if (result.getStatusCode() == HttpStatus.OK) {	
+				code=0;
+				body = result.getBody();
+				message=Constant.CALLBACKSUCCESS;
+			} else{
+				message=Constant.CALLBACKFAIL;
 			}
 		} catch (Exception e) {
 			// TODO log exception
+			message=Constant.CALLBACKFAIL;
 			e.printStackTrace();
-		}		
-		return null;
+		}	
+		callback.onCallBack(code, message);
+		
+		return body;
 	}
 	/*label topic chat history*/
 	@Override
-	public void TopicchatHistory(String topicId) throws RemoteException {
+	public void TopicchatHistory(String topicId,ISessionListener callback) throws RemoteException {
 		// TODO Auto-generated method stub
 		try {
 			ResponseEntity<Map> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS + "/topics/"+topicId+ ".json", Map.class);			
@@ -447,26 +478,21 @@ public class SessionManager extends ISessionManager.Stub {
 			DataUtil.putEntity(Constant.WEB_SERVER_ADDRESS + "/users/"+userid+".json", m);
 		}catch(Exception e){
 			e.printStackTrace();
-		}
-		
-		
+		}		
 	}
 	
 	/*creat topic  测试通过*/
 	@Override
-	public void creatTopic(String label, String topic, String userId)
+	public void creatTopic(String label, String topic)
 			throws RemoteException {
 		// TODO Auto-generated method stub
-//		HttpHeaders headers = new HttpHeaders();  
-//		headers.set("x-token", token);
-//		RestTemplate test=new RestTemplate();
 		
 		MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();			
 		String message = null;
 		int code=1;
 		try {
-			parts.add("subject", "这个事新建的话题");
-			parts.add("label_name", "美食");	
+			parts.add("subject", topic);
+			parts.add("label_name", label);	
 			
 			HttpHeaders headers=new HttpHeaders();			
 			headers.add("x-token", token);			

@@ -1,30 +1,23 @@
 package com.peer.activitymain;
 
 import java.util.List;
-
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.peer.R;
 import com.peer.activity.BasicActivity;
-import com.peer.activity.RegisterAcountActivity;
-import com.peer.activity.RegisterTagActivity;
 import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
-import com.peer.constant.Constant;
-import com.peer.util.ChatRoomTypeUtil;
+
 
 public class CreatTopicActivity extends BasicActivity {
 	private TextView title;
@@ -101,7 +94,7 @@ public class CreatTopicActivity extends BasicActivity {
 			// TODO Auto-generated method stub				
 			SessionListener callback=new SessionListener();
 			try {
-				PeerUI.getInstance().getISessionManager().creatTopic("", "", "");
+				PeerUI.getInstance().getISessionManager().creatTopic(paramer[0], paramer[1]);
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

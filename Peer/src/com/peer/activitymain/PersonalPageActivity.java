@@ -34,6 +34,10 @@ public class PersonalPageActivity extends BasicActivity {
 	private LinearLayout back,bottomline;
 	private ListView skillllist;
 	private List<HashMap<String, String>> list=new ArrayList<HashMap<String,String>>();
+	
+	private String image;
+	private String nike;
+	private String email;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -146,6 +150,10 @@ public class PersonalPageActivity extends BasicActivity {
 		switch (v.getId()) {
 		case R.id.rl_topic:
 			Intent intent=new Intent(PersonalPageActivity.this,TopicActivity.class);
+			intent.putExtra("userId", "1");
+			intent.putExtra("image", image);
+			intent.putExtra("nike", nike);
+			intent.putExtra("email", email);			
 			startActivity(intent);			
 			break;
 		default:
@@ -171,9 +179,12 @@ public class PersonalPageActivity extends BasicActivity {
 		protected void onPostExecute(User user) {
 			// TODO Auto-generated method stub
 			if(user!=null){
-				LoadImageUtil.imageLoader.displayImage(user.getImage(), personhead, LoadImageUtil.options);
-				nikename.setText(user.getUsername());
-				acount.setText(user.getEmail());
+				image=user.getImage();
+				nike=user.getUsername();
+				email=user.getEmail();
+				LoadImageUtil.imageLoader.displayImage(image, personhead, LoadImageUtil.options);				
+				nikename.setText(nike);
+				acount.setText(email);
 				city.setText(user.getCity());
 				SkillAdapter adapter=new SkillAdapter(PersonalPageActivity.this,"page",user.getLabels());
 				skillllist.setAdapter(adapter);	

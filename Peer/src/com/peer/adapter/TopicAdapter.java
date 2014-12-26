@@ -1,10 +1,7 @@
 package com.peer.adapter;
 
-import com.peer.R;
-import com.peer.activitymain.ChatRoomActivity;
-import com.peer.activitymain.TopicHistoryActivity;
-import com.peer.constant.Constant;
-import com.peer.util.ChatRoomTypeUtil;
+import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,15 +13,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.peer.R;
+import com.peer.activitymain.TopicHistoryActivity;
+
 public class TopicAdapter extends BaseAdapter {
 	private Context mContext;
-	public TopicAdapter(Context mContext){
+	private List<Map> mlist;
+	public TopicAdapter(Context mContext,List<Map> list){
 		this.mContext=mContext;
+		this.mlist=list;
 	}
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
-		return 5;
+		return mlist.size();
 	}
 
 	@Override
@@ -55,9 +57,9 @@ public class TopicAdapter extends BaseAdapter {
 		}else{
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
-		viewHolder.time.setText("2014-11-11");
-		viewHolder.nikename.setText("技能标签");
-		viewHolder.descripe.setText("聊天话题聊天话题聊天话题聊天话题聊天话题聊天话题聊天话题聊天话题聊天话题");
+		viewHolder.time.setText((String)mlist.get(position).get("created_at"));
+		viewHolder.nikename.setText((String)mlist.get(position).get("label_name"));
+		viewHolder.descripe.setText((String)mlist.get(position).get("subject"));
 		viewHolder.click.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -73,7 +75,6 @@ public class TopicAdapter extends BaseAdapter {
 	}
 	private class ViewHolder{
 		LinearLayout click;
-		ImageView headpic;
 		TextView nikename;
 		TextView descripe,time;
 	}

@@ -45,14 +45,14 @@ interface ISessionManager {
  	
  	com.peer.client.User personalPage(String targetId,ISessionListener callback);
  	
- 	List topicHistory(String targetId);
+ 	List topicHistory(String targetId,ISessionListener callback);
  	
- 	void TopicchatHistory(String topicId);
+ 	void TopicchatHistory(String topicId,ISessionListener callback);
  	
  	void forgetPassword(String tagetId);
  	
  	void updatePassword(String newPassword);
  	
- 	void creatTopic(String label,String topic,String userId);
+ 	void creatTopic(String label,String topic);
  	
 }

@@ -1,6 +1,8 @@
 package com.peer.activitymain;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -8,6 +10,8 @@ import android.widget.TextView;
 
 import com.peer.R;
 import com.peer.activity.BasicActivity;
+import com.peer.client.service.SessionListener;
+import com.peer.client.ui.PeerUI;
 
 public class AddFriendsActivity extends BasicActivity {
 	private TextView title;
@@ -40,6 +44,26 @@ public class AddFriendsActivity extends BasicActivity {
 
 		default:
 			break;
+		}
+	}
+	private class AddFriendsTask extends AsyncTask<String, String, String>{
+
+		@Override
+		protected String doInBackground(String... paramer) {
+			// TODO Auto-generated method stub				
+			SessionListener callback=new SessionListener();
+			try {
+				PeerUI.getInstance().getISessionManager().addFriends("2", "hello", callback);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}						
+			return callback.getMessage();
+		}
+		@Override
+		protected void onPostExecute(String result) {
+			// TODO Auto-generated method stub
+
 		}
 	}
 }
