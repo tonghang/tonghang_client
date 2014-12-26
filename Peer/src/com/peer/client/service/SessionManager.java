@@ -44,10 +44,11 @@ public class SessionManager extends ISessionManager.Stub {
 		String message = null;
 		int code=1;
 		User user=null;
+		ResponseEntity<Map> result=null;
 		try {
 			parts.put("email", email);
 			parts.put("password", password);			
-			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "/login.json"
+			result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "/login.json"
 					,parts, Map.class);						
 			Map body = result.getBody();			
 			token=(String) body.get("token");
@@ -76,6 +77,7 @@ public class SessionManager extends ISessionManager.Stub {
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			message = Constant.CALLBACKFAIL;
 			e.printStackTrace();
 		}
 		
@@ -450,7 +452,7 @@ public class SessionManager extends ISessionManager.Stub {
 		
 	}
 	
-	/*creat topic*/
+	/*creat topic  测试通过*/
 	@Override
 	public void creatTopic(String label, String topic, String userId)
 			throws RemoteException {
@@ -469,29 +471,16 @@ public class SessionManager extends ISessionManager.Stub {
 			HttpHeaders headers=new HttpHeaders();			
 			headers.add("x-token", token);			
 			
-//			headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-			
 			HttpEntity<MultiValueMap<String, Object>> requestEntity=
 					new HttpEntity<MultiValueMap<String,Object>>(parts,headers);			
 			RestTemplate restTemplate=new RestTemplate(true);	
 			
 			restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 			restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
-			restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
-						
-			ResponseEntity<Map> response=restTemplate.exchange(Constant.WEB_SERVER_ADDRESS + "/topics.json", HttpMethod.POST, requestEntity, Map.class);
+			restTemplate.getMessageConverters().add(new StringHttpMessageConverter());			
 			
-			
-			
-//			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "topics.json", parts, Map.class);			
-//			Map body = result.getBody();
-//			if (result.getStatusCode() == HttpStatus.OK) {
-//				code = 0;				
-//				List list=(List) body.get("labels");				
-////				message = (String) result.getBody().get("message");
-//			} else {
-////				message = (String) result.getBody().get("message");
-//			}
+			Map result= restTemplate.postForObject(Constant.WEB_SERVER_ADDRESS + "/topics.json", requestEntity, Map.class);
+			result.get("last_insert_rowid()");			
 		} catch (Exception e) {
 			// TODO log exception
 			e.printStackTrace();

@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -31,7 +33,11 @@ public class CreatTopicActivity extends BasicActivity {
 	private RadioGroup rg_lables;
 	private RadioButton r1,r2,r3,r4,r5;
 	private View v1,v2,v3,v4,v5;
+	private EditText topic;
 	private List<String> list;
+	
+	private boolean isselect=false;
+	private String selectlabel;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -47,6 +53,7 @@ public class CreatTopicActivity extends BasicActivity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		topic=(EditText)findViewById(R.id.et_topic);
 		creattopic=(Button)findViewById(R.id.bt_creattopic);
 		creattopic.setOnClickListener(this);
 		title=(TextView)findViewById(R.id.tv_title);
@@ -60,7 +67,9 @@ public class CreatTopicActivity extends BasicActivity {
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				// TODO Auto-generated method stub
 				RadioButton tempButton = (RadioButton)findViewById(checkedId);
-				System.out.println("选中的标签是："+tempButton.getText().toString());
+				selectlabel=tempButton.getText().toString();
+				isselect=true;
+//				System.out.println("选中的标签是："+tempButton.getText().toString());
 			}
 		});
 		addRadiobutton();
@@ -71,8 +80,10 @@ public class CreatTopicActivity extends BasicActivity {
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.bt_creattopic:
-			CreatTopicTask task=new CreatTopicTask();
-			task.execute();						
+			if(!TextUtils.isEmpty(topic.getText().toString().trim())&&isselect){
+				CreatTopicTask task=new CreatTopicTask();
+				task.execute();
+			}												
 //			ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.MULTICHAT);
 //			Intent intent=new Intent(CreatTopicActivity.this,ChatRoomActivity.class);
 //			startActivity(intent);
@@ -81,6 +92,30 @@ public class CreatTopicActivity extends BasicActivity {
 
 		default:
 			break;
+		}
+	}
+	private class CreatTopicTask extends AsyncTask<String, String, String>{
+
+		@Override
+		protected String doInBackground(String... paramer) {
+			// TODO Auto-generated method stub				
+			SessionListener callback=new SessionListener();
+			try {
+				PeerUI.getInstance().getISessionManager().creatTopic("", "", "");
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}						
+			return callback.getMessage();
+		}
+		@Override
+		protected void onPostExecute(String result) {
+			// TODO Auto-generated method stub
+//			if(result.equals(Constant.CALLBACKSUCCESS)){
+//				Intent intent=new Intent(RegisterAcountActivity.this,RegisterTagActivity.class);
+//				startActivity(intent);
+//				finish();
+//			}
 		}
 	}
 	private void addRadiobutton(){
@@ -141,35 +176,6 @@ public class CreatTopicActivity extends BasicActivity {
 			v3.setVisibility(View.VISIBLE);
 			v4.setVisibility(View.VISIBLE);
 			v5.setVisibility(View.VISIBLE);
-		}
-	}
-	
-	
-	
-	
-	
-	private class CreatTopicTask extends AsyncTask<String, String, String>{
-
-		@Override
-		protected String doInBackground(String... paramer) {
-			// TODO Auto-generated method stub				
-			SessionListener callback=new SessionListener();
-			try {
-				PeerUI.getInstance().getISessionManager().creatTopic("", "", "");
-			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}						
-			return callback.getMessage();
-		}
-		@Override
-		protected void onPostExecute(String result) {
-			// TODO Auto-generated method stub
-//			if(result.equals(Constant.CALLBACKSUCCESS)){
-//				Intent intent=new Intent(RegisterAcountActivity.this,RegisterTagActivity.class);
-//				startActivity(intent);
-//				finish();
-//			}
 		}
 	}
 }
