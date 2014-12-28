@@ -1,6 +1,9 @@
 package com.peer.activitymain;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -13,10 +16,15 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
+
 import com.peer.R;
 import com.peer.activity.BasicActivity;
+import com.peer.client.User;
 import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
+import com.peer.constant.Constant;
+import com.peer.localDB.LocalStorage;
+import com.peer.util.ChatRoomTypeUtil;
 
 
 public class CreatTopicActivity extends BasicActivity {
@@ -75,40 +83,51 @@ public class CreatTopicActivity extends BasicActivity {
 		case R.id.bt_creattopic:
 			if(!TextUtils.isEmpty(topic.getText().toString().trim())&&isselect){
 				CreatTopicTask task=new CreatTopicTask();
-				task.execute();
+				task.execute(selectlabel,topic.getText().toString().trim());
 			}												
-//			ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.MULTICHAT);
-//			Intent intent=new Intent(CreatTopicActivity.this,ChatRoomActivity.class);
-//			startActivity(intent);
-//			finish();
 			break;
 
 		default:
 			break;
 		}
 	}
-	private class CreatTopicTask extends AsyncTask<String, String, String>{
+	private class CreatTopicTask extends AsyncTask<String, String, List>{
 
 		@Override
-		protected String doInBackground(String... paramer) {
+		protected List<String> doInBackground(String... paramer) {
 			// TODO Auto-generated method stub				
-			SessionListener callback=new SessionListener();
+			List<String> list=new ArrayList<String>();
+			String groupid=null;
+			list.add(paramer[0]);
+			list.add(paramer[1]);			
 			try {
-				PeerUI.getInstance().getISessionManager().creatTopic(paramer[0], paramer[1]);
+				groupid=PeerUI.getInstance().getISessionManager().creatTopic(paramer[0], paramer[1]);
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}						
-			return callback.getMessage();
+			}
+			list.add(groupid);
+			return list;
 		}
 		@Override
-		protected void onPostExecute(String result) {
+		protected void onPostExecute(List result) {
 			// TODO Auto-generated method stub
-//			if(result.equals(Constant.CALLBACKSUCCESS)){
-//				Intent intent=new Intent(RegisterAcountActivity.this,RegisterTagActivity.class);
-//				startActivity(intent);
-//				finish();
-//			}
+			topic.setText("");
+			ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.MULTICHAT);				
+			ChatRoomTypeUtil.getInstance().setTitle((String)result.get(0));
+			ChatRoomTypeUtil.getInstance().setTheme((String)result.get(1));
+			ChatRoomTypeUtil.getInstance().setHuanxingId((String)result.get(2));
+			User u=new User();
+			try {
+				u.setImage(PeerUI.getInstance().getISessionManager().getImagUrL());
+				u.setUsername(PeerUI.getInstance().getISessionManager().getUserName());
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
+			ChatRoomTypeUtil.getInstance().setUser(u);	
+			Intent intent=new Intent(CreatTopicActivity.this,ChatRoomActivity.class);
+			startActivity(intent);
 		}
 	}
 	private void addRadiobutton(){

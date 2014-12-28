@@ -3,18 +3,25 @@ package com.peer.adapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.easemob.chat.core.c;
 import com.peer.R;
 import com.peer.activity.MySkillActivity;
 import com.peer.activity.SettingActivity;
+import com.peer.client.service.SessionListener;
+import com.peer.client.ui.PeerUI;
+import com.peer.constant.Constant;
 import com.peer.event.NewFriensEvent;
 import com.peer.event.SkillEvent;
 import com.peer.util.ManagerActivity;
 
 import de.greenrobot.event.EventBus;
 
+import android.R.bool;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.RemoteException;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,7 +90,7 @@ public class SkillAdapter extends BaseAdapter {
 					@Override
 					public void onClick(View arg0) {
 						// TODO Auto-generated method stub
-						updateSkill();
+						updateSkill(position);
 					}
 				});
 			}
@@ -98,13 +105,13 @@ public class SkillAdapter extends BaseAdapter {
 		new AlertDialog.Builder(mContext).setTitle(mContext.getResources().getString(R.string.deleteskill))  
 		.setMessage(mContext.getResources().getString(R.string.deletethisskill)) .setNegativeButton(mContext.getResources().getString(R.string.cancel), null) 
 		 .setPositiveButton(mContext.getResources().getString(R.string.sure), new DialogInterface.OnClickListener(){
-             public void onClick(DialogInterface dialoginterface, int i){            	 
-            	 EventBus.getDefault().post(new SkillEvent(position));
+             public void onClick(DialogInterface dialoginterface, int i){ 
+            	 EventBus.getDefault().post(new SkillEvent(position,mlist.get(position),true));           	      	        	 
              }
 		 })
 		 .show();  
 	}
-	private void updateSkill() {
+	private void updateSkill(final int position) {
 		// TODO Auto-generated method stub
 		final EditText inputServer = new EditText(mContext);
         inputServer.setFocusable(true);
@@ -114,15 +121,20 @@ public class SkillAdapter extends BaseAdapter {
         builder.setPositiveButton(mContext.getResources().getString(R.string.sure),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        String inputName = inputServer.getText().toString().trim();
-                       if(!inputName.equals("")){
-                    	   List<String> arr=new ArrayList<String>();
-                           arr.add(inputName);
-                        
-                       }else{
-                    	  
-                       }
-                       
+                        final String inputName = inputServer.getText().toString().trim();
+                        boolean issamelabel=false;
+                        if(!TextUtils.isEmpty(inputName)){                    	   
+                    	   for(int i=0;i<mlist.size();i++){
+                    		  if( inputName.equals( mlist.get(i))){
+                    			  issamelabel=true;
+                    			  break;
+                    			  }                    		   
+                    	   }
+                    	   if(!issamelabel){
+                    		   EventBus.getDefault().post(new SkillEvent(position,inputName,false));
+                  		  
+                    	   }                   	
+                       }      
                     }
                 });
         builder.show();			

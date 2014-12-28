@@ -13,13 +13,17 @@ interface ISessionManager {
 	
 	String getUserId();
 	
+	String getImagUrL();
+	
+	String getUserName();
+	
 	List<String> getLabels();
 	
     com.peer.client.User login(String username, String password, ISessionListener callback);    
     
     void register(String email, String password, String username, ISessionListener callback);
    
-    void registerLabel(in List<String> labels);
+    void registerLabel(in List<String> labels,ISessionListener callback);
  		
  	void profileUpdate(String nickName, String birthday, String city, String sex, String filename, in byte[] image, ISessionListener callback);
  	
@@ -37,11 +41,11 @@ interface ISessionManager {
     
     List<com.peer.client.User> searchUsersByNickName(String username,ISessionListener callback);
  	
- //	recommendByPage(int page, ISessionListener callback);
+ 	List recommendByPage(int page, ISessionListener callback);
  
  	List<com.peer.client.User> myFriends();
  	
- 	List<com.peer.client.User> Invitations();
+ 	List<com.peer.client.User> Invitations(ISessionListener callback);
  	
  	com.peer.client.User personalPage(String targetId,ISessionListener callback);
  	
@@ -53,6 +57,8 @@ interface ISessionManager {
  	
  	void updatePassword(String newPassword);
  	
- 	void creatTopic(String label,String topic);
+ 	String creatTopic(String label,String topic);
+ 	
+ 	void setLabels(in List<String> labels);
  	
 }

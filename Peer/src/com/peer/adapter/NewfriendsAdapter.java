@@ -4,14 +4,18 @@ import java.util.List;
 
 import com.peer.R;
 import com.peer.activitymain.PersonalPageActivity;
+import com.peer.client.User;
+import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
 import com.peer.event.NewFriensEvent;
 import com.peer.util.PersonpageUtil;
 
 import de.greenrobot.event.EventBus;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.RemoteException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +27,8 @@ import android.widget.Toast;
 
 public class NewfriendsAdapter extends BaseAdapter {
 	private Context mContext;	
-	private List<String> mlist;
-	public NewfriendsAdapter(Context mContext,List<String> mlist){
+	private List<User> mlist;
+	public NewfriendsAdapter(Context mContext,List<User> mlist){
 		this.mContext=mContext;
 		this.mlist=mlist;
 	}
@@ -74,8 +78,30 @@ public class NewfriendsAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				 EventBus.getDefault().post(new NewFriensEvent(position));
-				 Toast.makeText(mContext, "拒绝添加为好友", 0).show();
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						try {
+							PeerUI.getInstance().getISessionManager().refuseAddFriends(mlist.get(position).getId());
+							 EventBus.getDefault().post(new NewFriensEvent(position));
+							 ((Activity)mContext).runOnUiThread(new Runnable() {
+								
+								@Override
+								public void run() {
+									// TODO Auto-generated method stub
+									Toast.makeText(mContext, "拒绝添加为好友", 0).show();
+								}
+							});
+						} catch (RemoteException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}).start();
+//				 EventBus.getDefault().post(new NewFriensEvent(position));
+//				 Toast.makeText(mContext, "拒绝添加为好友", 0).show();
 			}
 		});
 		viewHolder.access.setOnClickListener(new View.OnClickListener() {
@@ -83,7 +109,21 @@ public class NewfriendsAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				 EventBus.getDefault().post(new NewFriensEvent(position));
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						try {
+							PeerUI.getInstance().getISessionManager().agreeAddFriends(mlist.get(position).getId());
+							 EventBus.getDefault().post(new NewFriensEvent(position));
+						} catch (RemoteException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}).start();
+				
 			}
 		});
 		viewHolder.click.setOnClickListener(new View.OnClickListener() {

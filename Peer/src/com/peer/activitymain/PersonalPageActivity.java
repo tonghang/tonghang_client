@@ -50,8 +50,7 @@ public class PersonalPageActivity extends BasicActivity {
 	}
 	
 	private void init() {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 		topic_whose=(TextView)findViewById(R.id.tv_topic);
 		title=(TextView)findViewById(R.id.tv_title);
 		acount=(TextView)findViewById(R.id.personcount);
@@ -78,30 +77,30 @@ public class PersonalPageActivity extends BasicActivity {
 			title.setText(getResources().getString(R.string.personalpage_other));
 			params.rightMargin=(int) getResources().getDimension(R.dimen.marginsize_around);
 			params.leftMargin=(int) getResources().getDimension(R.dimen.marginsize_around);
-			Button bt=new Button(this);
-			bt.setText(getResources().getString(R.string.sendmsg));
-			bt.setBackgroundResource(R.drawable.selector_commit);	
-			bt.setLayoutParams(params);
-			bt.setOnClickListener(new View.OnClickListener() {
+			Button send=new Button(this);
+			send.setText(getResources().getString(R.string.sendmsg));
+			send.setBackgroundResource(R.drawable.selector_commit);	
+			send.setLayoutParams(params);
+			send.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
 				public void onClick(View arg0) {
 					// TODO Auto-generated method stub
 					ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.SINGLECHAT);
-					ChatRoomTypeUtil.getInstance().setName("yzq");
-					
+					ChatRoomTypeUtil.getInstance().setHuanxingId(PersonpageUtil.getInstance().getHuanxinId());
+					ChatRoomTypeUtil.getInstance().setTitle(PersonpageUtil.getInstance().getPersonname());
 					Intent intent=new Intent(PersonalPageActivity.this,ChatRoomActivity.class);
 					startActivity(intent);
 				}
 			});
 			
-			Button bt2=new Button(this);
-			bt2.setText(getResources().getString(R.string.addfriends));
-			bt2.setBackgroundResource(R.drawable.selector_commit);		
-			bt2.setLayoutParams(params);
-			bottomline.addView(bt);
-			bottomline.addView(bt2);
-			bt2.setOnClickListener(new View.OnClickListener() {
+			Button addfriend=new Button(this);
+			addfriend.setText(getResources().getString(R.string.addfriends));
+			addfriend.setBackgroundResource(R.drawable.selector_commit);		
+			addfriend.setLayoutParams(params);
+			bottomline.addView(send);
+			bottomline.addView(addfriend);
+			addfriend.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
 				public void onClick(View arg0) {

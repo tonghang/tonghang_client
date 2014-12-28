@@ -52,6 +52,7 @@ public class ChatHistoryAdapter extends ArrayAdapter<EMConversation> {
 			EMConversation conversation = getItem(position);
 			// 获取用户username或者群组groupid
 			final String username = conversation.getUserName();
+			
 			List<EMGroup> groups = EMGroupManager.getInstance().getAllGroups();
 			EMContact contact = null;
 			boolean isGroup = false;
@@ -111,7 +112,7 @@ public class ChatHistoryAdapter extends ArrayAdapter<EMConversation> {
 							// TODO Auto-generated method stub
 							bd.hide();
 							ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.SINGLECHAT);
-							ChatRoomTypeUtil.getInstance().setName(username);
+							ChatRoomTypeUtil.getInstance().setTitle(username);
 							Intent intent=new Intent(mContext,ChatRoomActivity.class);
 							mContext.startActivity(intent);
 							

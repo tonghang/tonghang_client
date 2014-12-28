@@ -8,6 +8,9 @@ public interface Constant {
 	/*LocalStorage key*/
 	public String EMAIL="email";
 	
+	/*homepage recommend user or topic*/
+	public String USER="user";
+	public String TOPIC="topic";
 	
 	/*personalpage type*/
 	public int OWNPAGE=1;
@@ -27,7 +30,7 @@ public interface Constant {
 	public int SEARCHUSER=2;
 	public int SEARCHUSERBYLABEL=3;
 	/*web server*/
-	 String SERVER_ADDRESS = "10.0.2.2:3000";
+	 String SERVER_ADDRESS = "114.215.143.83:3000";
 	 int WEB_SERVER_PORT = 3000;
 	 String WEB_SERVER_ADDRESS="http://" + SERVER_ADDRESS;
 	 /*connection status*/

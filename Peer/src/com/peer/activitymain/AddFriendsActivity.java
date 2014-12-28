@@ -39,6 +39,8 @@ public class AddFriendsActivity extends BasicActivity {
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.bt_send:
+			AddFriendsTask task=new AddFriendsTask();
+			task.execute();
 			ShowMessage(getResources().getString(R.string.addfriendssuccess));
 			break;
 

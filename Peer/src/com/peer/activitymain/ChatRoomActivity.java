@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -32,6 +33,8 @@ import com.peer.R;
 import com.peer.IMimplements.RingLetterImp;
 import com.peer.activity.BasicActivity;
 import com.peer.adapter.ChatMsgViewAdapter;
+import com.peer.client.User;
+import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
 import com.peer.entity.ChatMsgEntity;
 import com.peer.localDB.LocalStorage;
@@ -39,6 +42,7 @@ import com.peer.titlepopwindow.ActionItem;
 import com.peer.titlepopwindow.TitlePopup;
 import com.peer.titlepopwindow.TitlePopup.OnItemOnClickListener;
 import com.peer.util.ChatRoomTypeUtil;
+import com.peer.widgetutil.LoadImageUtil;
 
 public class ChatRoomActivity extends BasicActivity {
 	private TitlePopup titlePopup;
@@ -46,7 +50,7 @@ public class ChatRoomActivity extends BasicActivity {
 	private RelativeLayout rl_owner;
 	private Button sendmessage;
 	private EditText messagebody;
-	private ImageView downwindow;
+	private ImageView downwindow,ownerimg;
 	private TextView tv_tagname,nikename,tv_theme,tv_seemember;
 	boolean isFirst=true;
 	private ListView selflistview;
@@ -63,13 +67,15 @@ public class ChatRoomActivity extends BasicActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chatroom);
+		LoadImageUtil.initImageLoader(this);
 		init();
 		initChatListener();
+		
 	}
 	
 	private void init() {
 		// TODO Auto-generated method stub
-		toChatUsername=ChatRoomTypeUtil.getInstance().getName();
+		toChatUsername=ChatRoomTypeUtil.getInstance().getHuanxingId();
 		titlePopup = new TitlePopup(this, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);	
 		rl_owner=(RelativeLayout)findViewById(R.id.host_imfor);		
 		popupwindow();
@@ -77,7 +83,10 @@ public class ChatRoomActivity extends BasicActivity {
 		mScrollView.setVerticalScrollBarEnabled(false);  
 		mScrollView.setHorizontalScrollBarEnabled(false);
 		downwindow=(ImageView)findViewById(R.id.im_downview);
-		downwindow.setOnClickListener(this);		
+		downwindow.setOnClickListener(this);	
+		
+		ownerimg=(ImageView)findViewById(R.id.host_image);
+		
 		tv_tagname=(TextView)findViewById(R.id.tv_tagname);		
 		nikename=(TextView)findViewById(R.id.tv_nikename);
 		tv_theme=(TextView)findViewById(R.id.theme_chat);
@@ -95,25 +104,25 @@ public class ChatRoomActivity extends BasicActivity {
 
 		sendmessage=(Button)findViewById(R.id.btn_send);
 		sendmessage.setOnClickListener(this);	
-		
-		
-		
+				
 		if(ChatRoomTypeUtil.getInstance().getChatroomtype()==Constant.MULTICHAT){
 			titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.exitroom), R.color.white));
 			rl_owner.setVisibility(View.VISIBLE);
-			tv_tagname.setText(ChatRoomTypeUtil.getInstance().getName());
-			nikename.setText(ChatRoomTypeUtil.getInstance().getNike());
+			tv_tagname.setText(ChatRoomTypeUtil.getInstance().getTitle());
+			User u=ChatRoomTypeUtil.getInstance().getUser();
+			LoadImageUtil.imageLoader.displayImage(u.getImage(), ownerimg,LoadImageUtil.options);		
+			nikename.setText(u.getUsername());
 			tv_theme.setText(ChatRoomTypeUtil.getInstance().getTheme());
 		}else if(ChatRoomTypeUtil.getInstance().getChatroomtype()==Constant.SINGLECHAT){
 			rl_owner.setVisibility(View.GONE);
-			tv_tagname.setText(ChatRoomTypeUtil.getInstance().getName());
+			tv_tagname.setText(ChatRoomTypeUtil.getInstance().getTitle());
 			titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.deletemes), R.color.white));
 		}
 		
 		if(LocalStorage.getBoolean(this, "istestui")){
 			
 		}else{
-			conversation = EMChatManager.getInstance().getConversation(ChatRoomTypeUtil.getInstance().getName());
+			conversation = EMChatManager.getInstance().getConversation(ChatRoomTypeUtil.getInstance().getHuanxingId());
 			for(int i=0;i<conversation.getMsgCount();i++){
 				EMMessage message =conversation.getMessage(i);
 				TextMessageBody body=(TextMessageBody) message.getBody();
@@ -162,7 +171,7 @@ public class ChatRoomActivity extends BasicActivity {
 				if(item.mTitle.equals(getResources().getString(R.string.exitroom))){
 					finish();
 				}else if(item.mTitle.equals(getResources().getString(R.string.deletemes))){
-					RingLetterImp.getInstance().clearConversation(ChatRoomTypeUtil.getInstance().getName());
+					RingLetterImp.getInstance().clearConversation(toChatUsername);
 					msgList.clear();
 					adapter.notifyDataSetChanged();
 			//		ShowMessage(getResources().getString(R.string.deletechatmsg));
@@ -198,8 +207,15 @@ public class ChatRoomActivity extends BasicActivity {
 	private void sendMessage() {
 		// TODO Auto-generated method stub
 		if(EMChatManager.getInstance().isConnected()){
-			String content=messagebody.getText().toString().trim();			
-			RingLetterImp.getInstance().sendMessage(content, Constant.SINGLECHAT, "yzq","imagurl");			
+			String content=messagebody.getText().toString().trim();	
+			String imagurl=null;
+			try {
+				imagurl=PeerUI.getInstance().getISessionManager().getImagUrL();
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			RingLetterImp.getInstance().sendMessage(content, Constant.SINGLECHAT, toChatUsername,imagurl);			
 			SimpleDateFormat   formatter   =   new   SimpleDateFormat   ("yyyy年MM月dd日   HH:mm:ss     ");     
 			 Date   curDate   =   new   Date(System.currentTimeMillis());//获取当前时间     
 			String   str   =   formatter.format(curDate);     

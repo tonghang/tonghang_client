@@ -7,6 +7,7 @@ import com.peer.R;
 import com.peer.adapter.SkillAdapter;
 import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
+import com.peer.constant.Constant;
 import com.peer.event.NewFriensEvent;
 import com.peer.event.SkillEvent;
 
@@ -58,6 +59,7 @@ public class MySkillActivity extends BasicActivity {
 		}
 		adapter=new SkillAdapter(this,mlist);
 		mytaglistview.setAdapter(adapter);
+		
 	}
 	@Override
 	public void onClick(View v) {
@@ -111,9 +113,7 @@ public class MySkillActivity extends BasicActivity {
                 });
         builder.show();			
 	}
-	public void createLable(String label){
-		final List<String> list=new ArrayList<String>();
-		list.add(label);
+	public void createLable(final String label){
 		new Thread(new Runnable() {
 			
 			@Override
@@ -121,8 +121,8 @@ public class MySkillActivity extends BasicActivity {
 				// TODO Auto-generated method stub
 				SessionListener callback=new SessionListener();
 				try {
-					PeerUI.getInstance().getISessionManager().registerLabel(list);
-					mlist.addAll(list);
+					mlist.add(label);
+					PeerUI.getInstance().getISessionManager().registerLabel(mlist,callback);					
 					adapter.notifyDataSetChanged();
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
@@ -132,10 +132,7 @@ public class MySkillActivity extends BasicActivity {
 		}).start();
 		
 		
-	}
-	
-	
-	
+	}	
 	private void initdata() {
 		// TODO Auto-generated method stub
 		mlist=new ArrayList<String>();
@@ -151,9 +148,69 @@ public class MySkillActivity extends BasicActivity {
 		 */
 		 mBus.register(this, "getSkillEvent",SkillEvent.class);
 	}
-	private void getSkillEvent(SkillEvent event){
-		mlist.remove(event.getPosition());
-		adapter.notifyDataSetChanged();
+	private void getSkillEvent(final SkillEvent event){
+		event.getPosition();
+		event.getLabel();
+		if(event.isIsdelete()){
+			new Thread(new Runnable() {			
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub					
+					SessionListener callback=new SessionListener(); 
+					mlist.remove(event.getPosition());
+	            	 try {
+						PeerUI.getInstance().getISessionManager().registerLabel(mlist,callback);
+						PeerUI.getInstance().getISessionManager().setLabels(mlist);
+	            	 } catch (RemoteException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+	            	 }  
+	            	 if (callback.getMessage().equals(Constant.CALLBACKSUCCESS)) {
+	            		 MySkillActivity.this.runOnUiThread(new Runnable() {
+								
+								@Override
+								public void run() {
+									// TODO Auto-generated method stub
+									 adapter.notifyDataSetChanged();
+								}
+							});
+	            	 }            		 
+				}
+			}).start(); 
+		}else{
+			 new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub	
+						 mlist.get(event.getPosition()).replace(mlist.get(event.getPosition()), event.getLabel());
+             		   SessionListener callback=new SessionListener();           	 
+                     	 try {
+         					PeerUI.getInstance().getISessionManager().registerLabel(mlist,callback);
+         					PeerUI.getInstance().getISessionManager().setLabels(mlist);
+                     	 } catch (RemoteException e) {
+         					// TODO Auto-generated catch block
+         					e.printStackTrace();
+                     	 }  
+                     	 if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
+                     		 MySkillActivity.this.runOnUiThread(new Runnable() {
+								
+								@Override
+								public void run() {
+									// TODO Auto-generated method stub
+									adapter.notifyDataSetChanged();
+								}
+							});
+                     	 }
+					}
+				}).start();
+		}
+		
+		
+		
+		
+		
+		
 	}
 	@Override
 	protected void onDestroy() {

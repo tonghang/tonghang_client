@@ -12,10 +12,13 @@ import com.peer.activitymain.CreatTopicActivity;
 import com.peer.activitymain.HomePageActivity;
 import com.peer.activitymain.SearchActivity;
 import com.peer.adapter.HomepageAdapter;
+import com.peer.client.service.SessionListener;
+import com.peer.client.ui.PeerUI;
 
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +35,7 @@ public class HomeFragment extends BasicFragment{
 	public RelativeLayout errorItem;
 	public TextView errorText;
 	
-	List<Map> list=new ArrayList<Map>();
+	private List list;
 	HomepageAdapter adapter;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,9 +47,10 @@ public class HomeFragment extends BasicFragment{
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
-		initdata();
+//		initdata();
 		init();
-		
+		RecommendTask task=new RecommendTask();
+		task.execute();
 	}
 	private void init() {
 		// TODO Auto-generated method stub
@@ -61,8 +65,7 @@ public class HomeFragment extends BasicFragment{
 			
 		mPullrefreshlistview=(PullToRefreshListView)getView().findViewById(R.id.pull_refresh_homepage);
 		
-		adapter=new HomepageAdapter(getActivity(),list);
-		mPullrefreshlistview.setAdapter(adapter);
+		
 		RefreshListner();
 	}
 	@Override
@@ -170,15 +173,22 @@ public class HomeFragment extends BasicFragment{
 		@Override
 		protected List doInBackground(Void... arg0) {
 			// TODO Auto-generated method stub
-			String message = null;
-            int code = 1;
+			SessionListener callback=new SessionListener();
+         
+            try {
+            	list=PeerUI.getInstance().getISessionManager().recommendByPage(1, callback);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
            
 			return list;
 		}
 		@Override
 		protected void onPostExecute(List result) {
 			// TODO Auto-generated method stub
-		
+			adapter=new HomepageAdapter(getActivity(),list);
+			mPullrefreshlistview.setAdapter(adapter);
 		}
 	}
 }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import com.peer.R;
+import com.peer.IMimplements.RingLetterImp;
 import com.peer.activitymain.HomePageActivity;
 import com.peer.activitymain.MainActivity;
 import com.peer.client.User;
@@ -171,7 +172,7 @@ public class CompleteActivity extends BasicActivity{
 					// TODO Auto-generated method stub
 					SessionListener callback=new SessionListener();
 					try {
-						PeerUI.getInstance().getISessionManager().registerLabel(tags);
+						PeerUI.getInstance().getISessionManager().registerLabel(tags,callback);
 						PeerUI.getInstance().getISessionManager().profileUpdate("",birthday.getText().toString(), cityselect.getText().toString(), sex.getText().toString(),IMAGE_FILE_NAME, img, callback);										
 					} catch (RemoteException e) {
 						// TODO Auto-generated catch block
@@ -187,6 +188,10 @@ public class CompleteActivity extends BasicActivity{
 //							pd = ProgressDialog.show(CompleteActivity.this,"", getResources().getString(R.string.committing));
 							User u=PeerUI.getInstance().getISessionManager().login(email, password, callback2);
 							if(callback2.getMessage().equals(Constant.CALLBACKSUCCESS)){
+								String huanxinid=PeerUI.getInstance().getISessionManager().getHuanxingUser();
+								RingLetterImp.getInstance().login(huanxinid, password);
+								RingLetterImp.getInstance().loadConversationsandGroups();
+								
 								com.peer.localDBbean.UserBean userbean=new com.peer.localDBbean.UserBean();
 								 userbean.setEmail(u.getEmail());
 								 userbean.setAge(u.getBirthday());
@@ -197,8 +202,8 @@ public class CompleteActivity extends BasicActivity{
 								 userdao.updateUser(userbean);
 //								 pd.dismiss();	
 								 Intent intent=new Intent(CompleteActivity.this,MainActivity.class);
-									startActivity(intent);
-									finish();
+								 startActivity(intent);
+								 finish();
 							}
 							
 						} catch (RemoteException e) {

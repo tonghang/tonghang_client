@@ -122,17 +122,17 @@ public class LoginActivity extends BasicActivity{
 	private class LoginTask extends AsyncTask<String, String, String>{		
 		@Override
 		protected String doInBackground(String... paramer) {
-			// TODO Auto-generated method stub
-						
+			// TODO Auto-generated method stub						
 			SessionListener callback=new SessionListener();
 			try {
 				User u=PeerUI.getInstance().getISessionManager().login(paramer[0], paramer[1], callback);
+				
 				if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
 					String huanxinid=PeerUI.getInstance().getISessionManager().getHuanxingUser();
-//					RingLetterImp.getInstance().login(huanxinid, paramer[1]);
-//					RingLetterImp.getInstance().loadConversationsandGroups();					
+					RingLetterImp.getInstance().login(huanxinid, paramer[1]);
+					RingLetterImp.getInstance().loadConversationsandGroups();					
 //本地存储操作。。。			
-					String userid=PeerUI.getInstance().getISessionManager().getUserId();
+					 String userid=PeerUI.getInstance().getISessionManager().getUserId();
 					
 					 LocalStorage.saveString(LoginActivity.this, Constant.EMAIL, paramer[0]);
 					 UserDao userdao=new UserDao(LoginActivity.this);
