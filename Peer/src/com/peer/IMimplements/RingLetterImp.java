@@ -129,5 +129,15 @@ public class RingLetterImp implements IM{
 		unreadMsgCountTotal = EMChatManager.getInstance().getUnreadMsgsCount();
 		return unreadMsgCountTotal;
 	}
+	@Override
+	public void joingroup(String groupid) {
+		// TODO Auto-generated method stub
+		try {
+			EMGroupManager.getInstance().joinGroup(groupid);
+		} catch (EaseMobException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 }

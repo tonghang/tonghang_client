@@ -113,6 +113,9 @@ public class ChatRoomActivity extends BasicActivity {
 			LoadImageUtil.imageLoader.displayImage(u.getImage(), ownerimg,LoadImageUtil.options);		
 			nikename.setText(u.getUsername());
 			tv_theme.setText(ChatRoomTypeUtil.getInstance().getTheme());
+			//加入公开群聊
+			RingLetterImp.getInstance().joingroup(toChatUsername);
+			
 		}else if(ChatRoomTypeUtil.getInstance().getChatroomtype()==Constant.SINGLECHAT){
 			rl_owner.setVisibility(View.GONE);
 			tv_tagname.setText(ChatRoomTypeUtil.getInstance().getTitle());

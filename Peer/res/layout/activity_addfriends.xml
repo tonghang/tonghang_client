@@ -30,7 +30,7 @@
                 android:layout_width="60.0dip"
                 android:layout_height="60.0dip"
                 android:layout_gravity="center"
-                android:background="@drawable/ad_background" />
+                 />
         </LinearLayout>
 
         <LinearLayout
@@ -49,17 +49,17 @@
                     android:id="@+id/personnike"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="昵称"
+                    
                     android:textColor="@color/black"
                     android:textSize="@dimen/textsize_middle" />
 
                 <TextView
-                    android:id="@+id/personnike"
+                    android:id="@+id/email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"
-                    android:text="36826273@qq.com"
+                    
                     android:textColor="@color/deepgray"
                     android:textSize="@dimen/textsize_middle" />
             </RelativeLayout>
@@ -67,6 +67,7 @@
     </LinearLayout>
 
     <EditText
+        android:id="@+id/add_reson"
         android:layout_width="match_parent"
         android:layout_height="97dp"
         android:layout_marginLeft="8dp"

@@ -15,4 +15,6 @@ public interface IM {
 	public void loadConversationsandGroups();
 	
 	public int getUnreadMesTotal();
+	
+	public void joingroup(String groupid);
 }

@@ -226,8 +226,11 @@ public class SessionManager extends ISessionManager.Stub {
 			restTemplate.getMessageConverters().add(new StringHttpMessageConverter());			
 			
 			Map result=restTemplate.postForObject(Constant.WEB_SERVER_ADDRESS + "/invitations.json", requestEntity, Map.class);
+			message=Constant.CALLBACKSUCCESS;
+			code=0;
 			result.get("last_insert_rowid()");
 		}catch(Exception e){
+			message=Constant.CALLBACKFAIL;
 			e.printStackTrace();
 		}
 		callback.onCallBack(code, message);

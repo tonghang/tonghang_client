@@ -34,6 +34,8 @@ public class PersonalPageActivity extends BasicActivity {
 	private LinearLayout back,bottomline;
 	private ListView skillllist;
 	private List<HashMap<String, String>> list=new ArrayList<HashMap<String,String>>();
+	private User userpage;
+	
 	
 	private String image;
 	private String nike;
@@ -104,8 +106,12 @@ public class PersonalPageActivity extends BasicActivity {
 				
 				@Override
 				public void onClick(View arg0) {
-					// TODO Auto-generated method stub					
+					// TODO Auto-generated method stub										
 					Intent intent=new Intent(PersonalPageActivity.this,AddFriendsActivity.class);
+					intent.putExtra("userId", userpage.getId());
+					intent.putExtra("image", userpage.getImage());
+					intent.putExtra("nike", userpage.getUsername());
+					intent.putExtra("email", userpage.getEmail());
 					startActivity(intent);
 				}
 			});
@@ -127,6 +133,8 @@ public class PersonalPageActivity extends BasicActivity {
 				public void onClick(View arg0) {
 					// TODO Auto-generated method stub
 					ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.SINGLECHAT);
+					ChatRoomTypeUtil.getInstance().setHuanxingId(PersonpageUtil.getInstance().getHuanxinId());
+					ChatRoomTypeUtil.getInstance().setTitle(PersonpageUtil.getInstance().getPersonname());					
 					Intent intent=new Intent(PersonalPageActivity.this,ChatRoomActivity.class);
 					startActivity(intent);
 				}
@@ -149,10 +157,10 @@ public class PersonalPageActivity extends BasicActivity {
 		switch (v.getId()) {
 		case R.id.rl_topic:
 			Intent intent=new Intent(PersonalPageActivity.this,TopicActivity.class);
-			intent.putExtra("userId", "1");
-			intent.putExtra("image", image);
-			intent.putExtra("nike", nike);
-			intent.putExtra("email", email);			
+			intent.putExtra("userId", userpage.getId());
+			intent.putExtra("image", userpage.getImage());
+			intent.putExtra("nike", userpage.getUsername());
+			intent.putExtra("email", userpage.getEmail());			
 			startActivity(intent);			
 			break;
 		default:
@@ -178,6 +186,7 @@ public class PersonalPageActivity extends BasicActivity {
 		protected void onPostExecute(User user) {
 			// TODO Auto-generated method stub
 			if(user!=null){
+				userpage=user;
 				image=user.getImage();
 				nike=user.getUsername();
 				email=user.getEmail();
