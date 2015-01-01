@@ -1,5 +1,8 @@
 package com.peer.activitymain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -11,12 +14,14 @@ import android.widget.RelativeLayout;
 import com.peer.R;
 import com.peer.activity.BasicActivity;
 import com.peer.adapter.FriendsAdapter;
+import com.peer.client.User;
 
 public class FriendsActivity extends BasicActivity {
 	private LinearLayout find,come,my,friends;
 	private ListView mlistview;
 	private RelativeLayout seenewfriends;
 	private ImageView friendsback;
+	private List<User> list=new ArrayList<User>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -32,7 +37,17 @@ public class FriendsActivity extends BasicActivity {
 		
 		mlistview=(ListView)findViewById(R.id.lv_friends);
 		
-		FriendsAdapter adapter=new FriendsAdapter(this);
+		
+		for(int i=0;i<9;i++){
+			User user=new User();
+			user.setUsername("离尘之影");
+			List<String> labels=new ArrayList<String>();
+			labels.add("美食");
+			labels.add("java");
+			user.setLabels(labels);
+			list.add(user);
+		}
+		FriendsAdapter adapter=new FriendsAdapter(this,list);
 		mlistview.setAdapter(adapter);
 	
 		find=(LinearLayout)findViewById(R.id.ll_find);		

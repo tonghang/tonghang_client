@@ -68,7 +68,7 @@ public class SeachResultAdapter extends BaseAdapter {
 			if(labels.equals("")){
 				labels=s;	
 			}else{
-				labels=labels+","+s;
+				labels=labels+" | "+s;
 			}			
 		}
 		

@@ -25,9 +25,9 @@
             android:textColor="@color/black" 
             android:layout_width="wrap_content"
             android:layout_height="40dip"
-            android:gravity="bottom"
+            android:gravity="center"
             android:textSize="@dimen/textsize_middle"
-            android:text="请用你的职业、专长、兴趣注册技能标签，职客秀帮你在专业领域出名"/>
+            android:text="请输入你的职业和所熟悉的行业"/>
     </LinearLayout>
     <View
         android:layout_marginTop="8dp"
@@ -52,7 +52,7 @@
             android:layout_weight="2"
             android:textColor="@color/black"
             android:layout_marginLeft="8dp"
-            android:text="技能1： "/>
+            android:text="行业1： "/>
         <EditText
             android:id="@+id/et_tagname_1"
             android:layout_width="match_parent"
@@ -88,7 +88,7 @@
             android:layout_weight="2"
              android:textColor="@color/black"
               android:layout_marginLeft="8dp"
-            android:text="技能2： "/>
+            android:text="行业2： "/>
         <EditText
             android:id="@+id/et_tagname_2"
             android:layout_width="match_parent"
@@ -125,7 +125,7 @@
             android:layout_weight="2"
              android:textColor="@color/black"
               android:layout_marginLeft="8dp"
-            android:text="技能3： "/>
+            android:text="行业3： "/>
         <EditText
             android:id="@+id/et_tagname_3"
             android:layout_width="match_parent"
@@ -160,7 +160,7 @@
             android:layout_weight="2"
              android:textColor="@color/black"
               android:layout_marginLeft="8dp"
-            android:text="技能4： "/>
+            android:text="行业4： "/>
         <EditText
             android:id="@+id/et_tagname_4"
             android:layout_width="match_parent"
@@ -195,7 +195,7 @@
             android:layout_weight="2"
              android:layout_marginLeft="8dp"
              android:textColor="@color/black"
-            android:text="技能5： "/>
+            android:text="行业5： "/>
         <EditText
             android:id="@+id/et_tagname_5"
             android:layout_width="match_parent"

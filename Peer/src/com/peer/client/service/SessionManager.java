@@ -385,21 +385,65 @@ public class SessionManager extends ISessionManager.Stub {
 	@Override
 	public List<User> myFriends() throws RemoteException {
 		// TODO Auto-generated method stub
+		List<User> list=new ArrayList<User>();		
 		try {
-			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "/users/"+userid+"/friends.json", "", Map.class);			
-			Map body = result.getBody();		
+			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS + "/users/"+userid+"/friends.json",List.class);			
+			if(result.getStatusCode()==HttpStatus.OK){
+				
+				List resultlist=result.getBody();
+				for(int i=0;i<resultlist.size();i++){
+					User u=new User();
+					Map m=(Map) resultlist.get(i);
+					u.setImage(Constant.WEB_SERVER_ADDRESS+(String)m.get("image"));
+					u.setLabels((List)m.get("labels"));
+					u.setUsername((String)m.get("username"));
+					u.setEmail((String)m.get("email"));
+					list.add(u);
+				}							
+			}
+					
 		} catch (Exception e) {
 			// TODO log exception
 			e.printStackTrace();
 		}
-		return null;
+		return list;
 	}
+	
 	/*All want to add me as a friend 好友请求列表*/
 	@Override
 	public List<User> Invitations(ISessionListener callback) throws RemoteException {
 		// TODO Auto-generated method stub
-		DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "/users/"+userid+"/invitations.json", "", Map.class);
-		return null;
+		List<User> list=null;	
+		String message=null;
+		int code=1;
+		try {		
+			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS + "/users/"+"1"+"/invitations.json", List.class);
+			if(result.getStatusCode()==HttpStatus.OK){
+				message=Constant.CALLBACKSUCCESS;
+				code=0;
+				list=new ArrayList<User>();
+				List resultlist=result.getBody();
+				for(int i=0;i<resultlist.size();i++){
+					User u=new User();
+					Map m=(Map) resultlist.get(i);
+//					if(((String)m.get("status")).equals(Constant.AGREED)){
+//						
+//					}
+					u.setImage((String)m.get("status"));
+					u.setUsername((String)m.get("invitee_id"));
+					u.setId((String)m.get("inviter_id"));
+					u.setReason((String)m.get("reason"));
+					list.add(u);
+				}
+				
+			}		
+		} catch (Exception e) {
+			// TODO log exception
+			message=Constant.CALLBACKFAIL;
+			e.printStackTrace();
+		}	
+		callback.onCallBack(code, message);
+		return list;
 	}
 	/*someone personal page 通过测试*/
 	@Override
@@ -476,9 +520,22 @@ public class SessionManager extends ISessionManager.Stub {
 	}
 	/*forget password*/
 	@Override
-	public void forgetPassword(String tagetId) throws RemoteException {
+	public void forgetPassword(String tagetId,ISessionListener callback) throws RemoteException {
 		// TODO Auto-generated method stub
-		
+		Map<String, String> parts = new HashMap<String, String>();
+		parts.put("email", tagetId);
+		String message=null;
+		int code=1;
+		try {
+			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS+"/forget_password.json" ,parts, Map.class);			
+			message=Constant.CALLBACKSUCCESS;
+			code=0;
+		} catch (Exception e) {
+			// TODO log exception
+			message=Constant.CALLBACKFAIL;
+			e.printStackTrace();
+		}
+		callback.onCallBack(code, message);
 	}
 	/*update password 通过测试*/
 	@Override
@@ -552,10 +609,38 @@ public class SessionManager extends ISessionManager.Stub {
 		return mlist;
 	}
 	@Override
-	public String getToken() throws RemoteException {
+	public List<User> inTopicUser(String topicid, ISessionListener callback)
+			throws RemoteException {
 		// TODO Auto-generated method stub
-		return token;
+		List<User> list=null;	
+		String message=null;
+		int code=1;
+		try {		
+			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS + "/users.json?topic_id="+topicid, List.class);
+			if(result.getStatusCode()==HttpStatus.OK){
+				message=Constant.CALLBACKSUCCESS;
+				code=0;
+				list=new ArrayList<User>();
+				List resultlist=result.getBody();
+				for(int i=0;i<list.size();i++){
+					User u=new User();
+					Map m=(Map) resultlist.get(i);
+					u.setId(String.valueOf(m.get("id")));
+					u.setImage(Constant.WEB_SERVER_ADDRESS+(String)m.get("image"));
+					u.setLabels((List)m.get("labels"));
+					u.setUsername((String)m.get("username"));
+					u.setEmail((String)m.get("email"));
+					list.add(u);
+				}							
+			}
+		}catch(Exception e){
+			message=Constant.CALLBACKFAIL;
+			e.printStackTrace();
+		}
+		callback.onCallBack(code, message);		
+		return list;
 	}
+
 	@Override
 	public String getHuanxingUser() throws RemoteException {
 		// TODO Auto-generated method stub
@@ -586,5 +671,5 @@ public class SessionManager extends ISessionManager.Stub {
 		// TODO Auto-generated method stub
 		return username;
 	}
-
+	
 }

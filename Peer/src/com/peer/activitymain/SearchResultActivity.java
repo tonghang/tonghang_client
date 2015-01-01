@@ -45,13 +45,27 @@ public class SearchResultActivity extends BasicActivity {
 		back.setOnClickListener(this);
 		mlistview=(ListView)findViewById(R.id.lv_searchresult);
 		if(LocalStorage.getBoolean(this, "istestui")){
-//			if(SearchUtil.getInstance().getSearchtype()==Constant.SEARCHSKILL){				
-//				SearchSkillAdapter adapter=new SearchSkillAdapter(this,labellist);
-//				mlistview.setAdapter(adapter);
-//			}else if(SearchUtil.getInstance().getSearchtype()==Constant.SEARCHUSER){
-//				SeachResultAdapter adapter=new SeachResultAdapter(this);
-//				mlistview.setAdapter(adapter);
-//			}	
+			if(SearchUtil.getInstance().getSearchtype()==Constant.SEARCHSKILL){	
+				labellist=new ArrayList<String>();
+				for(int i=0;i<20;i++){
+					labellist.add("美食做法");
+				}	
+				SearchSkillAdapter adapter=new SearchSkillAdapter(this,labellist);
+				mlistview.setAdapter(adapter);
+			}else if(SearchUtil.getInstance().getSearchtype()==Constant.SEARCHUSER){
+				userlist=new ArrayList<User>();
+				for(int i=0;i<10;i++){
+					User user=new User();
+					user.setUsername("离尘之影");
+					List<String> labels=new ArrayList<String>();
+					labels.add("美食");
+					labels.add("java");
+					user.setLabels(labels);		
+					userlist.add(user);
+				}			
+				SeachResultAdapter adapter=new SeachResultAdapter(this,userlist);
+				mlistview.setAdapter(adapter);
+			}	
 		}else{
 			if(SearchUtil.getInstance().getSearchtype()==Constant.SEARCHSKILL){				
 				SearchTask task=new SearchTask();

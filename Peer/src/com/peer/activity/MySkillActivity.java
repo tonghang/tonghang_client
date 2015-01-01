@@ -10,6 +10,7 @@ import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
 import com.peer.event.NewFriensEvent;
 import com.peer.event.SkillEvent;
+import com.peer.localDB.LocalStorage;
 
 import de.greenrobot.event.EventBus;
 import android.app.AlertDialog;
@@ -51,12 +52,20 @@ public class MySkillActivity extends BasicActivity {
 		creatTag=(LinearLayout)findViewById(R.id.ll_createTag_mytag);
 		creatTag.setOnClickListener(this);
 		mytaglistview=(ListView)findViewById(R.id.lv_myskill);
-		try {
-			mlist=PeerUI.getInstance().getISessionManager().getLabels();
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if(LocalStorage.getBoolean(this, "istestui")){
+			mlist=new ArrayList<String>();
+			mlist.add("美食");
+			mlist.add("java");
+		}else{
+		
+			try {
+				mlist=PeerUI.getInstance().getISessionManager().getLabels();
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+		
 		adapter=new SkillAdapter(this,mlist);
 		mytaglistview.setAdapter(adapter);
 		

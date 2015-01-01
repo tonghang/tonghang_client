@@ -15,34 +15,32 @@ import android.widget.TextView;
 
 import com.peer.R;
 import com.peer.activitymain.PersonalPageActivity;
+import com.peer.client.User;
 import com.peer.constant.Constant;
 import com.peer.util.PersonpageUtil;
 
 public class FriendsAdapter extends BaseAdapter {
-	private List<Map> mlist;
 	private Context mContext;
-	public FriendsAdapter(Context mContext){
+	private List<User> mlist;
+	public FriendsAdapter(Context mContext,List<User> list){
 		this.mContext=mContext;		
+		this.mlist=list;
 	}
-
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
-		return 8;
+		return mlist.size();
 	}
-
 	@Override
 	public Object getItem(int arg0) {
 		// TODO Auto-generated method stub
 		return mlist.get(arg0);
 	}
-
 	@Override
 	public long getItemId(int arg0) {
 		// TODO Auto-generated method stub
 		return arg0;
 	}
-
 	@Override
 	public View getView(int position, View convertView, ViewGroup parentgroup) {
 		// TODO Auto-generated method stub
@@ -58,13 +56,24 @@ public class FriendsAdapter extends BaseAdapter {
 		}else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
-		viewHolder.nikename.setText("昵称");
-		viewHolder.descripe.setText("聊天内容，在这里记录最后一次的内容");
+		viewHolder.nikename.setText(mlist.get(position).getUsername());
+		List<String>list=(List<String>)mlist.get(position).getLabels();
+		String labels="";
+		for(String s:list){
+			if(labels.equals("")){
+				labels=s;	
+			}else{
+				labels=labels+" | "+s;
+			}			
+		}
+		final String personid=mlist.get(position).getId();
+		viewHolder.descripe.setText(labels);
 		viewHolder.click.setOnClickListener(new View.OnClickListener() {			
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				PersonpageUtil.getInstance().setPersonpagetype(Constant.FRIENDSPAGE);
+				PersonpageUtil.getInstance().setPersonid(personid);			
 				Intent intent=new Intent(mContext,PersonalPageActivity.class);
 				mContext.startActivity(intent);
 			}

@@ -8,13 +8,14 @@
         android:layout_width="fill_parent"
         android:layout_height="48dp"
         android:orientation="horizontal"
-        android:gravity="center"
+        android:gravity="center_vertical"
         android:background="@color/title_backcolor"
         >
         <TextView 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="来信"
+             android:layout_marginLeft="16dp"
             android:textColor="@color/white"
             android:textSize="@dimen/textsize_large"
             />

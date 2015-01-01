@@ -56,7 +56,7 @@ public class ChatRoomActivity extends BasicActivity {
 	private ListView selflistview;
 	private ChatMsgViewAdapter adapter;	
 	private List<ChatMsgEntity> msgList=new ArrayList<ChatMsgEntity>();
-	
+	private String topicId;
 	private String toChatUsername;
 	public static ChatRoomActivity activityInstance = null;
 	private EMConversation conversation;
@@ -110,11 +110,18 @@ public class ChatRoomActivity extends BasicActivity {
 			rl_owner.setVisibility(View.VISIBLE);
 			tv_tagname.setText(ChatRoomTypeUtil.getInstance().getTitle());
 			User u=ChatRoomTypeUtil.getInstance().getUser();
-			LoadImageUtil.imageLoader.displayImage(u.getImage(), ownerimg,LoadImageUtil.options);		
-			nikename.setText(u.getUsername());
-			tv_theme.setText(ChatRoomTypeUtil.getInstance().getTheme());
-			//加入公开群聊
-			RingLetterImp.getInstance().joingroup(toChatUsername);
+				
+			if(LocalStorage.getBoolean(this, "istestui")){
+				
+			}else{
+				nikename.setText(u.getUsername());
+				LoadImageUtil.imageLoader.displayImage(u.getImage(), ownerimg,LoadImageUtil.options);	
+				tv_theme.setText(ChatRoomTypeUtil.getInstance().getTheme());
+				topicId=ChatRoomTypeUtil.getInstance().getTopicId();
+				//加入公开群聊
+				RingLetterImp.getInstance().joingroup(toChatUsername);
+			}
+			
 			
 		}else if(ChatRoomTypeUtil.getInstance().getChatroomtype()==Constant.SINGLECHAT){
 			rl_owner.setVisibility(View.GONE);
@@ -190,6 +197,7 @@ public class ChatRoomActivity extends BasicActivity {
 		switch (v.getId()) {
 		case R.id.tv_seemember:
 			Intent intent=new Intent(ChatRoomActivity.this,ChatRoomListnikeActivity.class);
+			intent.putExtra("topicId", topicId);			
 			startActivity(intent);
 			break;
 

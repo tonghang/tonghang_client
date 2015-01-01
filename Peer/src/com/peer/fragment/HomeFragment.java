@@ -109,40 +109,6 @@ public class HomeFragment extends BasicFragment{
 			}			
 		});
 	}
-	private void initdata() {
-		// TODO Auto-generated method stub
-		Map m=new HashMap<String, String>();
-		m.put("type", "person");
-		list.add(m);
-		m=new HashMap<String, String>();
-		m.put("type", "topic");
-		list.add(m);
-		m=new HashMap<String, String>();
-		m.put("type", "person");
-		list.add(m);
-		m=new HashMap<String, String>();
-		m.put("type", "person");
-		list.add(m);
-		m=new HashMap<String, String>();
-		m.put("type", "person");
-		list.add(m);
-		m=new HashMap<String, String>();
-		m.put("type", "topic");
-		list.add(m);
-		m=new HashMap<String, String>();
-		m.put("type", "topic");
-		list.add(m);
-		m=new HashMap<String, String>();
-		m.put("type", "person");
-		list.add(m);
-	}
-	private void freshdata(){
-		Map m=new HashMap<String, String>();
-		m.put("type", "topic");
-		for(int i=0;i<10;i++){
-			list.add(m);
-		}	
-	}
 	private class RefreshTask extends AsyncTask<String, String, Void>{
 
 		@Override
@@ -155,9 +121,7 @@ public class HomeFragment extends BasicFragment{
 				e1.printStackTrace();
 			}
 			if(arg0[0].equals("up")){
-				freshdata();	
-			}else{
-				initdata();
+					
 			}		
 			return null;
 		}

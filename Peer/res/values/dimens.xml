@@ -10,6 +10,8 @@
 	<dimen name="textsize_smallmiddle">14sp</dimen>
 	<dimen name="textsize_small">12sp</dimen>
 	<!-- 边距大小 -->
+	<dimen name="lowdp">4dp</dimen>
+	
 	<dimen name="marginsize_around">8dp</dimen><!-- 左右两边的距离 -->
 	<dimen name="margintopsize_max">64dp</dimen><!-- 据上一个控件的最大高度 -->
 	<dimen name="margintopsize_middle">64dp</dimen><!-- 据上一个控件的中等高度 -->

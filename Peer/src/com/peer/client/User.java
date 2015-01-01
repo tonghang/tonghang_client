@@ -15,6 +15,7 @@ public class User implements Parcelable {
 	private String sex;
 	private String birthday;
 	private String city;
+	private String reason;
 	
 	private List<String> labels=new ArrayList<String>();
 	
@@ -36,6 +37,7 @@ public class User implements Parcelable {
 		birthday = source.readString();
 		city = source.readString();
 		password=source.readString();
+		reason=source.readString();
 		labels=new ArrayList<String>();
 		source.readList(labels, getClass().getClassLoader());
 	}  	
@@ -69,6 +71,7 @@ public class User implements Parcelable {
 	        dest.writeString(birthday);
 	        dest.writeString(city);
 	        dest.writeList(labels);
+	        dest.writeString(reason);
 	}
 
 	public String getEmail() {
@@ -143,6 +146,14 @@ public class User implements Parcelable {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
 	}
 
 }

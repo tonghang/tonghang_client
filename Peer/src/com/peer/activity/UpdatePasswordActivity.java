@@ -58,7 +58,11 @@ public class UpdatePasswordActivity extends BasicActivity {
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.bt_changesubmite:
-			UpdatePassword();
+			if(LocalStorage.getBoolean(this, "istestui")){
+				ShowMessage("密码更新成功");
+			}else{
+				UpdatePassword();
+			}			
 			break;
 
 		default:

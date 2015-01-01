@@ -9,6 +9,7 @@ import com.peer.client.User;
  */
 public class ChatRoomTypeUtil {
 	private int chatroomtype;
+	private String topicId;
 	private String title;
 	private String userId;
 	private String huanxingId;
@@ -72,6 +73,12 @@ public class ChatRoomTypeUtil {
 	}
 	public void setTitle(String title) {
 		this.title = title;
+	}
+	public String getTopicId() {
+		return topicId;
+	}
+	public void setTopicId(String topicId) {
+		this.topicId = topicId;
 	}
 
 }

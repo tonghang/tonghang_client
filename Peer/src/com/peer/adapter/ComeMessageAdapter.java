@@ -6,6 +6,7 @@ import com.peer.R;
 import com.peer.activitymain.ChatRoomActivity;
 import com.peer.constant.Constant;
 import com.peer.util.ChatRoomTypeUtil;
+import com.peer.widgetutil.LoadImageUtil;
 
 import android.content.Context;
 import android.content.Intent;
@@ -53,8 +54,8 @@ public class ComeMessageAdapter extends BaseAdapter {
 		String type=(String) mList.get(position).get("type");		
 		if(convertView==null){
 			viewHolder=new ViewHolder();
-			if(type.equals("person")){
-				convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_home_listperson,null,false);				
+			if(type.equals(Constant.USER)){
+				convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_come_listperson,null,false);				
 				viewHolder.headpic=(ImageView)convertView.findViewById(R.id.im_headpic);
 				viewHolder.headpic.setLayoutParams(new RelativeLayout.LayoutParams((int) mContext.getResources().getDimension(R.dimen.widgeheight), (int) mContext.getResources().getDimension(R.dimen.widgeheight)));
 				viewHolder.nikename=(TextView)convertView.findViewById(R.id.tv_nikename);			
@@ -64,28 +65,31 @@ public class ComeMessageAdapter extends BaseAdapter {
 				LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,(int) mContext.getResources().getDimension(R.dimen.widgeheight_max));
 				params.leftMargin=(int) mContext.getResources().getDimension(R.dimen.marginsize_around);
 				params.rightMargin=(int) mContext.getResources().getDimension(R.dimen.marginsize_around);			
-				viewHolder.click.setLayoutParams(params);
+				viewHolder.click.setLayoutParams(params);				
 				convertView.setTag(viewHolder);
-			}else if(type.equals("topic")){
-				convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_home_listtopic,null,false);
+			}else if(type.equals(Constant.TOPIC)){
+				convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_come_listtopic,null,false);
 				viewHolder.nikename=(TextView)convertView.findViewById(R.id.tv_skill);			
 				viewHolder.descripe=(TextView)convertView.findViewById(R.id.tv_topic);
 				viewHolder.click=(LinearLayout)convertView.findViewById(R.id.ll_clike);
 				viewHolder.click.setGravity(Gravity.CENTER_VERTICAL);
-				LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-						(int) mContext.getResources().getDimension(R.dimen.widgeheight_max));
-				params.leftMargin=(int) mContext.getResources().getDimension(R.dimen.marginsize_around);
-				params.rightMargin=(int) mContext.getResources().getDimension(R.dimen.marginsize_around);
-				viewHolder.click.setLayoutParams(params);
+				
 				convertView.setTag(viewHolder);
 			}
 			
 		}else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
-		if(type.equals("person")){
-			viewHolder.nikename.setText("昵称");
-			viewHolder.descripe.setText("聊天内容，在这里记录最后一次的内容");
+		if(type.equals(Constant.USER)){
+			
+			LoadImageUtil.imageLoader.displayImage(Constant.WEB_SERVER_ADDRESS+mList.get(position).get("image"), viewHolder.headpic, LoadImageUtil.options);				
+			viewHolder.nikename.setText((String)mList.get(position).get("username"));
+			List<String>list=(List<String>) mList.get(position).get("labels");
+			String labels="";
+			for(String s:list){				
+					labels=labels+s;							
+			}
+			viewHolder.descripe.setText(labels);
 			viewHolder.click.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
@@ -97,8 +101,9 @@ public class ComeMessageAdapter extends BaseAdapter {
 				}
 			});
 		}else{
-			viewHolder.nikename.setText("技能标签");
-			viewHolder.descripe.setText("聊天话题聊天话题聊天话题聊天话题聊天话题聊天话题聊天话题聊天话题聊天话题");
+			viewHolder.nikename.setText((String)mList.get(position).get("label_name"));
+			viewHolder.descripe.setText((String)mList.get(position).get("subject"));
+			
 			viewHolder.click.setOnClickListener(new View.OnClickListener() {
 				
 				@Override

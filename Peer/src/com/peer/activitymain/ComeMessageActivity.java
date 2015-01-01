@@ -62,29 +62,19 @@ public class ComeMessageActivity extends BasicActivity{
 	}
 	private void initdata() {
 		// TODO Auto-generated method stub
-		Map m=new HashMap<String, String>();
-		m.put("type", "person");
-		list.add(m);
-		m=new HashMap<String, String>();
-		m.put("type", "topic");
-		list.add(m);
-		m=new HashMap<String, String>();
-		m.put("type", "person");
-		list.add(m);
-		m=new HashMap<String, String>();
-		m.put("type", "person");
-		list.add(m);
-		m=new HashMap<String, String>();
-		m.put("type", "person");
-		list.add(m);
-		m=new HashMap<String, String>();
-		m.put("type", "topic");
-		list.add(m);
-		m=new HashMap<String, String>();
-		m.put("type", "topic");
-		list.add(m);
-		m=new HashMap<String, String>();
-		m.put("type", "person");
-		list.add(m);
+		Map user=new HashMap();
+		user.put("type", "user");
+		user.put("username", "离尘之影");
+		List<String> labels=new ArrayList<String>();
+		labels.add("美食就应该这么做");
+		
+		user.put("labels", labels);		
+		list.add(user);
+		
+		Map topic=new HashMap();
+		topic.put("type", "topic");
+		topic.put("label_name", "美食");
+		topic.put("subject", "话题：大家来交流一下各国美食的做法，让我们的厨艺更上一层楼");
+		list.add(topic);
 	}
 }

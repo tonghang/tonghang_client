@@ -7,6 +7,7 @@ import com.peer.activitymain.ChatRoomActivity;
 import com.peer.activitymain.PersonalPageActivity;
 import com.peer.client.User;
 import com.peer.constant.Constant;
+import com.peer.localDB.LocalStorage;
 import com.peer.util.ChatRoomTypeUtil;
 import com.peer.util.PersonpageUtil;
 import com.peer.widgetutil.LoadImageUtil;
@@ -69,7 +70,7 @@ public class HomepageAdapter extends BaseAdapter {
 					if(labels.equals("")){
 						labels=s;	
 					}else{
-						labels=labels+","+s;
+						labels=labels+" | "+s;
 					}			
 				}
 				viewHolder.descripe.setText(labels);
@@ -81,13 +82,19 @@ public class HomepageAdapter extends BaseAdapter {
 						PersonpageUtil.getInstance().setPersonid(String.valueOf(mList.get(position).get("id")));
 						PersonpageUtil.getInstance().setHuanxinId((String)mList.get(position).get("huanxin_username"));
 						PersonpageUtil.getInstance().setPersonname((String)mList.get(position).get("username"));
-						if((Boolean)mList.get(position).get("is_friend")){
-							PersonpageUtil.getInstance().setPersonpagetype(Constant.FRIENDSPAGE);
-						}else{
+						if(LocalStorage.getBoolean(mContext, "istestui")){
 							PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
+							Intent intent=new Intent(mContext,PersonalPageActivity.class);
+							mContext.startActivity(intent);
+						}else{
+							if((Boolean)mList.get(position).get("is_friend")){
+								PersonpageUtil.getInstance().setPersonpagetype(Constant.FRIENDSPAGE);
+							}else{
+								PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
+							}						
+							Intent intent=new Intent(mContext,PersonalPageActivity.class);
+							mContext.startActivity(intent);
 						}						
-						Intent intent=new Intent(mContext,PersonalPageActivity.class);
-						mContext.startActivity(intent);
 					}
 				});
 			}else if(type.equals(Constant.TOPIC)){
@@ -106,14 +113,24 @@ public class HomepageAdapter extends BaseAdapter {
 						ChatRoomTypeUtil.getInstance().setHuanxingId(String.valueOf(mList.get(position).get("huanxin_group_id")));
 						ChatRoomTypeUtil.getInstance().setTitle((String)mList.get(position).get("label_name"));
 						ChatRoomTypeUtil.getInstance().setTheme((String)mList.get(position).get("subject"));
-						Map m=(Map)mList.get(position).get("user");
-						User user=new User();
-						user.setImage(Constant.WEB_SERVER_ADDRESS+(String)m.get("image"));
-						user.setId((String)m.get("user_id"));
-						user.setUsername((String)m.get("username"));
-						ChatRoomTypeUtil.getInstance().setUser(user);
-						Intent intent=new Intent(mContext,ChatRoomActivity.class);
-						mContext.startActivity(intent);
+						ChatRoomTypeUtil.getInstance().setTopicId((String)mList.get(position).get("id"));
+						
+						if(LocalStorage.getBoolean(mContext, "istestui")){
+							Intent intent=new Intent(mContext,ChatRoomActivity.class);
+							mContext.startActivity(intent);
+						}else{
+							Map m=(Map)mList.get(position).get("user");
+							User user=new User();
+							user.setImage(Constant.WEB_SERVER_ADDRESS+(String)m.get("image"));
+							user.setId((String)m.get("user_id"));
+							user.setUsername((String)m.get("username"));
+							ChatRoomTypeUtil.getInstance().setUser(user);
+						
+							Intent intent=new Intent(mContext,ChatRoomActivity.class);
+							mContext.startActivity(intent);
+						}
+						
+						
 					}
 				});
 			}

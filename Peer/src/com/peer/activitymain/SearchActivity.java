@@ -3,6 +3,7 @@ package com.peer.activitymain;
 import com.peer.R;
 import com.peer.activity.BasicActivity;
 import com.peer.constant.Constant;
+import com.peer.localDB.LocalStorage;
 import com.peer.util.SearchUtil;
 
 import android.app.Activity;
@@ -96,12 +97,18 @@ public class SearchActivity extends BasicActivity {
 			mLayoutClearSearchText.setVisibility(View.GONE);
 			break;
 		case R.id.tv_search_search:
-			String searchtaget=contentsearch.getText().toString().trim();
-			if(TextUtils.isEmpty(searchtaget)){
-				ShowMessage("搜索框不能为空");
+			if(LocalStorage.getBoolean(this, "istestui")){
+				 Intent intent=new Intent(SearchActivity.this, SearchResultActivity.class);
+				 startActivity(intent);
 			}else{
-				Search(searchtaget);
-			}						
+				String searchtaget=contentsearch.getText().toString().trim();
+				if(TextUtils.isEmpty(searchtaget)){
+					ShowMessage("搜索框不能为空");
+				}else{
+					Search(searchtaget);
+				}	
+			}
+								
 			break;
 		case R.id.ll_back:
 			imm.hideSoftInputFromWindow(contentsearch.getWindowToken(), 0);

@@ -57,10 +57,7 @@ public class AddFriendsActivity extends BasicActivity {
 		tv_nike=(TextView)findViewById(R.id.personnike);
 		tv_nike.setText(nike);
 		tv_email=(TextView)findViewById(R.id.email);
-		tv_email.setText(email);
-		
-		
-		
+		tv_email.setText(email);		
 	}
 	@Override
 	public void onClick(View v) {

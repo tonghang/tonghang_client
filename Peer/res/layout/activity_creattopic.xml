@@ -12,6 +12,21 @@
 
       <include layout="@layout/layout_titlebar"/>
     </LinearLayout>
+    <TextView 
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/widgeheight"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="16dp"
+        android:text="请为您要创建的话题选择所属行业"
+        android:textSize="@dimen/textsize_small"
+        android:textColor="@color/bottomtextgray"
+        />
+     <View 
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+         android:background="@color/gray"
+      />
+     
     <LinearLayout 
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
@@ -30,6 +45,7 @@
                 android:text="标签名一"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/widgeheight"
+                android:textSize="@dimen/textsize_middle"
                 />
             <View android:id="@+id/v1"
                 android:layout_width="match_parent"
@@ -41,6 +57,7 @@
                 android:text="标签名一"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/widgeheight"
+                android:textSize="@dimen/textsize_middle"
                 />
         <View android:id="@+id/v2"
                 android:layout_width="match_parent"
@@ -53,6 +70,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/widgeheight"
                 android:visibility="gone"
+                android:textSize="@dimen/textsize_middle"
                 />
             <View android:id="@+id/v3"
                 android:layout_width="match_parent"
@@ -66,6 +84,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/widgeheight"
                 android:visibility="gone"
+                android:textSize="@dimen/textsize_middle"
                 />
 			 <View android:id="@+id/v4"
                 android:layout_width="match_parent"
@@ -79,6 +98,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/widgeheight"
                 android:visibility="gone"
+                android:textSize="@dimen/textsize_middle"
                 />
          	<View android:id="@+id/v5"
                 android:layout_width="match_parent"
@@ -91,11 +111,13 @@
 
     <EditText
         android:id="@+id/et_topic"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="64dp"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/widgeheight_max"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:hint="请输入话题"
+        android:textSize="@dimen/textsize_middle"
         >
 
         <requestFocus />
@@ -113,7 +135,8 @@
 	        android:layout_height="48dp"
 	        android:layout_marginLeft="8dp"
 	        android:layout_marginRight="8dp"
-	        android:text="创建话题"
+	        android:text="创建"
+	        android:textColor="@color/white"
 	        android:background="@drawable/selector_commit"
 	        android:textSize="@dimen/textsize_large" />
 

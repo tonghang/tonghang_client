@@ -40,6 +40,23 @@ public class NewFriendsActivity extends BasicActivity {
 		setContentView(R.layout.activity_newfriends);
 		init();		
 		registEventBus();
+		if(LocalStorage.getBoolean(this, "istestui")){
+			mlist=new ArrayList<User>();
+			User user=new User();
+			user.setUsername("离尘之影");
+			user.setReason("我是美食家");
+			
+			for(int i=0;i<5;i++){
+				mlist.add(user);
+			}
+			adapter=new NewfriendsAdapter(NewFriendsActivity.this,mlist);
+			mlistview.setAdapter(adapter);
+			
+		}else{
+			InvitationsTask task=new InvitationsTask();
+			task.execute();
+		}
+		
 	}	
 	
 	private void init() {
@@ -71,7 +88,7 @@ public class NewFriendsActivity extends BasicActivity {
 		super.onDestroy();
 		 mBus.unregister(this);
 	}
-	private class LoginTask extends AsyncTask<String, String, String>{		
+	private class InvitationsTask extends AsyncTask<String, String, String>{		
 		@Override
 		protected String doInBackground(String... paramer) {
 			// TODO Auto-generated method stub						
@@ -87,8 +104,10 @@ public class NewFriendsActivity extends BasicActivity {
 		@Override
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
-			adapter=new NewfriendsAdapter(NewFriendsActivity.this,mlist);
-			mlistview.setAdapter(adapter);
+			if(result.equals(Constant.CALLBACKSUCCESS)){
+				adapter=new NewfriendsAdapter(NewFriendsActivity.this,mlist);
+				mlistview.setAdapter(adapter);
+			}			
 		}
 		
 	}

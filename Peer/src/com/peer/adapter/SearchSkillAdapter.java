@@ -7,6 +7,7 @@ import com.peer.R;
 import com.peer.activitymain.SearchActivity;
 import com.peer.activitymain.SearchResultActivity;
 import com.peer.constant.Constant;
+import com.peer.localDB.LocalStorage;
 import com.peer.util.SearchUtil;
 
 import android.app.Activity;
@@ -76,16 +77,24 @@ public class SearchSkillAdapter extends BaseAdapter {
 			viewHolder.view1.setText(mlist.get(weizhi));						
 			viewHolder.view1.setBackgroundResource(R.drawable.searchskillborder);		
 			GradientDrawable myGrad = (GradientDrawable)viewHolder.view1.getBackground();
-			myGrad.setColor(Color.rgb(r, g, b));
+			myGrad.setColor(mContext.getResources().getColor(R.color.testcolor));
 			viewHolder.view1.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
 				public void onClick(View arg0) {
 					// TODO Auto-generated method stub
-					SearchUtil.getInstance().setSearchtype(Constant.SEARCHUSERBYLABEL);
-					Intent intent=new Intent(mContext,SearchResultActivity.class);
-					mContext.startActivity(intent);
-					((Activity) mContext).finish();
+					if(LocalStorage.getBoolean(mContext, "istestui")){
+						SearchUtil.getInstance().setSearchtype(Constant.SEARCHUSER);
+						Intent intent=new Intent(mContext,SearchResultActivity.class);
+						mContext.startActivity(intent);						
+						((Activity) mContext).finish();
+					}else{
+						SearchUtil.getInstance().setSearchtype(Constant.SEARCHUSERBYLABEL);
+						Intent intent=new Intent(mContext,SearchResultActivity.class);
+						mContext.startActivity(intent);
+						((Activity) mContext).finish();
+					}
+					
 				}
 			});			
 			int r2=random.nextInt(255);
@@ -95,16 +104,24 @@ public class SearchSkillAdapter extends BaseAdapter {
 				viewHolder.view2.setText(mlist.get(weizhi+1));		
 				viewHolder.view2.setBackgroundResource(R.drawable.searchskillborder);	
 				GradientDrawable myGrad2 = (GradientDrawable)viewHolder.view2.getBackground();
-				myGrad.setColor(Color.rgb(r2, g2, b2));
+				myGrad.setColor(mContext.getResources().getColor(R.color.testcolor));
 				viewHolder.view2.setOnClickListener(new View.OnClickListener() {
 					
 					@Override
 					public void onClick(View arg0) {
 						// TODO Auto-generated method stub
-						SearchUtil.getInstance().setSearchtype(Constant.SEARCHUSERBYLABEL);
-						Intent intent=new Intent(mContext,SearchResultActivity.class);
-						mContext.startActivity(intent);						
-						((Activity) mContext).finish();
+						
+						if(LocalStorage.getBoolean(mContext, "istestui")){
+							SearchUtil.getInstance().setSearchtype(Constant.SEARCHUSER);
+							Intent intent=new Intent(mContext,SearchResultActivity.class);
+							mContext.startActivity(intent);						
+							((Activity) mContext).finish();
+						}else{
+							SearchUtil.getInstance().setSearchtype(Constant.SEARCHUSERBYLABEL);
+							Intent intent=new Intent(mContext,SearchResultActivity.class);
+							mContext.startActivity(intent);						
+							((Activity) mContext).finish();
+						}
 					}
 				});
 			}else{

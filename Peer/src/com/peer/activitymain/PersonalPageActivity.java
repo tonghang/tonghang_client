@@ -10,6 +10,7 @@ import com.peer.client.User;
 import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
+import com.peer.localDB.LocalStorage;
 import com.peer.util.ChatRoomTypeUtil;
 import com.peer.util.PersonpageUtil;
 import com.peer.widgetutil.LoadImageUtil;
@@ -47,12 +48,21 @@ public class PersonalPageActivity extends BasicActivity {
 		setContentView(R.layout.activity_personalpage);
 		init();
 		LoadImageUtil.initImageLoader(this);
-		PersonalTask task=new PersonalTask();
-		task.execute(PersonpageUtil.getInstance().getPersonid());		
+		if(LocalStorage.getBoolean(this, "istestui")){
+			List lablelist=new ArrayList<String>();
+			lablelist.add("美食");
+			lablelist.add("java");
+			SkillAdapter adapter=new SkillAdapter(PersonalPageActivity.this,"page",lablelist);
+			skillllist.setAdapter(adapter);	
+		}else{
+			PersonalTask task=new PersonalTask();
+			task.execute(PersonpageUtil.getInstance().getPersonid());
+		}
+				
 	}
 	
 	private void init() {
-		// TODO Auto-generated method stub		
+		// TODO Auto-generated method stub	
 		topic_whose=(TextView)findViewById(R.id.tv_topic);
 		title=(TextView)findViewById(R.id.tv_title);
 		acount=(TextView)findViewById(R.id.personcount);
@@ -106,13 +116,18 @@ public class PersonalPageActivity extends BasicActivity {
 				
 				@Override
 				public void onClick(View arg0) {
-					// TODO Auto-generated method stub										
-					Intent intent=new Intent(PersonalPageActivity.this,AddFriendsActivity.class);
-					intent.putExtra("userId", userpage.getId());
-					intent.putExtra("image", userpage.getImage());
-					intent.putExtra("nike", userpage.getUsername());
-					intent.putExtra("email", userpage.getEmail());
-					startActivity(intent);
+					// TODO Auto-generated method stub	
+					if(LocalStorage.getBoolean(PersonalPageActivity.this, "istestui")){
+						Intent intent=new Intent(PersonalPageActivity.this,AddFriendsActivity.class);
+						startActivity(intent);
+					}else{
+						Intent intent=new Intent(PersonalPageActivity.this,AddFriendsActivity.class);
+						intent.putExtra("userId", userpage.getId());
+						intent.putExtra("image", userpage.getImage());
+						intent.putExtra("nike", userpage.getUsername());
+						intent.putExtra("email", userpage.getEmail());
+						startActivity(intent);
+					}	
 				}
 			});
 			break;

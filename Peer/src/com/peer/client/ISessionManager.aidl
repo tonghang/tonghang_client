@@ -7,8 +7,6 @@ import com.peer.client.User;
 
 interface ISessionManager {
 
-	String getToken();
-	
 	String getHuanxingUser();
 	
 	String getUserId();
@@ -53,12 +51,14 @@ interface ISessionManager {
  	
  	void TopicchatHistory(String topicId,ISessionListener callback);
  	
- 	void forgetPassword(String tagetId);
+ 	void forgetPassword(String tagetId,ISessionListener callback);
  	
  	void updatePassword(String newPassword);
  	
  	String creatTopic(String label,String topic);
  	
  	void setLabels(in List<String> labels);
+ 	
+ 	List<com.peer.client.User> inTopicUser(String topicid,ISessionListener callback);
  	
 }

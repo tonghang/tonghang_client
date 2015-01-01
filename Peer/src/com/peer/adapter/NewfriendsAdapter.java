@@ -9,6 +9,7 @@ import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
 import com.peer.event.NewFriensEvent;
 import com.peer.util.PersonpageUtil;
+import com.peer.widgetutil.LoadImageUtil;
 
 import de.greenrobot.event.EventBus;
 
@@ -31,14 +32,13 @@ public class NewfriendsAdapter extends BaseAdapter {
 	public NewfriendsAdapter(Context mContext,List<User> mlist){
 		this.mContext=mContext;
 		this.mlist=mlist;
+		LoadImageUtil.initImageLoader(mContext);
 	}
-
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
 		return mlist.size();
 	}
-
 	@Override
 	public Object getItem(int arg0) {
 		// TODO Auto-generated method stub
@@ -71,8 +71,9 @@ public class NewfriendsAdapter extends BaseAdapter {
 		}else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
-		viewHolder.nikename.setText("昵称");
-		viewHolder.descripe.setText("请求加为好友");	
+		LoadImageUtil.imageLoader.displayImage(mlist.get(position).getImage(), viewHolder.headpic, LoadImageUtil.options);
+		viewHolder.nikename.setText(mlist.get(position).getUsername());
+		viewHolder.descripe.setText(mlist.get(position).getReason());	
 		viewHolder.refuse.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
