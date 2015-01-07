@@ -3,9 +3,14 @@ package com.peer.fragment;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
+
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +21,9 @@ import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMMessage;
 import com.peer.R;
 import com.peer.adapter.ChatHistoryAdapter;
+import com.peer.client.easemobchatUser;
+import com.peer.client.service.SessionListener;
+import com.peer.client.ui.PeerUI;
 
 
 public class ComeMsgFragment extends Fragment {
@@ -24,6 +32,7 @@ public class ComeMsgFragment extends Fragment {
 	
 	private ChatHistoryAdapter adapter;
 	private List<EMConversation> list;
+	private List<Map> easemobchatusers=new ArrayList<Map>();
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -40,8 +49,16 @@ public class ComeMsgFragment extends Fragment {
 		// TODO Auto-generated method stub	
 		list=loadConversationsWithRecentChat();		
 		ListView_come=(ListView)getView().findViewById(R.id.lv_come);	
-		adapter=new ChatHistoryAdapter(getActivity(),1, list);
-		ListView_come.setAdapter(adapter);
+		for(EMConversation em:loadConversationsWithRecentChat()){
+			Map m=new HashMap<String, Object>();
+			m.put("username", em.getUserName());
+			m.put("is_group", em.isGroup());
+			easemobchatusers.add(m);
+		}
+		easemobchatUser users=new easemobchatUser();
+		users.setEasemobchatusers(easemobchatusers);
+		comeMsgTask task=new comeMsgTask();
+		task.execute(users);		
 	}
 	/**
 	 * 刷新页面 待优化。。。
@@ -49,8 +66,21 @@ public class ComeMsgFragment extends Fragment {
 	public void refresh() {
 		list.clear();		
 		list.addAll(loadConversationsWithRecentChat());
-		adapter=new ChatHistoryAdapter(getActivity(),1, list);
-		ListView_come.setAdapter(adapter);
+		easemobchatusers.clear();
+		for(EMConversation em:loadConversationsWithRecentChat()){
+			Map m=new HashMap<String, Object>();
+			m.put("username", em.getUserName());
+			m.put("is_group", em.isGroup());
+			easemobchatusers.add(m);
+		}
+		easemobchatUser users=new easemobchatUser();
+		users.setEasemobchatusers(easemobchatusers);
+		comeMsgTask task=new comeMsgTask();
+		task.execute(users);
+		
+		
+//		adapter=new ChatHistoryAdapter(getActivity(),1, list);
+//		ListView_come.setAdapter(adapter);
 //		adapter.notifyDataSetChanged();
 	}
 	/**
@@ -111,5 +141,31 @@ public class ComeMsgFragment extends Fragment {
 		if (!hidden) {
 			refresh();
 		}
+	}
+	private class comeMsgTask extends AsyncTask<easemobchatUser, easemobchatUser, List>{
+
+		@Override
+		protected List doInBackground(easemobchatUser... params) {
+			// TODO Auto-generated method stub
+			SessionListener callback=new SessionListener();
+			List mlist=null;
+			try {
+				mlist=PeerUI.getInstance().getISessionManager().convertToUser(params[0], callback);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return mlist;
+		}
+		@Override
+		protected void onPostExecute(List result) {
+			// TODO Auto-generated method stub
+			adapter=new ChatHistoryAdapter(getActivity(),1, list);
+			adapter.setUsermsg(result);			
+			ListView_come.setAdapter(adapter);
+		}
+		
+		
 	}
 }

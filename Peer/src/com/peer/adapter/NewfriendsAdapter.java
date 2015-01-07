@@ -5,6 +5,7 @@ import java.util.List;
 import com.peer.R;
 import com.peer.activitymain.PersonalPageActivity;
 import com.peer.client.User;
+import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
 import com.peer.event.NewFriensEvent;
@@ -85,16 +86,19 @@ public class NewfriendsAdapter extends BaseAdapter {
 					public void run() {
 						// TODO Auto-generated method stub
 						try {
-							PeerUI.getInstance().getISessionManager().refuseAddFriends(mlist.get(position).getId());
-							 EventBus.getDefault().post(new NewFriensEvent(position));
-							 ((Activity)mContext).runOnUiThread(new Runnable() {
-								
-								@Override
-								public void run() {
-									// TODO Auto-generated method stub
-									Toast.makeText(mContext, "拒绝添加为好友", 0).show();
-								}
-							});
+							SessionListener callback=new SessionListener();
+							PeerUI.getInstance().getISessionManager().refuseAddFriends(mlist.get(position).getId(),callback);
+							if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
+								 ((Activity)mContext).runOnUiThread(new Runnable() {
+										
+										@Override
+										public void run() {
+											// TODO Auto-generated method stub
+											EventBus.getDefault().post(new NewFriensEvent(position));
+											Toast.makeText(mContext, "拒绝添加为好友", 0).show();
+										}
+									});
+							}							
 						} catch (RemoteException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -116,8 +120,19 @@ public class NewfriendsAdapter extends BaseAdapter {
 					public void run() {
 						// TODO Auto-generated method stub
 						try {
-							PeerUI.getInstance().getISessionManager().agreeAddFriends(mlist.get(position).getId());
-							 EventBus.getDefault().post(new NewFriensEvent(position));
+							SessionListener callback=new SessionListener();
+							PeerUI.getInstance().getISessionManager().agreeAddFriends(mlist.get(position).getId(),callback);
+							if (callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
+								 ((Activity)mContext).runOnUiThread(new Runnable(){
+
+									@Override
+									public void run() {
+										// TODO Auto-generated method stub
+										EventBus.getDefault().post(new NewFriensEvent(position));
+									}
+									 
+								 });								
+							}								
 						} catch (RemoteException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();

@@ -12,7 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.peer.R;
-import com.peer.IMimplements.RingLetterImp;
+import com.peer.IMimplements.easemobchatImp;
 import com.peer.activity.BasicActivity;
 import com.peer.activity.LoginActivity;
 import com.peer.adapter.NewfriendsAdapter;

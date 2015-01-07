@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import com.peer.R;
-import com.peer.IMimplements.RingLetterImp;
+import com.peer.IMimplements.easemobchatImp;
 import com.peer.activitymain.HomePageActivity;
 import com.peer.activitymain.MainActivity;
 import com.peer.client.User;
@@ -189,8 +189,8 @@ public class CompleteActivity extends BasicActivity{
 							User u=PeerUI.getInstance().getISessionManager().login(email, password, callback2);
 							if(callback2.getMessage().equals(Constant.CALLBACKSUCCESS)){
 								String huanxinid=PeerUI.getInstance().getISessionManager().getHuanxingUser();
-								RingLetterImp.getInstance().login(huanxinid, password);
-								RingLetterImp.getInstance().loadConversationsandGroups();
+								easemobchatImp.getInstance().login(huanxinid, password);
+								easemobchatImp.getInstance().loadConversationsandGroups();
 								
 								com.peer.localDBbean.UserBean userbean=new com.peer.localDBbean.UserBean();
 								 userbean.setEmail(u.getEmail());

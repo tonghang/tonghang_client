@@ -6,6 +6,7 @@ import org.springframework.http.ContentCodingType;
 
 import com.peer.R;
 import com.peer.entity.ChatMsgEntity;
+import com.peer.widgetutil.LoadImageUtil;
 
 import android.content.Context;
 import android.content.Intent;
@@ -34,7 +35,7 @@ public class ChatMsgViewAdapter extends BaseAdapter {
 		this.coll = coll;
 		this.context=context;
 		mInflater = LayoutInflater.from(context);
-//		LoadImageUtil.initImageLoader(context);
+		LoadImageUtil.initImageLoader(context);
 	}
 	public int getCount() {
 		return coll.size();
@@ -99,7 +100,7 @@ public class ChatMsgViewAdapter extends BaseAdapter {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 		if(isComMsg!=2){
-//			LoadImageUtil.imageLoader.displayImage(entity.getImage(), viewHolder.heapic, LoadImageUtil.options);
+			LoadImageUtil.imageLoader.displayImage(entity.getImage(), viewHolder.heapic, LoadImageUtil.options);
 			viewHolder.tvSendTime.setText(entity.getDate());
 			
 			viewHolder.tvContent.setText(entity.getMessage());

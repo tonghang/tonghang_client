@@ -27,6 +27,7 @@ import android.os.RemoteException;
 import com.peer.client.ISessionListener;
 import com.peer.client.ISessionManager;
 import com.peer.client.User;
+import com.peer.client.easemobchatUser;
 import com.peer.client.util.DataUtil;
 import com.peer.constant.Constant;
 
@@ -202,7 +203,7 @@ public class SessionManager extends ISessionManager.Stub {
 		}
 		callback.onCallBack(code, message);
 	}
-	/*To add someone as a friend*/
+	/*To add someone as a friend 通过测试*/
 	@Override
 	public void addFriends(String targetId, String reason,
 			ISessionListener callback) throws RemoteException {
@@ -291,27 +292,37 @@ public class SessionManager extends ISessionManager.Stub {
 	}
 	/*refuse someone add as friend*/
 	@Override
-	public void refuseAddFriends(String sourceId) throws RemoteException {
+	public void refuseAddFriends(String sourceId,ISessionListener callback) throws RemoteException {
 		// TODO Auto-generated method stub
+		String message=null;
+		int code=1;
 		try {
 			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "/invitations/"+sourceId+"/refuse.json", "", Map.class);			
-			Map body = result.getBody();		
+			Map body = result.getBody();
+			message=Constant.CALLBACKSUCCESS;
 		} catch (Exception e) {
 			// TODO log exception
+			message=Constant.CALLBACKFAIL;
 			e.printStackTrace();
 		}
+		callback.onCallBack(code, message);
 	}
 	/*aggree someone add as friend*/
 	@Override
-	public void agreeAddFriends(String sourceId) throws RemoteException {
+	public void agreeAddFriends(String sourceId,ISessionListener callback) throws RemoteException {
 		// TODO Auto-generated method stub
+		String message=null;
+		int code=1;
 		try {
 			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "/invitations/"+sourceId+"/agree.json", "", Map.class);			
-			Map body = result.getBody();		
+			Map body = result.getBody();
+			message=Constant.CALLBACKSUCCESS;
 		} catch (Exception e) {
 			// TODO log exception
+			message=Constant.CALLBACKFAIL;
 			e.printStackTrace();
-		}		
+		}	
+		callback.onCallBack(code, message);
 	}
 	/*search user by label 通过测试*/
 	@Override
@@ -381,7 +392,7 @@ public class SessionManager extends ISessionManager.Stub {
 		callback.onCallBack(code, message);
 		return mlist;
 	}
-	/*get all friends*/
+	/*get all friends 通过测试*/
 	@Override
 	public List<User> myFriends() throws RemoteException {
 		// TODO Auto-generated method stub
@@ -430,8 +441,8 @@ public class SessionManager extends ISessionManager.Stub {
 //						
 //					}
 					u.setImage((String)m.get("status"));
-					u.setUsername((String)m.get("invitee_id"));
-					u.setId((String)m.get("inviter_id"));
+					u.setUsername(String.valueOf(m.get("invitee_id")));
+					u.setId(String.valueOf(m.get("inviter_id")));
 					u.setReason((String)m.get("reason"));
 					list.add(u);
 				}
@@ -585,6 +596,7 @@ public class SessionManager extends ISessionManager.Stub {
 		}
 		return huanxing_group_id;
 	}
+	/*用户首页推荐 通过测试*/
 	@Override
 	public List recommendByPage(int page, ISessionListener callback)
 			throws RemoteException {
@@ -640,7 +652,7 @@ public class SessionManager extends ISessionManager.Stub {
 		callback.onCallBack(code, message);		
 		return list;
 	}
-
+	
 	@Override
 	public String getHuanxingUser() throws RemoteException {
 		// TODO Auto-generated method stub
@@ -671,5 +683,32 @@ public class SessionManager extends ISessionManager.Stub {
 		// TODO Auto-generated method stub
 		return username;
 	}
+	@Override
+	public List convertToUser(easemobchatUser users, ISessionListener callback)
+			throws RemoteException {
+		// TODO Auto-generated method stub
+		List mlist=null;
+		users.getEasemobchatusers();
+		Map<String, List> parts=new HashMap<String, List>();
+		String message=null;
+		int code=1;
+		try{
+			parts.put("entries", users.getEasemobchatusers());
+			ResponseEntity<List> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS+"/huanxin/hid2sids.json", parts,  List.class);
+			if(result.getStatusCode()==HttpStatus.OK){
+				message=Constant.CALLBACKSUCCESS;
+				code=0;
+				mlist=result.getBody();
+			}
+		
+		}catch(Exception e){
+			message=Constant.CALLBACKFAIL;
+			e.printStackTrace();
+		}
+		
+		callback.onCallBack(code, message);		
+		return mlist;
+	}
+	
 	
 }

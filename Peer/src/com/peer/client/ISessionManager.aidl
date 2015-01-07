@@ -4,6 +4,7 @@ package com.peer.client;
 // Declare any non-default types here with import statements
 import com.peer.client.ISessionListener;
 import com.peer.client.User;
+import com.peer.client.easemobchatUser;
 
 interface ISessionManager {
 
@@ -27,9 +28,9 @@ interface ISessionManager {
  	
  	void addFriends(String targetId,String reason,ISessionListener callback);
  	
- 	void refuseAddFriends(String sourceId);
+ 	void refuseAddFriends(String sourceId,ISessionListener callback);
  	
- 	void agreeAddFriends(String sourceId);
+ 	void agreeAddFriends(String sourceId,ISessionListener callback);
  	
  	void deleteFriends(String targetId);
  	
@@ -40,6 +41,8 @@ interface ISessionManager {
     List<com.peer.client.User> searchUsersByNickName(String username,ISessionListener callback);
  	
  	List recommendByPage(int page, ISessionListener callback);
+ 	
+ 	List convertToUser(in com.peer.client.easemobchatUser users, ISessionListener callback);
  
  	List<com.peer.client.User> myFriends();
  	

@@ -18,16 +18,16 @@ import com.peer.util.ChatRoomTypeUtil;
  * Encapsulation ring letter implementation method
  * 封装环信通信
  * */
-public class RingLetterImp implements IM{
-	private static RingLetterImp ringletter=null;
-	private RingLetterImp(){
+public class easemobchatImp implements IM{
+	private static easemobchatImp ringletter=null;
+	private easemobchatImp(){
 		
 	}
-	public static RingLetterImp getInstance(){
+	public static easemobchatImp getInstance(){
 		if(ringletter==null){
-			synchronized (RingLetterImp.class) {
+			synchronized (easemobchatImp.class) {
 				if(ringletter==null){
-					ringletter=new RingLetterImp();
+					ringletter=new easemobchatImp();
 				}
 			 }
 		}		 

@@ -17,7 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.peer.R;
-import com.peer.IMimplements.RingLetterImp;
+import com.peer.IMimplements.easemobchatImp;
 import com.peer.activitymain.HomePageActivity;
 import com.peer.activitymain.MainActivity;
 import com.peer.client.User;
@@ -129,8 +129,8 @@ public class LoginActivity extends BasicActivity{
 				
 				if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
 					String huanxinid=PeerUI.getInstance().getISessionManager().getHuanxingUser();
-					RingLetterImp.getInstance().login(huanxinid, paramer[1]);
-					RingLetterImp.getInstance().loadConversationsandGroups();					
+					easemobchatImp.getInstance().login(huanxinid, paramer[1]);
+					easemobchatImp.getInstance().loadConversationsandGroups();					
 //本地存储操作。。。			
 					 String userid=PeerUI.getInstance().getISessionManager().getUserId();
 					

@@ -24,7 +24,7 @@ import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.EMMessage.ChatType;
 import com.peer.R;
-import com.peer.IMimplements.RingLetterImp;
+import com.peer.IMimplements.easemobchatImp;
 import com.peer.activity.BasicActivity;
 import com.peer.fragment.ComeMsgFragment;
 import com.peer.fragment.FriendsFragment;
@@ -180,7 +180,7 @@ public class MainActivity extends BasicActivity{
 	 * 刷新未读消息数
 	 */
 	public void updateUnreadLabel() {
-		int count = RingLetterImp.getInstance().getUnreadMesTotal();
+		int count = easemobchatImp.getInstance().getUnreadMesTotal();
 		if (count > 0) {
 			unredmsg.setText(String.valueOf(count));
 			unredmsg.show();

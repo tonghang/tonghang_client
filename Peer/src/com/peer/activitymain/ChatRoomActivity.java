@@ -28,9 +28,10 @@ import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.TextMessageBody;
+import com.easemob.exceptions.EaseMobException;
 import com.easemob.util.DateUtils;
 import com.peer.R;
-import com.peer.IMimplements.RingLetterImp;
+import com.peer.IMimplements.easemobchatImp;
 import com.peer.activity.BasicActivity;
 import com.peer.adapter.ChatMsgViewAdapter;
 import com.peer.client.User;
@@ -62,6 +63,8 @@ public class ChatRoomActivity extends BasicActivity {
 	private EMConversation conversation;
 	private NewMessageBroadcastReceiver receiver;
 	private InputMethodManager manager;
+	
+	private String imagurl=null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -75,6 +78,13 @@ public class ChatRoomActivity extends BasicActivity {
 	
 	private void init() {
 		// TODO Auto-generated method stub
+		try {
+			imagurl=PeerUI.getInstance().getISessionManager().getImagUrL();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		toChatUsername=ChatRoomTypeUtil.getInstance().getHuanxingId();
 		titlePopup = new TitlePopup(this, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);	
 		rl_owner=(RelativeLayout)findViewById(R.id.host_imfor);		
@@ -119,7 +129,7 @@ public class ChatRoomActivity extends BasicActivity {
 				tv_theme.setText(ChatRoomTypeUtil.getInstance().getTheme());
 				topicId=ChatRoomTypeUtil.getInstance().getTopicId();
 				//加入公开群聊
-				RingLetterImp.getInstance().joingroup(toChatUsername);
+				easemobchatImp.getInstance().joingroup(toChatUsername);
 			}
 			
 			
@@ -181,7 +191,7 @@ public class ChatRoomActivity extends BasicActivity {
 				if(item.mTitle.equals(getResources().getString(R.string.exitroom))){
 					finish();
 				}else if(item.mTitle.equals(getResources().getString(R.string.deletemes))){
-					RingLetterImp.getInstance().clearConversation(toChatUsername);
+					easemobchatImp.getInstance().clearConversation(toChatUsername);
 					msgList.clear();
 					adapter.notifyDataSetChanged();
 			//		ShowMessage(getResources().getString(R.string.deletechatmsg));
@@ -218,15 +228,8 @@ public class ChatRoomActivity extends BasicActivity {
 	private void sendMessage() {
 		// TODO Auto-generated method stub
 		if(EMChatManager.getInstance().isConnected()){
-			String content=messagebody.getText().toString().trim();	
-			String imagurl=null;
-			try {
-				imagurl=PeerUI.getInstance().getISessionManager().getImagUrL();
-			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			RingLetterImp.getInstance().sendMessage(content, Constant.SINGLECHAT, toChatUsername,imagurl);			
+			String content=messagebody.getText().toString().trim();				
+			easemobchatImp.getInstance().sendMessage(content, Constant.SINGLECHAT, toChatUsername,imagurl);			
 			SimpleDateFormat   formatter   =   new   SimpleDateFormat   ("yyyy年MM月dd日   HH:mm:ss     ");     
 			 Date   curDate   =   new   Date(System.currentTimeMillis());//获取当前时间     
 			String   str   =   formatter.format(curDate);     
@@ -278,16 +281,24 @@ public class ChatRoomActivity extends BasicActivity {
 			// 收到这个广播的时候，message已经在db和内存里了，可以通过id获取mesage对象
 			EMMessage message = EMChatManager.getInstance().getMessage(msgid);
 			// 如果是群聊消息，获取到group id
-						
+			String image=null;
+			try {
+				 image=message.getStringAttribute(Constant.IMAGEURL);
+			} catch (EaseMobException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
 			//获取到消息
 			TextMessageBody txtBody = (TextMessageBody)message.getBody();
 			String msg=txtBody.getMessage();
+			
 			
 			
 			SimpleDateFormat   formatter   =   new   SimpleDateFormat   ("yyyy年MM月dd日   HH:mm:ss     ");     
 			 Date   curDate   =   new   Date(System.currentTimeMillis());//获取当前时间     
 			String   str   =   formatter.format(curDate);  
 			ChatMsgEntity entity=new ChatMsgEntity();
+			entity.setImage(image);
 			entity.setDate(str);
 			entity.setMessage(msg);
 			entity.setMsgType(Constant.OTHER);					

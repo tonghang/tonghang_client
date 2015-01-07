@@ -99,9 +99,11 @@ public class HomepageAdapter extends BaseAdapter {
 				});
 			}else if(type.equals(Constant.TOPIC)){
 				convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_home_listtopic,null,false);
+				viewHolder.time=(TextView)convertView.findViewById(R.id.tv_time);
 				viewHolder.skillname=(TextView)convertView.findViewById(R.id.tv_skill);			
 				viewHolder.topic=(TextView)convertView.findViewById(R.id.tv_topic);
 				viewHolder.click=(LinearLayout)convertView.findViewById(R.id.ll_clike);
+				viewHolder.time.setText((String)mList.get(position).get("created_at"));
 				viewHolder.skillname.setText((String)mList.get(position).get("label_name"));
 				viewHolder.topic.setText((String)mList.get(position).get("subject"));
 				viewHolder.click.setOnClickListener(new View.OnClickListener() {
@@ -142,6 +144,6 @@ public class HomepageAdapter extends BaseAdapter {
 		LinearLayout click;
 		ImageView headpic;
 		TextView nikename,skillname;
-		TextView descripe,topic;
+		TextView descripe,topic,time;
 	}
 }

@@ -18,7 +18,7 @@ import com.easemob.EMError;
 import com.easemob.chat.EMChatManager;
 import com.easemob.exceptions.EaseMobException;
 import com.peer.R;
-import com.peer.IMimplements.RingLetterImp;
+import com.peer.IMimplements.easemobchatImp;
 import com.peer.IMinterface.IM;
 import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
