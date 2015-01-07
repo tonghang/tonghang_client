@@ -31,6 +31,7 @@ import com.peer.fragment.FriendsFragment;
 import com.peer.fragment.HomeFragment;
 import com.peer.fragment.MyFragment;
 import com.readystatesoftware.viewbadger.BadgeView;
+import com.umeng.update.UmengUpdateAgent;
 
 
 public class MainActivity extends BasicActivity{
@@ -55,7 +56,7 @@ public class MainActivity extends BasicActivity{
 		setContentView(R.layout.activity_main);	
 		init();
 		registerEMchat();
-		
+		UmengUpdateAgent.update(this);
 	}
 	private void registerEMchat() {
 		// TODO Auto-generated method stub		

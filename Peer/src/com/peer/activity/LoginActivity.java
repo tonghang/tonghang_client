@@ -137,7 +137,7 @@ public class LoginActivity extends BasicActivity{
 					 LocalStorage.saveString(LoginActivity.this, Constant.EMAIL, paramer[0]);
 					 UserDao userdao=new UserDao(LoginActivity.this);
 					 com.peer.localDBbean.UserBean userbean=new com.peer.localDBbean.UserBean();
-					 userbean.setEmail(u.getEmail());
+					 userbean.setEmail(paramer[0]);
 					 userbean.setPassword(paramer[1]);
 					 userbean.setAge(u.getBirthday());
 					 userbean.setCity(u.getCity());

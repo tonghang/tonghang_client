@@ -4,6 +4,7 @@ import java.io.File;
 
 import com.peer.R;
 import com.peer.util.ManagerActivity;
+import com.umeng.update.UmengUpdateAgent;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -69,10 +70,10 @@ public class SettingActivity extends BasicActivity{
 			startActivity(feedback);
 			break;
 		case R.id.ll_newversion_set:
-//			UmengUpdateAgent.forceUpdate(SettingActivity.this);
+			UmengUpdateAgent.forceUpdate(SettingActivity.this);
 			break;
 		case R.id.ll_clearcash_set:
-//			deleteFilesByDirectory(getCacheDir());
+			deleteFilesByDirectory(getCacheDir());
 			Clean();
 			
 			break;
