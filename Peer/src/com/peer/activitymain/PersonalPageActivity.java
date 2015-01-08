@@ -53,7 +53,7 @@ public class PersonalPageActivity extends BasicActivity {
 			lablelist.add("java");
 			for(int i=0;i<lablelist.size();i++){
 				String tag=(String) lablelist.get(i);					
-				skill=(TextView) getLayoutInflater().inflate(R.layout.tag, tagContainer, false);
+				skill=(TextView) getLayoutInflater().inflate(R.layout.skill, tagContainer, false);
 				skill.setHeight((int)getResources().getDimension(R.dimen.hight));
 				
 				int pading=(int)getResources().getDimension(R.dimen.pading);
@@ -223,7 +223,7 @@ public class PersonalPageActivity extends BasicActivity {
 				for(int i=0;i<user.getLabels().size();i++){
 					String tag=user.getLabels().get(i);					
 
-					skill=(TextView) getLayoutInflater().inflate(R.layout.tag, tagContainer, false);
+					skill=(TextView) getLayoutInflater().inflate(R.layout.skill, tagContainer, false);
 					skill.setHeight((int)getResources().getDimension(R.dimen.hight));
 					
 					int pading=(int)getResources().getDimension(R.dimen.pading);

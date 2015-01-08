@@ -225,6 +225,7 @@
             android:layout_marginRight="8dp"
             android:id="@+id/bt_update"
             android:text="修改"
+            android:textColor="@color/white"
             android:layout_height="48dp"
             android:background="@drawable/selector_commit"
             android:layout_width="match_parent"/>

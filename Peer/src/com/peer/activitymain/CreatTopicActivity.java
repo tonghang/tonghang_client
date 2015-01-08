@@ -24,6 +24,8 @@ import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
 import com.peer.localDB.LocalStorage;
+import com.peer.util.AutoWrapLinearLayout;
+import com.peer.util.AutoWrapRadioGroup;
 import com.peer.util.ChatRoomTypeUtil;
 
 
@@ -32,10 +34,10 @@ public class CreatTopicActivity extends BasicActivity {
 	private Button creattopic;
 	private LinearLayout back;
 	private RadioGroup rg_lables;
-	private RadioButton r1,r2,r3,r4,r5;
-	private View v1,v2,v3,v4,v5;
 	private EditText topic;
 	private List<String> list;
+	private AutoWrapRadioGroup tagContainer;
+	
 	
 	private boolean isselect=false;
 	private String selectlabel;
@@ -44,9 +46,10 @@ public class CreatTopicActivity extends BasicActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_creattopic);
+		getlables();
 		init();
 	}
-	private void init() {
+	private void getlables() {
 		// TODO Auto-generated method stub
 		if(LocalStorage.getBoolean(this, "istestui")){
 			list=new ArrayList<String>();
@@ -60,7 +63,9 @@ public class CreatTopicActivity extends BasicActivity {
 				e.printStackTrace();
 			}
 		}
-		
+	}
+	private void init() {
+		// TODO Auto-generated method stub		
 		topic=(EditText)findViewById(R.id.et_topic);
 		creattopic=(Button)findViewById(R.id.bt_creattopic);
 		creattopic.setOnClickListener(this);
@@ -68,8 +73,14 @@ public class CreatTopicActivity extends BasicActivity {
 		title.setText(getResources().getString(R.string.createtopic));
 		back=(LinearLayout)findViewById(R.id.ll_back);
 		back.setOnClickListener(this);
-		rg_lables=(RadioGroup)findViewById(R.id.rg_lables);		
-		rg_lables.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		tagContainer = (AutoWrapRadioGroup) findViewById(R.id.tag_container);	
+		for(int i=0;i<list.size();i++){
+			RadioButton rb=(RadioButton)getLayoutInflater().inflate(R.layout.skillradio, tagContainer, false);
+			rb.setHeight((int)getResources().getDimension(R.dimen.hight));
+			rb.setText(list.get(i));
+			tagContainer.addView(rb);
+		}	
+		tagContainer.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -77,10 +88,9 @@ public class CreatTopicActivity extends BasicActivity {
 				RadioButton tempButton = (RadioButton)findViewById(checkedId);
 				selectlabel=tempButton.getText().toString();
 				isselect=true;
-//				System.out.println("选中的标签是："+tempButton.getText().toString());
+				System.out.println("选中的标签是："+tempButton.getText().toString());
 			}
 		});
-		addRadiobutton();
 	}
 	@Override
 	public void onClick(View v) {
@@ -141,66 +151,6 @@ public class CreatTopicActivity extends BasicActivity {
 			ChatRoomTypeUtil.getInstance().setUser(u);	
 			Intent intent=new Intent(CreatTopicActivity.this,ChatRoomActivity.class);
 			startActivity(intent);
-		}
-	}
-	private void addRadiobutton(){
-		if(list.size()==2){
-			r1=(RadioButton)findViewById(R.id.label1);
-			v1=(View)findViewById(R.id.v1);
-			r1.setText(list.get(0));
-			
-			r2=(RadioButton)findViewById(R.id.label2);
-			v2=(View)findViewById(R.id.v2);
-			r2.setText(list.get(1));
-		}else if(list.size()==3){
-			r1=(RadioButton)findViewById(R.id.label1);
-			v1=(View)findViewById(R.id.v1);
-			r1.setText(list.get(0));
-			
-			r2=(RadioButton)findViewById(R.id.label2);
-			v2=(View)findViewById(R.id.v2);
-			r2.setText(list.get(1));
-			
-			r3=(RadioButton)findViewById(R.id.label3);
-			v3=(View)findViewById(R.id.v3);
-			r3.setText(list.get(2));
-			
-			r3.setVisibility(View.VISIBLE);
-			v3.setVisibility(View.VISIBLE);
-		}else if(list.size()==4){
-			r1=(RadioButton)findViewById(R.id.label1);
-			v1=(View)findViewById(R.id.v1);
-			r2=(RadioButton)findViewById(R.id.label2);
-			v2=(View)findViewById(R.id.v2);
-			r3=(RadioButton)findViewById(R.id.label3);
-			v3=(View)findViewById(R.id.v3);
-			r4=(RadioButton)findViewById(R.id.label4);
-			v4=(View)findViewById(R.id.v4);
-			r1.setText(list.get(0));
-			r2.setText(list.get(1));
-			r3.setText(list.get(2));
-			r4.setText(list.get(3));
-			v3.setVisibility(View.VISIBLE);
-			v4.setVisibility(View.VISIBLE);
-		}else if(list.size()==5){
-			r1=(RadioButton)findViewById(R.id.label1);
-			v1=(View)findViewById(R.id.v1);
-			r2=(RadioButton)findViewById(R.id.label2);
-			v2=(View)findViewById(R.id.v2);
-			r3=(RadioButton)findViewById(R.id.label3);
-			v3=(View)findViewById(R.id.v3);
-			r4=(RadioButton)findViewById(R.id.label4);
-			v4=(View)findViewById(R.id.v4);
-			r5=(RadioButton)findViewById(R.id.label5);
-			v5=(View)findViewById(R.id.v5);
-			r1.setText(list.get(0));
-			r2.setText(list.get(1));
-			r3.setText(list.get(2));
-			r4.setText(list.get(3));
-			r5.setText(list.get(4));
-			v3.setVisibility(View.VISIBLE);
-			v4.setVisibility(View.VISIBLE);
-			v5.setVisibility(View.VISIBLE);
 		}
 	}
 }
