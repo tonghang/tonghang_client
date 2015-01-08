@@ -11,6 +11,7 @@ import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
 import com.peer.localDB.LocalStorage;
+import com.peer.util.AutoWrapLinearLayout;
 import com.peer.util.ChatRoomTypeUtil;
 import com.peer.util.PersonpageUtil;
 import com.peer.widgetutil.LoadImageUtil;
@@ -19,6 +20,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
@@ -30,17 +32,14 @@ import android.widget.TextView;
 
 public class PersonalPageActivity extends BasicActivity {
 	private ImageView personhead,delete;
-	private TextView nikename,title,topic_whose,acount,city;
+	private TextView nikename,title,topic_whose,acount,city,birth,sex,skill;
 	private RelativeLayout topic_click;
-	private LinearLayout back,bottomline;
-	private ListView skillllist;
+	private LinearLayout back,bottomline,content;
+//	private ListView skillllist;
+	private AutoWrapLinearLayout tagContainer;
+	
 	private List<HashMap<String, String>> list=new ArrayList<HashMap<String,String>>();
-	private User userpage;
-	
-	
-	private String image;
-	private String nike;
-	private String email;
+	private User userpage;	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -52,8 +51,16 @@ public class PersonalPageActivity extends BasicActivity {
 			List lablelist=new ArrayList<String>();
 			lablelist.add("美食");
 			lablelist.add("java");
-			SkillAdapter adapter=new SkillAdapter(PersonalPageActivity.this,"page",lablelist);
-			skillllist.setAdapter(adapter);	
+			for(int i=0;i<lablelist.size();i++){
+				String tag=(String) lablelist.get(i);					
+				skill=(TextView) getLayoutInflater().inflate(R.layout.tag, tagContainer, false);
+				skill.setHeight((int)getResources().getDimension(R.dimen.hight));
+				
+				int pading=(int)getResources().getDimension(R.dimen.pading);
+				skill.setText(tag);
+				skill.setTag(""+i);
+				tagContainer.addView(skill);
+			}	
 		}else{
 			PersonalTask task=new PersonalTask();
 			task.execute(PersonpageUtil.getInstance().getPersonid());
@@ -67,6 +74,9 @@ public class PersonalPageActivity extends BasicActivity {
 		title=(TextView)findViewById(R.id.tv_title);
 		acount=(TextView)findViewById(R.id.personcount);
 		city=(TextView)findViewById(R.id.city);
+		birth=(TextView)findViewById(R.id.birthday);
+		sex=(TextView)findViewById(R.id.sex);
+		
 		topic_click=(RelativeLayout)findViewById(R.id.rl_topic);
 		topic_click.setOnClickListener(this);
 		back=(LinearLayout)findViewById(R.id.ll_back);
@@ -74,7 +84,9 @@ public class PersonalPageActivity extends BasicActivity {
 		nikename=(TextView)findViewById(R.id.personnike);
 		personhead=(ImageView)findViewById(R.id.personhead);
 		bottomline=(LinearLayout)findViewById(R.id.ll_personpagebottom);
-		skillllist=(ListView)findViewById(R.id.lv_pageskill);			
+		content=(LinearLayout)findViewById(R.id.contentauto);
+		tagContainer = (AutoWrapLinearLayout) findViewById(R.id.tag_container);
+//		skillllist=(ListView)findViewById(R.id.lv_pageskill);			
 		ViewType();	
 		
 	}
@@ -202,15 +214,24 @@ public class PersonalPageActivity extends BasicActivity {
 			// TODO Auto-generated method stub
 			if(user!=null){
 				userpage=user;
-				image=user.getImage();
-				nike=user.getUsername();
-				email=user.getEmail();
-				LoadImageUtil.imageLoader.displayImage(image, personhead, LoadImageUtil.options);				
-				nikename.setText(nike);
-				acount.setText(email);
+				LoadImageUtil.imageLoader.displayImage(user.getImage(), personhead, LoadImageUtil.options);				
+				nikename.setText(user.getUsername());
+				acount.setText(user.getEmail());
 				city.setText(user.getCity());
-				SkillAdapter adapter=new SkillAdapter(PersonalPageActivity.this,"page",user.getLabels());
-				skillllist.setAdapter(adapter);	
+				birth.setText(user.getBirthday());
+				sex.setText(user.getSex());
+				for(int i=0;i<user.getLabels().size();i++){
+					String tag=user.getLabels().get(i);					
+
+					skill=(TextView) getLayoutInflater().inflate(R.layout.tag, tagContainer, false);
+					skill.setHeight((int)getResources().getDimension(R.dimen.hight));
+					
+					int pading=(int)getResources().getDimension(R.dimen.pading);
+					skill.setText(tag);
+					skill.setTag(""+i);
+					tagContainer.addView(skill);
+				}
+				
 			}
 		}
 		

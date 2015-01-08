@@ -47,7 +47,6 @@ public class HomeFragment extends BasicFragment{
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
-//		initdata();
 		init();
 		RecommendTask task=new RecommendTask();
 		task.execute();

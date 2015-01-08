@@ -20,5 +20,8 @@
 	<dimen name="widgeheight_max">64dp</dimen>
 	<!-- 横线高度 -->
 	<dimen name="index_line">1dp</dimen>
+	
+	<dimen name="hight">32dp</dimen>
+    <dimen name="pading">8dp</dimen>
 
 </resources>
