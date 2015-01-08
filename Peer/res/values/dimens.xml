@@ -21,7 +21,7 @@
 	<!-- 横线高度 -->
 	<dimen name="index_line">1dp</dimen>
 	
-	<dimen name="hight">32dp</dimen>
+	<dimen name="hight">48dp</dimen>
     <dimen name="pading">8dp</dimen>
 
 </resources>

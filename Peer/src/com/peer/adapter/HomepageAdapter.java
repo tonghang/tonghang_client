@@ -115,7 +115,7 @@ public class HomepageAdapter extends BaseAdapter {
 						ChatRoomTypeUtil.getInstance().setHuanxingId(String.valueOf(mList.get(position).get("huanxin_group_id")));
 						ChatRoomTypeUtil.getInstance().setTitle((String)mList.get(position).get("label_name"));
 						ChatRoomTypeUtil.getInstance().setTheme((String)mList.get(position).get("subject"));
-						ChatRoomTypeUtil.getInstance().setTopicId((String)mList.get(position).get("id"));
+						ChatRoomTypeUtil.getInstance().setTopicId(String.valueOf(mList.get(position).get("id")));
 						
 						if(LocalStorage.getBoolean(mContext, "istestui")){
 							Intent intent=new Intent(mContext,ChatRoomActivity.class);

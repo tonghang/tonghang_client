@@ -49,13 +49,14 @@ public class PersonalPageActivity extends BasicActivity {
 		LoadImageUtil.initImageLoader(this);
 		if(LocalStorage.getBoolean(this, "istestui")){
 			List lablelist=new ArrayList<String>();
-			lablelist.add("美食");
-			lablelist.add("java");
+			lablelist.add("我最爱的美食是糖醋排骨");
+			lablelist.add("java是我擅长的编程语言");
 			for(int i=0;i<lablelist.size();i++){
 				String tag=(String) lablelist.get(i);					
 				skill=(TextView) getLayoutInflater().inflate(R.layout.skill, tagContainer, false);
 				skill.setHeight((int)getResources().getDimension(R.dimen.hight));
-				
+				skill.setTextSize(20);
+				skill.setTextColor(getResources().getColor(R.color.white));
 				int pading=(int)getResources().getDimension(R.dimen.pading);
 				skill.setText(tag);
 				skill.setTag(""+i);
@@ -225,7 +226,8 @@ public class PersonalPageActivity extends BasicActivity {
 
 					skill=(TextView) getLayoutInflater().inflate(R.layout.skill, tagContainer, false);
 					skill.setHeight((int)getResources().getDimension(R.dimen.hight));
-					
+					skill.setTextSize(20);
+					skill.setTextColor(getResources().getColor(R.color.white));
 					int pading=(int)getResources().getDimension(R.dimen.pading);
 					skill.setText(tag);
 					skill.setTag(""+i);

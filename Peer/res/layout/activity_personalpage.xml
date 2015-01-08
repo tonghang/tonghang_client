@@ -58,7 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/personhead"
-               android:layout_alignLeft="@+id/personnike"
+                android:layout_alignLeft="@+id/personnike"
                 android:layout_toRightOf="@+id/personhead"
                 android:textColor="@color/deepgray"
                 android:textSize="@dimen/textsize_middle" 
@@ -86,7 +86,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                
+                android:textSize="@dimen/textsize_middle"  
                 android:textColor="@color/deepgray"
                 />
             
@@ -112,6 +112,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"                
                 android:textColor="@color/deepgray"
+                android:textSize="@dimen/textsize_middle"  
                 />
             
         </LinearLayout>
@@ -127,6 +128,7 @@
                 android:text="所在城市："
                 android:textSize="@dimen/textsize_middle"
                  android:textColor="@color/deepgray"
+                 
                 />
             <TextView 
                 android:id="@+id/city"
@@ -135,6 +137,7 @@
                 android:layout_height="match_parent"
                 android:text="天津"
                 android:textColor="@color/deepgray"
+                android:textSize="@dimen/textsize_middle"  
                 />
             
         </LinearLayout>

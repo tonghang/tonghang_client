@@ -4,6 +4,7 @@ import com.peer.R;
 import com.peer.activity.BasicActivity;
 import com.peer.constant.Constant;
 import com.peer.localDB.LocalStorage;
+import com.peer.util.ManagerActivity;
 import com.peer.util.SearchUtil;
 
 import android.app.Activity;

@@ -27,6 +27,7 @@ import com.peer.localDB.LocalStorage;
 import com.peer.util.AutoWrapLinearLayout;
 import com.peer.util.AutoWrapRadioGroup;
 import com.peer.util.ChatRoomTypeUtil;
+import com.peer.util.ManagerActivity;
 
 
 public class CreatTopicActivity extends BasicActivity {
@@ -78,6 +79,8 @@ public class CreatTopicActivity extends BasicActivity {
 			RadioButton rb=(RadioButton)getLayoutInflater().inflate(R.layout.skillradio, tagContainer, false);
 			rb.setHeight((int)getResources().getDimension(R.dimen.hight));
 			rb.setText(list.get(i));
+			rb.setTextSize(20);
+//			rb.setTextColor(getResources().getColor(R.color.white));
 			tagContainer.addView(rb);
 		}	
 		tagContainer.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -151,6 +154,7 @@ public class CreatTopicActivity extends BasicActivity {
 			ChatRoomTypeUtil.getInstance().setUser(u);	
 			Intent intent=new Intent(CreatTopicActivity.this,ChatRoomActivity.class);
 			startActivity(intent);
+			ManagerActivity.getAppManager().finishActivity(CreatTopicActivity.this);
 		}
 	}
 }
