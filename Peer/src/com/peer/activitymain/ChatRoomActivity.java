@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -203,8 +204,14 @@ public class ChatRoomActivity extends BasicActivity {
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
-		super.onClick(v);
+//		super.onClick(v);
 		switch (v.getId()) {
+		case R.id.ll_back:
+			// 把此会话的未读数置为0
+			conversation.resetUnreadMsgCount();
+			finish();
+			break;
+		
 		case R.id.tv_seemember:
 			Intent intent=new Intent(ChatRoomActivity.this,ChatRoomListnikeActivity.class);
 			intent.putExtra("topicId", topicId);			
@@ -254,6 +261,17 @@ public class ChatRoomActivity extends BasicActivity {
 			if (getCurrentFocus() != null)
 				manager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 		}
+	}
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+		  if (keyCode == KeyEvent.KEYCODE_BACK) {
+			// 把此会话的未读数置为0
+				conversation.resetUnreadMsgCount();
+				finish();
+		        return true;
+		    }
+		    return super.onKeyDown(keyCode, event);
 	}
 	
 	@Override
