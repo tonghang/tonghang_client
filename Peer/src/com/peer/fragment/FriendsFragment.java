@@ -44,6 +44,13 @@ public class FriendsFragment extends BasicFragment {
 		seenewfriends=(RelativeLayout)getView().findViewById(R.id.rl_newfriends);
 		seenewfriends.setOnClickListener(this);
 	}
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		FriendsTask task=new FriendsTask();
+		task.execute();
+	}
 	private class FriendsTask extends AsyncTask<Void, Void, List>{
 
 		@Override

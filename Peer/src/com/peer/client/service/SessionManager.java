@@ -63,7 +63,7 @@ public class SessionManager extends ISessionManager.Stub {
 				huanxin_user=(String)u.get("huanxin_username");
 				String id=String.valueOf(u.get("id"));
 				userid=id;
-				user.setId(id);
+				user.setUserid(id);
 				imageURL=Constant.WEB_SERVER_ADDRESS+(String)u.get("image");
 				user.setEmail(imageURL);
 				user.setCity((String)u.get("city"));
@@ -341,7 +341,7 @@ public class SessionManager extends ISessionManager.Stub {
 					user.setEmail((String)m.get("email"));
 					user.setUsername((String)m.get("username"));
 					user.setImage(Constant.WEB_SERVER_ADDRESS+(String)m.get("image"));
-					user.setId(String.valueOf(m.get("id")));
+					user.setUserid(String.valueOf(m.get("id")));
 					user.setBirthday((String)m.get("birth"));
 					user.setLabels((List)m.get("labels"));
 					mlist.add(user);
@@ -376,7 +376,7 @@ public class SessionManager extends ISessionManager.Stub {
 					user.setEmail((String)m.get("email"));
 					user.setUsername((String)m.get("username"));
 					user.setImage(Constant.WEB_SERVER_ADDRESS+(String)m.get("image"));
-					user.setId(String.valueOf(m.get("id")));
+					user.setUserid(String.valueOf(m.get("id")));
 					user.setBirthday((String)m.get("birth"));
 					user.setLabels((List)m.get("labels"));
 					mlist.add(user);
@@ -428,7 +428,7 @@ public class SessionManager extends ISessionManager.Stub {
 		String message=null;
 		int code=1;
 		try {		
-			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS + "/users/"+"1"+"/invitations.json", List.class);
+			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS + "/users/"+userid+"/invitations.json", List.class);
 			if(result.getStatusCode()==HttpStatus.OK){
 				message=Constant.CALLBACKSUCCESS;
 				code=0;
@@ -437,14 +437,14 @@ public class SessionManager extends ISessionManager.Stub {
 				for(int i=0;i<resultlist.size();i++){
 					User u=new User();
 					Map m=(Map) resultlist.get(i);
-//					if(((String)m.get("status")).equals(Constant.AGREED)){
-//						
-//					}
-					u.setImage((String)m.get("status"));
-					u.setUsername(String.valueOf(m.get("invitee_id")));
-					u.setId(String.valueOf(m.get("inviter_id")));
-					u.setReason((String)m.get("reason"));
-					list.add(u);
+					if(((String)m.get("status")).equals(Constant.PENDING)){
+						u.setImage((String)m.get("status"));
+						u.setUsername(String.valueOf(m.get("invitee_id")));
+						u.setUserid(String.valueOf(m.get("inviter_id")));
+						u.setReason((String)m.get("reason"));
+						u.setInvitionid(String.valueOf(m.get("id")));
+						list.add(u);
+					}					
 				}
 				
 			}		
@@ -469,7 +469,7 @@ public class SessionManager extends ISessionManager.Stub {
 				user=new User();
 				String id=String.valueOf(u.get("id"));
 				userid=id;
-				user.setId(id);
+				user.setUserid(id);
 				user.setEmail((String)u.get("email"));
 				user.setBirthday((String)u.get("birth"));
 				user.setImage(Constant.WEB_SERVER_ADDRESS+(String)u.get("image"));
@@ -637,7 +637,7 @@ public class SessionManager extends ISessionManager.Stub {
 				for(int i=0;i<list.size();i++){
 					User u=new User();
 					Map m=(Map) resultlist.get(i);
-					u.setId(String.valueOf(m.get("id")));
+					u.setUserid(String.valueOf(m.get("id")));
 					u.setImage(Constant.WEB_SERVER_ADDRESS+(String)m.get("image"));
 					u.setLabels((List)m.get("labels"));
 					u.setUsername((String)m.get("username"));

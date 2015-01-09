@@ -4,9 +4,9 @@ public interface IM {
 	
 	public void login(String email,String password);
 	
-	public void setAppInited();
+	public void logout();
 	
-	public boolean register(String email,String password,String username);
+	public void setAppInited();
 	
 	public void sendMessage(String content,int chattype,String targetId,String imageUrl);
 	

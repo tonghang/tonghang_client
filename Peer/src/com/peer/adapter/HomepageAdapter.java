@@ -124,7 +124,7 @@ public class HomepageAdapter extends BaseAdapter {
 							Map m=(Map)mList.get(position).get("user");
 							User user=new User();
 							user.setImage(Constant.WEB_SERVER_ADDRESS+(String)m.get("image"));
-							user.setId((String)m.get("user_id"));
+							user.setUserid((String)m.get("user_id"));
 							user.setUsername((String)m.get("username"));
 							ChatRoomTypeUtil.getInstance().setUser(user);
 						

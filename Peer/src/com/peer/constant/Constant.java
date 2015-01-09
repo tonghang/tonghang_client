@@ -6,6 +6,8 @@ package com.peer.constant;
  */
 public interface Constant {
 	public String AGREED="agreed";
+	
+	public String PENDING="pending";
 		
 	/*LocalStorage key*/
 	public String EMAIL="email";

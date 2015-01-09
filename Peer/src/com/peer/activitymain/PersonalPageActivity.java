@@ -13,6 +13,7 @@ import com.peer.constant.Constant;
 import com.peer.localDB.LocalStorage;
 import com.peer.util.AutoWrapLinearLayout;
 import com.peer.util.ChatRoomTypeUtil;
+import com.peer.util.ManagerActivity;
 import com.peer.util.PersonpageUtil;
 import com.peer.widgetutil.LoadImageUtil;
 
@@ -116,6 +117,7 @@ public class PersonalPageActivity extends BasicActivity {
 					ChatRoomTypeUtil.getInstance().setTitle(PersonpageUtil.getInstance().getPersonname());
 					Intent intent=new Intent(PersonalPageActivity.this,ChatRoomActivity.class);
 					startActivity(intent);
+					ManagerActivity.getAppManager().finishActivity();
 				}
 			});
 			
@@ -135,7 +137,7 @@ public class PersonalPageActivity extends BasicActivity {
 						startActivity(intent);
 					}else{
 						Intent intent=new Intent(PersonalPageActivity.this,AddFriendsActivity.class);
-						intent.putExtra("userId", userpage.getId());
+						intent.putExtra("userId", userpage.getUserid());
 						intent.putExtra("image", userpage.getImage());
 						intent.putExtra("nike", userpage.getUsername());
 						intent.putExtra("email", userpage.getEmail());
@@ -185,7 +187,7 @@ public class PersonalPageActivity extends BasicActivity {
 		switch (v.getId()) {
 		case R.id.rl_topic:
 			Intent intent=new Intent(PersonalPageActivity.this,TopicActivity.class);
-			intent.putExtra("userId", userpage.getId());
+			intent.putExtra("userId", userpage.getUserid());
 			intent.putExtra("image", userpage.getImage());
 			intent.putExtra("nike", userpage.getUsername());
 			intent.putExtra("email", userpage.getEmail());			

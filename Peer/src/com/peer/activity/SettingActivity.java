@@ -3,6 +3,7 @@ package com.peer.activity;
 import java.io.File;
 
 import com.peer.R;
+import com.peer.IMimplements.easemobchatImp;
 import com.peer.util.ManagerActivity;
 import com.umeng.update.UmengUpdateAgent;
 
@@ -104,6 +105,8 @@ public class SettingActivity extends BasicActivity{
 		 .setPositiveButton(getResources().getString(R.string.sure), new DialogInterface.OnClickListener(){
              public void onClick(DialogInterface dialoginterface, int i){            	 
             	 ManagerActivity.getAppManager().restart(SettingActivity.this);
+            	//退出环信账号
+            	 easemobchatImp.getInstance().logout();
              }
 		 })
 		 .show();  

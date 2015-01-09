@@ -66,7 +66,7 @@ public class FriendsAdapter extends BaseAdapter {
 				labels=labels+" | "+s;
 			}			
 		}
-		final String personid=mlist.get(position).getId();
+		final String personid=mlist.get(position).getUserid();
 		viewHolder.descripe.setText(labels);
 		viewHolder.click.setOnClickListener(new View.OnClickListener() {			
 			@Override

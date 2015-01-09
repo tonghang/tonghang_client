@@ -76,9 +76,7 @@ public class ComeMsgFragment extends Fragment {
 		easemobchatUser users=new easemobchatUser();
 		users.setEasemobchatusers(easemobchatusers);
 		comeMsgTask task=new comeMsgTask();
-		task.execute(users);
-		
-		
+		task.execute(users);		
 //		adapter=new ChatHistoryAdapter(getActivity(),1, list);
 //		ListView_come.setAdapter(adapter);
 //		adapter.notifyDataSetChanged();
@@ -161,8 +159,8 @@ public class ComeMsgFragment extends Fragment {
 		@Override
 		protected void onPostExecute(List result) {
 			// TODO Auto-generated method stub
-			adapter=new ChatHistoryAdapter(getActivity(),1, list);
-			adapter.setUsermsg(result);			
+			adapter=new ChatHistoryAdapter(getActivity(), result);
+//			adapter.setUsermsg(result);			
 			ListView_come.setAdapter(adapter);
 		}
 		

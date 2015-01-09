@@ -9,13 +9,14 @@ import android.os.Parcelable;
 public class User implements Parcelable {
 	private String email;
 	private String username;
-	private String id;
+	private String userid;
 	private String password;
 	private String image;
 	private String sex;
 	private String birthday;
 	private String city;
-	private String reason;
+	private String reason;	
+	private String invitionid;
 	
 	private List<String> labels=new ArrayList<String>();
 	
@@ -29,7 +30,7 @@ public class User implements Parcelable {
 	}    
     
 	public void readFromParcel(Parcel source) { 
-		id = source.readString();
+		userid = source.readString();
 		email=source.readString();
 		username = source.readString();
 		image = source.readString();
@@ -38,6 +39,7 @@ public class User implements Parcelable {
 		city = source.readString();
 		password=source.readString();
 		reason=source.readString();
+		invitionid=source.readString();
 		labels=new ArrayList<String>();
 		source.readList(labels, getClass().getClassLoader());
 	}  	
@@ -63,7 +65,7 @@ public class User implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		// TODO Auto-generated method stub
 		dest.writeString(email);
-		 dest.writeString(id);
+		 dest.writeString(userid);
 		 dest.writeString(password);
 	        dest.writeString(username);
 	        dest.writeString(image);
@@ -72,6 +74,7 @@ public class User implements Parcelable {
 	        dest.writeString(city);
 	        dest.writeList(labels);
 	        dest.writeString(reason);
+	        dest.writeString(invitionid);
 	}
 
 	public String getEmail() {
@@ -90,14 +93,6 @@ public class User implements Parcelable {
 
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public String getImage() {
@@ -154,6 +149,22 @@ public class User implements Parcelable {
 
 	public void setReason(String reason) {
 		this.reason = reason;
+	}
+
+	public String getUserid() {
+		return userid;
+	}
+
+	public void setUserid(String userid) {
+		this.userid = userid;
+	}
+
+	public String getInvitionid() {
+		return invitionid;
+	}
+
+	public void setInvitionid(String invitionid) {
+		this.invitionid = invitionid;
 	}
 
 }

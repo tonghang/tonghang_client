@@ -111,7 +111,7 @@ public class ChatRoomActivity extends BasicActivity {
 		messagebody=(EditText)findViewById(R.id.et_sendmessage);
 
 		manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		hideKeyboard();
+//		hideKeyboard();
 
 		sendmessage=(Button)findViewById(R.id.btn_send);
 		sendmessage.setOnClickListener(this);	

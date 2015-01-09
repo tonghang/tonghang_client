@@ -87,7 +87,7 @@ public class NewfriendsAdapter extends BaseAdapter {
 						// TODO Auto-generated method stub
 						try {
 							SessionListener callback=new SessionListener();
-							PeerUI.getInstance().getISessionManager().refuseAddFriends(mlist.get(position).getId(),callback);
+							PeerUI.getInstance().getISessionManager().refuseAddFriends(mlist.get(position).getInvitionid(),callback);
 							if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
 								 ((Activity)mContext).runOnUiThread(new Runnable() {
 										
@@ -121,7 +121,7 @@ public class NewfriendsAdapter extends BaseAdapter {
 						// TODO Auto-generated method stub
 						try {
 							SessionListener callback=new SessionListener();
-							PeerUI.getInstance().getISessionManager().agreeAddFriends(mlist.get(position).getId(),callback);
+							PeerUI.getInstance().getISessionManager().agreeAddFriends(mlist.get(position).getInvitionid(),callback);
 							if (callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
 								 ((Activity)mContext).runOnUiThread(new Runnable(){
 

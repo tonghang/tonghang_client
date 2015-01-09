@@ -59,30 +59,6 @@ public class easemobchatImp implements IM{
 			}
 		});
 	}
-
-	@Override
-	public boolean register(String email, String password, String username) {
-		// TODO Auto-generated method stub
-		try {
-			EMChatManager.getInstance().createAccountOnServer(email, password);
-			System.out.println("注册成功");
-			return true;
-		} catch (EaseMobException e) {
-			// TODO Auto-generated catch block			
-			int errorCode=e.getErrorCode();
-			if(errorCode==EMError.NONETWORK_ERROR){
-				System.out.println("网络异常，请检查网络！");				
-			}else if(errorCode==EMError.USER_ALREADY_EXISTS){				
-				System.out.println("用户已存在！");				
-			}else if(errorCode==EMError.UNAUTHORIZED){				
-				System.out.println("注册失败，无权限！");				
-			}else{
-				System.out.println("注册失败: " + e.getMessage());
-			}			
-			e.printStackTrace();
-			return false;
-		}
-	}
 	@Override
 	public void sendMessage(String content, int chattype,String targetId,String imageUrl) {
 		// TODO Auto-generated method stub
@@ -138,6 +114,11 @@ public class easemobchatImp implements IM{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	@Override
+	public void logout() {
+		// TODO Auto-generated method stub
+		EMChatManager.getInstance().logout();
 	}
 
 }
