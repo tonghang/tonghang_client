@@ -19,6 +19,7 @@ import com.easemob.chat.EMMessage;
 import com.easemob.chat.TextMessageBody;
 import com.peer.R;
 import com.peer.activitymain.ChatRoomActivity;
+import com.peer.client.User;
 import com.peer.constant.Constant;
 import com.peer.util.ChatRoomTypeUtil;
 import com.peer.widgetutil.LoadImageUtil;
@@ -72,8 +73,7 @@ public class ChatHistoryAdapter extends BaseAdapter {
 				LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
 						(int) mContext.getResources().getDimension(R.dimen.widgeheight_max));
 				params.leftMargin=(int) mContext.getResources().getDimension(R.dimen.marginsize_around);
-				params.rightMargin=(int) mContext.getResources().getDimension(R.dimen.marginsize_around);
-				
+				params.rightMargin=(int) mContext.getResources().getDimension(R.dimen.marginsize_around);				
 				
 				viewHolder.time.setText((String)userlist.get(position).get("created_at"));
 				viewHolder.nikename.setText((String)userlist.get(position).get("label_name"));
@@ -90,16 +90,20 @@ public class ChatHistoryAdapter extends BaseAdapter {
 						ChatRoomTypeUtil.getInstance().setTitle((String)userlist.get(position).get("label_name"));
 						ChatRoomTypeUtil.getInstance().setTheme((String)userlist.get(position).get("subject"));
 						ChatRoomTypeUtil.getInstance().setTopicId(String.valueOf(userlist.get(position).get("id")));
-						
+						Map m=(Map) userlist.get(position).get("user");
+						User user=new User();
+						user.setImage(Constant.WEB_SERVER_ADDRESS+(String)m.get("image"));
+						user.setUsername((String)m.get("username"));
+						user.setUserid((String)m.get("user_id"));
+						ChatRoomTypeUtil.getInstance().setUser(user);
 						Intent intent=new Intent(mContext,ChatRoomActivity.class);
 						mContext.startActivity(intent);
 					}
 				});
 				
 				convertView.setTag(viewHolder);
-			}else if(type.equals(Constant.USER)){
-				EMConversation conversation = EMChatManager.getInstance().getConversation((String)userlist.get(position).get("huanxin_username"));
-				
+			}else if(type.equals(Constant.USER)){					
+				EMConversation conversation = EMChatManager.getInstance().getConversation((String)userlist.get(position).get("huanxin_username"));				
 				convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_come_listperson,null,false);				
 				viewHolder.headpic=(ImageView)convertView.findViewById(R.id.im_headpic);
 	

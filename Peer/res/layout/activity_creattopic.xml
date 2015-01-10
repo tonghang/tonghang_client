@@ -69,7 +69,7 @@
 	        android:layout_marginRight="8dp"
 	        android:text="创建"
 	        android:textColor="@color/white"
-	        android:background="@drawable/selector_commit"
+	        android:background="@drawable/selector_back"
 	        android:textSize="@dimen/textsize_large" />
 
 	</LinearLayout>

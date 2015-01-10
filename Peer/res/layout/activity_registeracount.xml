@@ -161,7 +161,7 @@
 	        android:layout_marginRight="8dp"
 	        android:textColor="@color/white"
 	        android:text="提交"
-	        android:background="@drawable/selector_commit"
+	        android:background="@drawable/selector_back"
 	        android:textSize="@dimen/textsize_large" />
 
 	</LinearLayout>

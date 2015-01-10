@@ -207,7 +207,8 @@
         android:layout_marginBottom="16dp"
         >
         <Button
-            android:background="@drawable/selector_commit"
+            android:background="@drawable/selector_back"
+            android:textColor="@color/white"
             android:id="@+id/bt_relogin" 
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -215,7 +216,8 @@
             android:text="退出登录"
             />
         <Button 
-            android:background="@drawable/selector_commit"
+            android:background="@drawable/selector_back"
+            android:textColor="@color/white"
             android:id="@+id/bt_todesk"
             android:textSize="@dimen/textsize_large"
             android:layout_marginTop="8dp"

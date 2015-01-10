@@ -7,17 +7,17 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMConversation;
+import com.easemob.chat.EMGroup;
+import com.easemob.chat.EMGroupManager;
 import com.easemob.chat.EMMessage;
 import com.peer.R;
 import com.peer.adapter.ChatHistoryAdapter;
@@ -26,10 +26,10 @@ import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
 
 
-public class ComeMsgFragment extends Fragment {
+public class ComeMsgFragment extends BasicFragment {
 	private ListView ListView_come;
 	private boolean hidden;
-	
+	private List<EMGroup> groups;
 	private ChatHistoryAdapter adapter;
 	private List<EMConversation> list;
 	private List<Map> easemobchatusers=new ArrayList<Map>();
@@ -45,14 +45,33 @@ public class ComeMsgFragment extends Fragment {
 		super.onActivityCreated(savedInstanceState);
 		init();	
 	}
+	@Override
+	public void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();		
+	}
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+//		groups = EMGroupManager.getInstance().getAllGroups();
+	}	
 	private void init() {
 		// TODO Auto-generated method stub	
+		groups = EMGroupManager.getInstance().getAllGroups();
 		list=loadConversationsWithRecentChat();		
 		ListView_come=(ListView)getView().findViewById(R.id.lv_come);	
 		for(EMConversation em:loadConversationsWithRecentChat()){
 			Map m=new HashMap<String, Object>();
 			m.put("username", em.getUserName());
-			m.put("is_group", em.isGroup());
+			boolean isgroup=false;
+			for (EMGroup group : groups) {
+				if (group.getGroupId().equals(em.getUserName())) {
+					isgroup=true;
+					break;
+				}
+			}
+			m.put("is_group", isgroup);			
 			easemobchatusers.add(m);
 		}
 		easemobchatUser users=new easemobchatUser();
@@ -70,7 +89,14 @@ public class ComeMsgFragment extends Fragment {
 		for(EMConversation em:loadConversationsWithRecentChat()){
 			Map m=new HashMap<String, Object>();
 			m.put("username", em.getUserName());
-			m.put("is_group", em.isGroup());
+			boolean isgroup=false;
+			for (EMGroup group : groups) {
+				if (group.getGroupId().equals(em.getUserName())) {
+					isgroup=true;
+					break;
+				}
+			}
+			m.put("is_group", isgroup);
 			easemobchatusers.add(m);
 		}
 		easemobchatUser users=new easemobchatUser();
@@ -81,6 +107,7 @@ public class ComeMsgFragment extends Fragment {
 //		ListView_come.setAdapter(adapter);
 //		adapter.notifyDataSetChanged();
 	}
+	
 	/**
 	 * 获取所有会话
 	 * 

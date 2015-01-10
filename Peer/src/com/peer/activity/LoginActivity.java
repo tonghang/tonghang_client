@@ -41,8 +41,7 @@ public class LoginActivity extends BasicActivity{
 		setContentView(R.layout.activity_login);
 		init();	
 		
-	}
-	
+	}	
 	private void init() {
 		// TODO Auto-generated method stub		
 		email_login=(EditText)findViewById(R.id.et_email_login);

@@ -33,7 +33,7 @@ import android.widget.TextView;
 
 public class PersonalPageActivity extends BasicActivity {
 	private ImageView personhead,delete;
-	private TextView nikename,title,topic_whose,acount,city,birth,sex,skill;
+	private TextView nikename,title,topic_whose,acount,city,sex,skill;
 	private RelativeLayout topic_click;
 	private LinearLayout back,bottomline,content;
 //	private ListView skillllist;
@@ -56,7 +56,7 @@ public class PersonalPageActivity extends BasicActivity {
 				String tag=(String) lablelist.get(i);					
 				skill=(TextView) getLayoutInflater().inflate(R.layout.skill, tagContainer, false);
 				skill.setHeight((int)getResources().getDimension(R.dimen.hight));
-				skill.setTextSize(20);
+				skill.setTextSize(18);
 				skill.setTextColor(getResources().getColor(R.color.white));
 				int pading=(int)getResources().getDimension(R.dimen.pading);
 				skill.setText(tag);
@@ -76,7 +76,7 @@ public class PersonalPageActivity extends BasicActivity {
 		title=(TextView)findViewById(R.id.tv_title);
 		acount=(TextView)findViewById(R.id.personcount);
 		city=(TextView)findViewById(R.id.city);
-		birth=(TextView)findViewById(R.id.birthday);
+//		birth=(TextView)findViewById(R.id.birthday);
 		sex=(TextView)findViewById(R.id.sex);
 		
 		topic_click=(RelativeLayout)findViewById(R.id.rl_topic);
@@ -97,15 +97,19 @@ public class PersonalPageActivity extends BasicActivity {
 		// TODO Auto-generated method stub
 		LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		params.weight=1;
+		params.gravity=Gravity.CENTER_VERTICAL;
 		switch (PersonpageUtil.getInstance().getPersonpagetype()) {
 		case Constant.UNFRIENDSPAGE:
 			topic_whose.setText(getResources().getString(R.string.topic_other));
 			title.setText(getResources().getString(R.string.personalpage_other));
-			params.rightMargin=(int) getResources().getDimension(R.dimen.marginsize_around);
-			params.leftMargin=(int) getResources().getDimension(R.dimen.marginsize_around);
+//			params.rightMargin=(int) getResources().getDimension(R.dimen.marginsize_around);
+//			params.leftMargin=(int) getResources().getDimension(R.dimen.marginsize_around);
+//			params.height=(int) getResources().getDimension(R.dimen.personalhight);
+			
 			Button send=new Button(this);
 			send.setText(getResources().getString(R.string.sendmsg));
-			send.setBackgroundResource(R.drawable.selector_commit);	
+			send.setTextColor(getResources().getColor(R.color.white));
+			send.setBackgroundResource(R.drawable.select_personal);	
 			send.setLayoutParams(params);
 			send.setOnClickListener(new View.OnClickListener() {
 				
@@ -120,10 +124,10 @@ public class PersonalPageActivity extends BasicActivity {
 					ManagerActivity.getAppManager().finishActivity();
 				}
 			});
-			
 			Button addfriend=new Button(this);
 			addfriend.setText(getResources().getString(R.string.addfriends));
-			addfriend.setBackgroundResource(R.drawable.selector_commit);		
+			addfriend.setTextColor(getResources().getColor(R.color.white));
+			addfriend.setBackgroundResource(R.drawable.select_personal);		
 			addfriend.setLayoutParams(params);
 			bottomline.addView(send);
 			bottomline.addView(addfriend);
@@ -221,7 +225,7 @@ public class PersonalPageActivity extends BasicActivity {
 				nikename.setText(user.getUsername());
 				acount.setText(user.getEmail());
 				city.setText(user.getCity());
-				birth.setText(user.getBirthday());
+//				birth.setText(user.getBirthday());
 				sex.setText(user.getSex());
 				for(int i=0;i<user.getLabels().size();i++){
 					String tag=user.getLabels().get(i);					

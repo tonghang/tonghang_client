@@ -21,7 +21,11 @@
 	<!-- 横线高度 -->
 	<dimen name="index_line">1dp</dimen>
 	
+	<dimen name="personalhight">40dp</dimen>
+	
 	<dimen name="hight">48dp</dimen>
     <dimen name="pading">8dp</dimen>
+    
+    <dimen name="verticalline">0.5dp</dimen>
 
 </resources>

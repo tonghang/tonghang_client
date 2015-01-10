@@ -198,8 +198,9 @@
             android:layout_marginRight="8dp"
             android:id="@+id/bt_login_complete"
             android:text="登录"
+            android:textColor="@color/white"
             android:layout_height="48dp"
-            android:background="@drawable/selector_commit"
+            android:background="@drawable/selector_back"
             android:layout_width="match_parent"/>
     </LinearLayout>
 </LinearLayout>

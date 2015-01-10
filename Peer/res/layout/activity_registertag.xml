@@ -235,7 +235,7 @@
             android:id="@+id/bt_registe_tag"
             android:layout_width="fill_parent"
             android:layout_height="48dp"
-            android:background="@drawable/selector_commit"
+            android:background="@drawable/selector_back"
             android:text="下一步"
             />
     </LinearLayout>

@@ -51,6 +51,7 @@ public class FriendsFragment extends BasicFragment {
 		FriendsTask task=new FriendsTask();
 		task.execute();
 	}
+	
 	private class FriendsTask extends AsyncTask<Void, Void, List>{
 
 		@Override
