@@ -1,5 +1,6 @@
 package com.peer.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -33,7 +34,7 @@ public class LoginActivity extends BasicActivity{
 	private Button login_login;
 	private TextView register_login,forget_login,login_remind;
 	private CheckBox testUI;
-	
+	private ProgressDialog pd;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -98,7 +99,7 @@ public class LoginActivity extends BasicActivity{
 				if(checkNetworkState()){
 					String email=email_login.getText().toString().trim();
 					String password=password_login.getText().toString().trim();
-					
+					pd = ProgressDialog.show(LoginActivity.this,"", "正在登陆请稍候。。。");
 					LoginTask task=new LoginTask();
 					task.execute(email,password);
 				}else{
@@ -124,6 +125,7 @@ public class LoginActivity extends BasicActivity{
 			// TODO Auto-generated method stub						
 			SessionListener callback=new SessionListener();
 			try {
+				
 				User u=PeerUI.getInstance().getISessionManager().login(paramer[0], paramer[1], callback);
 				
 				if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
@@ -161,6 +163,7 @@ public class LoginActivity extends BasicActivity{
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
 			if(result.equals(Constant.CALLBACKSUCCESS)){
+				pd.dismiss();
 				Intent intent=new Intent(LoginActivity.this,MainActivity.class);
 				startActivity(intent);
 				finish();

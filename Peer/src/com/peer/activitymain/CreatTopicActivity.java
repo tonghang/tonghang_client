@@ -37,9 +37,7 @@ public class CreatTopicActivity extends BasicActivity {
 	private RadioGroup rg_lables;
 	private EditText topic;
 	private List<String> list;
-	private AutoWrapRadioGroup tagContainer;
-	
-	
+	private AutoWrapRadioGroup tagContainer;	
 	private boolean isselect=false;
 	private String selectlabel;
 	@Override
@@ -79,8 +77,7 @@ public class CreatTopicActivity extends BasicActivity {
 			RadioButton rb=(RadioButton)getLayoutInflater().inflate(R.layout.skillradio, tagContainer, false);
 			rb.setHeight((int)getResources().getDimension(R.dimen.hight));
 			rb.setText(list.get(i));
-			rb.setTextSize(20);
-//			rb.setTextColor(getResources().getColor(R.color.white));
+			rb.setTextSize(18);
 			tagContainer.addView(rb);
 		}	
 		tagContainer.setOnCheckedChangeListener(new OnCheckedChangeListener() {

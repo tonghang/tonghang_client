@@ -1,5 +1,8 @@
 package com.peer.adapter;
 
+import java.util.List;
+import java.util.Map;
+
 import com.peer.R;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,14 +15,16 @@ import android.widget.TextView;
 
 public class HistoryMsgAdapter extends BaseAdapter {
 	private Context mContext;
-	public HistoryMsgAdapter(Context mContext){
-		this.mContext=mContext;		
+	private List<Map> mlist;
+	public HistoryMsgAdapter(Context mContext, List<Map> mlist){
+		this.mContext=mContext;	
+		this.mlist=mlist;
 	}
 
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
-		return 8;
+		return mlist.size();
 	}
 
 	@Override
@@ -48,7 +53,7 @@ public class HistoryMsgAdapter extends BaseAdapter {
 		}else{
 			convertView.getTag();
 		}
-		
+		viewHolder.content.setText((String)mlist.get(position).get("body"));
 		return convertView;
 	}
 	private class ViewHolder{

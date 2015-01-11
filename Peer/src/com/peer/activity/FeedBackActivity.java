@@ -1,7 +1,14 @@
 package com.peer.activity;
 
 import com.peer.R;
+import com.peer.client.service.SessionListener;
+import com.peer.client.ui.PeerUI;
+import com.peer.constant.Constant;
+
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -39,9 +46,8 @@ public class FeedBackActivity extends BasicActivity {
 				// TODO Auto-generated method stub
 				String contentcommite=content.getText().toString().trim();
 				if(checkNetworkState()){
-					feedback(contentcommite);
-					content.setText("");
-					ShowMessage(getResources().getString(R.string.commit));
+					FeedBackTask task=new FeedBackTask();
+					task.execute(contentcommite);					
 				}else{
 					ShowMessage(getResources().getString(R.string.Broken_network_prompt));
 				}							
@@ -76,8 +82,29 @@ public class FeedBackActivity extends BasicActivity {
 			}
 		}
 	};
-	private void feedback(final String contentcommite) {
-		// TODO Auto-generated method stub
-	}
 
+	private class FeedBackTask extends AsyncTask<String, Void, String>{
+
+		@Override
+		protected String doInBackground(String... params) {
+			// TODO Auto-generated method stub  
+			SessionListener callback=new SessionListener();
+            try {            	
+            	PeerUI.getInstance().getISessionManager().feedback(params[0], callback);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+           
+			return callback.getMessage();
+		}
+		@Override
+		protected void onPostExecute(String result) {
+			// TODO Auto-generated method stub
+			if(result.equals(Constant.CALLBACKSUCCESS)){
+				content.setText("");
+				ShowMessage(getResources().getString(R.string.commit));
+			}
+		}
+	}
 }

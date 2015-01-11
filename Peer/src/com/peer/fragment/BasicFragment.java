@@ -36,10 +36,7 @@ public class BasicFragment extends Fragment implements OnClickListener{
 		case R.id.rl_newfriends:
 			Intent intent=new Intent(getActivity(),NewFriendsActivity.class);
 			startActivity(intent);		
-			break;
-			
-			
-			
+			break;			
 		case R.id.rl_myacount_my:
 			Intent myacount=new Intent(getActivity(),MyAcountActivity.class);
 			startActivity(myacount);

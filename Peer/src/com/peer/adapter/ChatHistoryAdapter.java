@@ -32,7 +32,6 @@ public class ChatHistoryAdapter extends BaseAdapter {
 		this.mContext=mContext;
 		this.userlist=mlist;
 	}
-	
 
 	@Override
 	public int getCount() {

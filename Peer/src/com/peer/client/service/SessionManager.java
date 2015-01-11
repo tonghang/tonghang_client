@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.http.protocol.HTTP;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -236,31 +238,6 @@ public class SessionManager extends ISessionManager.Stub {
 		}
 		callback.onCallBack(code, message);
 	}
-	/* delete friend*/
-	@Override
-	public void deleteFriends(String targetId)
-			throws RemoteException {
-		// TODO Auto-generated method stub
-		MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();			
-		String message = null;
-		int code=1;
-		try {
-			HttpHeaders headers=new HttpHeaders();			
-			headers.add("x-token", token);						
-			HttpEntity<MultiValueMap<String, Object>> requestEntity=
-					new HttpEntity<MultiValueMap<String,Object>>(parts,headers);			
-			RestTemplate restTemplate=new RestTemplate(true);	
-			
-			restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-			restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
-			restTemplate.getMessageConverters().add(new StringHttpMessageConverter());			
-			
-			restTemplate.delete(Constant.WEB_SERVER_ADDRESS + "/topics.json", requestEntity);		
-		} catch (Exception e) {
-			// TODO log exception
-			e.printStackTrace();
-		}				
-	}
 	/*search label 通过测试*/
 	@Override
 	public List<String> search(String label,ISessionListener callback)
@@ -409,6 +386,7 @@ public class SessionManager extends ISessionManager.Stub {
 					u.setLabels((List)m.get("labels"));
 					u.setUsername((String)m.get("username"));
 					u.setEmail((String)m.get("email"));
+					u.setUserid(String.valueOf(m.get("id")));
 					list.add(u);
 				}							
 			}
@@ -438,9 +416,10 @@ public class SessionManager extends ISessionManager.Stub {
 					User u=new User();
 					Map m=(Map) resultlist.get(i);
 					if(((String)m.get("status")).equals(Constant.PENDING)){
-						u.setImage((String)m.get("status"));
-						u.setUsername(String.valueOf(m.get("invitee_id")));
-						u.setUserid(String.valueOf(m.get("inviter_id")));
+						Map inviter=(Map)m.get("inviter");						
+						u.setImage(Constant.WEB_SERVER_ADDRESS+(String)inviter.get("image"));
+						u.setUsername((String)m.get("username"));
+						u.setUserid(String.valueOf(m.get("id")));
 						u.setReason((String)m.get("reason"));
 						u.setInvitionid(String.valueOf(m.get("id")));
 						list.add(u);
@@ -652,6 +631,88 @@ public class SessionManager extends ISessionManager.Stub {
 		callback.onCallBack(code, message);		
 		return list;
 	}
+	@Override
+	public List convertToUser(easemobchatUser users, ISessionListener callback)
+			throws RemoteException {
+		// TODO Auto-generated method stub
+		List mlist=null;
+		Map<String, List> parts=new HashMap<String, List>();
+		String message=null;
+		int code=1;
+		try{
+			parts.put("entries", users.getEasemobchatusers());
+			ResponseEntity<List> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS+"/huanxin/hid2sids.json", parts,  List.class);
+			if(result.getStatusCode()==HttpStatus.OK){
+				message=Constant.CALLBACKSUCCESS;
+				code=0;
+				mlist=result.getBody();
+			}
+		
+		}catch(Exception e){
+			message=Constant.CALLBACKFAIL;
+			e.printStackTrace();
+		}
+		
+		callback.onCallBack(code, message);		
+		return mlist;
+	}
+	@Override
+	public void feedback(String content, ISessionListener callback)
+			throws RemoteException {
+		// TODO Auto-generated method stub
+		MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();			
+		String message = null;
+		int code=1;
+		Map result=null;
+		String id=null;
+		try {	
+			parts.add("content", content);
+			
+			HttpHeaders headers=new HttpHeaders();			
+			headers.add("x-token", token);			
+			
+			HttpEntity<MultiValueMap<String, Object>> requestEntity=
+					new HttpEntity<MultiValueMap<String,Object>>(parts,headers);			
+			RestTemplate restTemplate=new RestTemplate(true);	
+			
+			restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+			restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
+			restTemplate.getMessageConverters().add(new StringHttpMessageConverter());			
+			
+			result= restTemplate.postForObject(Constant.WEB_SERVER_ADDRESS + "/feedbacks.json", requestEntity, Map.class);
+			
+			id=String.valueOf(result.get("id"));	
+			message=Constant.CALLBACKSUCCESS;
+			code=0;
+		} catch (Exception e) {
+			// TODO log exception
+			message=Constant.CALLBACKFAIL;
+			e.printStackTrace();
+		}
+		callback.onCallBack(code, message);
+	}
+	@Override
+	public List TopicReplies(String topicId, ISessionListener callback)
+			throws RemoteException {
+		// TODO Auto-generated method stub
+		String message=null;
+		int code=1;	
+		List mlist=null;
+		try{
+			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/topics/"+topicId+"/replies.json",List.class);
+			if(result.getStatusCode()==HttpStatus.OK){
+				message=Constant.CALLBACKSUCCESS;
+				code=0;
+				mlist=result.getBody();				
+			}
+		}catch(Exception e){
+			message=Constant.CALLBACKFAIL;
+			e.printStackTrace();			
+		}
+		callback.onCallBack(code, message);
+		
+		return mlist;
+	}
 	
 	@Override
 	public String getHuanxingUser() throws RemoteException {
@@ -684,31 +745,29 @@ public class SessionManager extends ISessionManager.Stub {
 		return username;
 	}
 	@Override
-	public List convertToUser(easemobchatUser users, ISessionListener callback)
+	public void deleteFriend(String targetId, ISessionListener callback)
 			throws RemoteException {
 		// TODO Auto-generated method stub
-		List mlist=null;
-		users.getEasemobchatusers();
-		Map<String, List> parts=new HashMap<String, List>();
-		String message=null;
+		String message = null;
 		int code=1;
-		try{
-			parts.put("entries", users.getEasemobchatusers());
-			ResponseEntity<List> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS+"/huanxin/hid2sids.json", parts,  List.class);
-			if(result.getStatusCode()==HttpStatus.OK){
-				message=Constant.CALLBACKSUCCESS;
-				code=0;
-				mlist=result.getBody();
-			}
-		
+		try {
+			HttpHeaders headers=new HttpHeaders();			
+			headers.add("x-token", token);									
+			RestTemplate restTemplate=new RestTemplate(true);				
+			restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+			restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
+			restTemplate.getMessageConverters().add(new StringHttpMessageConverter());			
+			
+			restTemplate.delete(Constant.WEB_SERVER_ADDRESS + "/friends/"+targetId+".json");
+			message=Constant.CALLBACKSUCCESS;
+			code=0;
+			
 		}catch(Exception e){
 			message=Constant.CALLBACKFAIL;
 			e.printStackTrace();
 		}
-		
-		callback.onCallBack(code, message);		
-		return mlist;
+		callback.onCallBack(code, message);
 	}
-	
+
 	
 }

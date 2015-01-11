@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/person2button"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
+    <Button 
+        android:id="@+id/send"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/widgeheight"
+        android:textColor="@color/white"
+        android:background="@drawable/select_personal"
+        android:text="发信"
+        />
+    <View 
+        android:layout_width="0.5dp"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        />
+    <Button 
+        android:id="@+id/addfriends"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/widgeheight"
+        android:background="@drawable/select_personal"
+        android:textColor="@color/white"
+        android:text="加好友"
+        />
+    
+
+</LinearLayout>

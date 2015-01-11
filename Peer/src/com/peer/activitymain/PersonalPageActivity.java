@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import com.peer.R;
+import com.peer.IMimplements.easemobchatImp;
 import com.peer.activity.BasicActivity;
 import com.peer.adapter.SkillAdapter;
 import com.peer.client.User;
@@ -11,6 +12,9 @@ import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
 import com.peer.localDB.LocalStorage;
+import com.peer.titlepopwindow.ActionItem;
+import com.peer.titlepopwindow.TitlePopup;
+import com.peer.titlepopwindow.TitlePopup.OnItemOnClickListener;
 import com.peer.util.AutoWrapLinearLayout;
 import com.peer.util.ChatRoomTypeUtil;
 import com.peer.util.ManagerActivity;
@@ -36,8 +40,10 @@ public class PersonalPageActivity extends BasicActivity {
 	private TextView nikename,title,topic_whose,acount,city,sex,skill;
 	private RelativeLayout topic_click;
 	private LinearLayout back,bottomline,content;
-//	private ListView skillllist;
+	private Button send,addfriend;
+
 	private AutoWrapLinearLayout tagContainer;
+	private TitlePopup titlePopup;
 	
 	private List<HashMap<String, String>> list=new ArrayList<HashMap<String,String>>();
 	private User userpage;	
@@ -76,8 +82,11 @@ public class PersonalPageActivity extends BasicActivity {
 		title=(TextView)findViewById(R.id.tv_title);
 		acount=(TextView)findViewById(R.id.personcount);
 		city=(TextView)findViewById(R.id.city);
-//		birth=(TextView)findViewById(R.id.birthday);
 		sex=(TextView)findViewById(R.id.sex);
+		
+		delete=(ImageView)findViewById(R.id.im_downview);
+		titlePopup = new TitlePopup(this, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);	
+		delete.setOnClickListener(this);
 		
 		topic_click=(RelativeLayout)findViewById(R.id.rl_topic);
 		topic_click.setOnClickListener(this);
@@ -88,8 +97,10 @@ public class PersonalPageActivity extends BasicActivity {
 		bottomline=(LinearLayout)findViewById(R.id.ll_personpagebottom);
 		content=(LinearLayout)findViewById(R.id.contentauto);
 		tagContainer = (AutoWrapLinearLayout) findViewById(R.id.tag_container);
-//		skillllist=(ListView)findViewById(R.id.lv_pageskill);			
+		send=(Button)findViewById(R.id.send);
+		addfriend=(Button)findViewById(R.id.addfriends);
 		ViewType();	
+		
 		
 	}
 	
@@ -102,15 +113,8 @@ public class PersonalPageActivity extends BasicActivity {
 		case Constant.UNFRIENDSPAGE:
 			topic_whose.setText(getResources().getString(R.string.topic_other));
 			title.setText(getResources().getString(R.string.personalpage_other));
-//			params.rightMargin=(int) getResources().getDimension(R.dimen.marginsize_around);
-//			params.leftMargin=(int) getResources().getDimension(R.dimen.marginsize_around);
-//			params.height=(int) getResources().getDimension(R.dimen.personalhight);
 			
-			Button send=new Button(this);
-			send.setText(getResources().getString(R.string.sendmsg));
-			send.setTextColor(getResources().getColor(R.color.white));
-			send.setBackgroundResource(R.drawable.select_personal);	
-			send.setLayoutParams(params);
+
 			send.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
@@ -124,13 +128,7 @@ public class PersonalPageActivity extends BasicActivity {
 					ManagerActivity.getAppManager().finishActivity();
 				}
 			});
-			Button addfriend=new Button(this);
-			addfriend.setText(getResources().getString(R.string.addfriends));
-			addfriend.setTextColor(getResources().getColor(R.color.white));
-			addfriend.setBackgroundResource(R.drawable.select_personal);		
-			addfriend.setLayoutParams(params);
-			bottomline.addView(send);
-			bottomline.addView(addfriend);
+
 			addfriend.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
@@ -152,13 +150,18 @@ public class PersonalPageActivity extends BasicActivity {
 			break;
 		case Constant.FRIENDSPAGE:
 			delete.setVisibility(View.VISIBLE);
+			send.setVisibility(View.GONE);
+			addfriend.setVisibility(View.GONE);
+			
+			titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.deletefriends), R.color.white));
+			popupwindow();
+			
 			topic_whose.setText(getResources().getString(R.string.topic_other));
-			params.rightMargin=(int) getResources().getDimension(R.dimen.marginsize_around);
-			params.leftMargin=(int) getResources().getDimension(R.dimen.marginsize_around);
 			title.setText(getResources().getString(R.string.personalpage_other));
 			Button bt3=new Button(this);
 			bt3.setText(getResources().getString(R.string.sendmsg));
-			bt3.setBackgroundResource(R.drawable.selector_commit);
+			bt3.setTextColor(getResources().getColor(R.color.white));
+			bt3.setBackgroundResource(R.drawable.select_personal);
 			bt3.setLayoutParams(params);
 			bottomline.addView(bt3);
 			bt3.setOnClickListener(new View.OnClickListener() {
@@ -197,9 +200,42 @@ public class PersonalPageActivity extends BasicActivity {
 			intent.putExtra("email", userpage.getEmail());			
 			startActivity(intent);			
 			break;
+		case R.id.im_downview:
+			titlePopup.show(v);
+			break;
 		default:
 			break;
 		}
+	}
+	private void popupwindow() {
+		// TODO Auto-generated method stub		
+		
+		titlePopup.setItemOnClickListener(new OnItemOnClickListener() {
+			
+			@Override
+			public void onItemClick(ActionItem item, int position) {
+				// TODO Auto-generated method stub	
+				if(item.mTitle.equals(getResources().getString(R.string.deletefriends))){
+					new Thread(new Runnable() {
+						
+						@Override
+						public void run() {
+							// TODO Auto-generated method stub
+							SessionListener callback=new SessionListener();
+							try {
+								PeerUI.getInstance().getISessionManager().deleteFriend(userpage.getUserid(), callback);
+							} catch (RemoteException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
+								finish();
+							}
+						}
+					}).start();
+				}
+			}
+		});
 	}
 	private class PersonalTask extends AsyncTask<String, Void, User>{
 

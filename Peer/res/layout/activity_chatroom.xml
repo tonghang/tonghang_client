@@ -46,7 +46,7 @@
     <RelativeLayout
         android:id="@+id/rl_bottom"
         android:layout_width="fill_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/chat_input_back" >
         <Button
@@ -64,29 +64,19 @@
         <EditText
             android:id="@+id/et_sendmessage"
             android:layout_width="fill_parent"
-            android:layout_height="32dp"
+            android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_margin="8dp"
             android:layout_toLeftOf="@+id/btn_send"
             android:layout_toRightOf="@+id/chatting_biaoqing_btn"
-            android:background="@drawable/input_editext"
-            android:singleLine="true"
-            android:lines="1"
+            android:background="@drawable/input_editext"           
+            android:singleLine="false"
+            android:maxLines="10"
             android:paddingLeft="5dp"
             android:textSize="18sp" >
      	<requestFocus />
     </EditText>
-        <ImageButton
-            android:layout_marginLeft="8dp"
-            android:id="@+id/chatting_biaoqing_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_alignParentLeft="true"
-            android:background="@null"
-            android:minWidth="0.0dip"
-            android:src="@drawable/addfile"
-            android:visibility="visible" />
+        
     </RelativeLayout>
     <ScrollView  
         android:id="@+id/scrollContent"  

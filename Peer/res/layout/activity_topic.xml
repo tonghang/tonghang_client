@@ -34,7 +34,7 @@
                 android:layout_width="60.0dip"
                 android:layout_height="60.0dip"
                 android:layout_gravity="center"
-                android:background="@drawable/ad_background" />
+                 />
         </LinearLayout>
 
         <LinearLayout
@@ -52,8 +52,7 @@
                 <TextView
                     android:id="@+id/personnike"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="昵称"
+                    android:layout_height="wrap_content"                   
                     android:textColor="@color/black"
                     android:textSize="@dimen/textsize_middle" />
 
@@ -62,8 +61,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_alignParentLeft="true"
-                    android:text="36826273@qq.com"
+                    android:layout_alignParentLeft="true"                    
                     android:textColor="@color/deepgray"
                     android:textSize="@dimen/textsize_middle" />
             </RelativeLayout>

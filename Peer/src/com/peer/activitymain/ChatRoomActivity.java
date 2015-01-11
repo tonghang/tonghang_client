@@ -110,8 +110,8 @@ public class ChatRoomActivity extends BasicActivity {
 
 		messagebody=(EditText)findViewById(R.id.et_sendmessage);
 
-		manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//		hideKeyboard();
+//		manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		hideKeyboard();
 
 		sendmessage=(Button)findViewById(R.id.btn_send);
 		sendmessage.setOnClickListener(this);	
@@ -257,6 +257,11 @@ public class ChatRoomActivity extends BasicActivity {
 	 * 隐藏软键盘
 	 */
 	private void hideKeyboard() {
+		manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		
+		
+//		InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 		if (getWindow().getAttributes().softInputMode != WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {
 			if (getCurrentFocus() != null)
 				manager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);

@@ -32,8 +32,6 @@ interface ISessionManager {
  	
  	void agreeAddFriends(String sourceId,ISessionListener callback);
  	
- 	void deleteFriends(String targetId);
- 	
     List<String> search(String label,ISessionListener callback);
     
     List<com.peer.client.User> searchUserByLabel(String label,ISessionListener callback);
@@ -64,4 +62,9 @@ interface ISessionManager {
  	
  	List<com.peer.client.User> inTopicUser(String topicid,ISessionListener callback);
  	
+ 	void feedback(String content,ISessionListener callback);
+ 	
+ 	List TopicReplies(String topicId,ISessionListener callback);
+ 	
+ 	void deleteFriend(String targetId,ISessionListener callback);
 }

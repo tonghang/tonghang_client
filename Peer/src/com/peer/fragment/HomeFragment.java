@@ -77,8 +77,9 @@ public class HomeFragment extends BasicFragment{
 			startActivity(tosearch);			
 			break;
 		case R.id.tv_createtopic:
-			Intent creat=new Intent(getActivity(),CreatTopicActivity.class);
-			startActivity(creat);
+			Intent intent=new Intent();
+			intent.setClass(getActivity(), CreatTopicActivity.class);
+			startActivity(intent);
 			break;
 		}
 	}

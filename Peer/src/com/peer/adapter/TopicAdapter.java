@@ -42,7 +42,7 @@ public class TopicAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parentgroup) {
+	public View getView(final int position, View convertView, ViewGroup parentgroup) {
 		// TODO Auto-generated method stub
 		ViewHolder viewHolder;
 		if(convertView==null){
@@ -67,6 +67,7 @@ public class TopicAdapter extends BaseAdapter {
 				// TODO Auto-generated method stub
 //				ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.MULTICHAT);
 				Intent intent=new Intent(mContext,TopicHistoryActivity.class);
+				intent.putExtra("topicid",String.valueOf(mlist.get(position).get("id")));
 				mContext.startActivity(intent);
 			}
 		});

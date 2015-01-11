@@ -109,6 +109,7 @@ public class RegisterAcountActivity extends BasicActivity{
 			registe_remind.setText(getResources().getString(R.string.errornike));
 			return ;
 		}else{
+			pd.show(RegisterAcountActivity.this, "", "正在注册。。。");
 			RegisterTask task=new RegisterTask();
 			task.execute(email,password,nikename);
 		}		
@@ -173,7 +174,8 @@ public class RegisterAcountActivity extends BasicActivity{
 		@Override
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
-			if(result.equals(Constant.CALLBACKSUCCESS)){				
+			if(result.equals(Constant.CALLBACKSUCCESS)){
+				pd.dismiss();
 				Intent intent=new Intent(RegisterAcountActivity.this,RegisterTagActivity.class);
 				startActivity(intent);
 				finish();

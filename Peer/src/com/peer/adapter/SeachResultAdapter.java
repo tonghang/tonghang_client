@@ -46,7 +46,7 @@ public class SeachResultAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parentgroup) {
+	public View getView(final int position, View convertView, ViewGroup parentgroup) {
 		// TODO Auto-generated method stub
 		ViewHolder viewHolder;
 		if(convertView==null){
@@ -70,14 +70,14 @@ public class SeachResultAdapter extends BaseAdapter {
 			}else{
 				labels=labels+" | "+s;
 			}			
-		}
-		
+		}		
 		viewHolder.descripe.setText(labels);	
 		viewHolder.click.setOnClickListener(new View.OnClickListener() {			
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
+				PersonpageUtil.getInstance().setPersonid(mlist.get(position).getUserid());
 				Intent intent=new Intent(mContext,PersonalPageActivity.class);
 				mContext.startActivity(intent);
 			}
