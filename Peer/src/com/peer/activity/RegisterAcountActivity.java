@@ -108,8 +108,8 @@ public class RegisterAcountActivity extends BasicActivity{
 		}else if(nike_registe.length()>10){
 			registe_remind.setText(getResources().getString(R.string.errornike));
 			return ;
-		}else{
-			pd.show(RegisterAcountActivity.this, "", "正在注册。。。");
+		}else{	
+			pd = ProgressDialog.show(RegisterAcountActivity.this, "", "正在注册。。。");
 			RegisterTask task=new RegisterTask();
 			task.execute(email,password,nikename);
 		}		
@@ -128,7 +128,6 @@ public class RegisterAcountActivity extends BasicActivity{
 			// TODO Auto-generated method stub
 			
 		}
-
 		@Override
 		public void onTextChanged(CharSequence arg0, int arg1, int arg2,
 				int arg3) {
@@ -154,8 +153,10 @@ public class RegisterAcountActivity extends BasicActivity{
 			// TODO Auto-generated method stub				
 			SessionListener callback=new SessionListener();
 			try {
+				
 				PeerUI.getInstance().getISessionManager().register(paramer[0], paramer[1], paramer[2], callback);
 				if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
+					
 					LocalStorage.saveString(RegisterAcountActivity.this, Constant.EMAIL, paramer[0]);
 					UserBean u=new UserBean();
 					u.setEmail(paramer[0]);

@@ -230,6 +230,7 @@
         >
         <Button
             android:textSize="@dimen/textsize_large" 
+            android:textColor="@color/white"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:id="@+id/bt_registe_tag"
