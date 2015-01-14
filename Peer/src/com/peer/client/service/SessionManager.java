@@ -28,6 +28,7 @@ import org.springframework.web.client.RestTemplate;
 import android.os.RemoteException;
 import com.peer.client.ISessionListener;
 import com.peer.client.ISessionManager;
+import com.peer.client.Topic;
 import com.peer.client.User;
 import com.peer.client.easemobchatUser;
 import com.peer.client.util.DataUtil;
@@ -586,7 +587,45 @@ public class SessionManager extends ISessionManager.Stub {
 		try{
 			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/recommendations.json", List.class);
 			if(result.getStatusCode()==HttpStatus.OK){
-				mlist=result.getBody();
+				List<Map> recomend=result.getBody();				
+				for(int i=0;i<recomend.size();i++){
+					if(recomend.get(i).get("type").equals(Constant.USER)){
+						Map<String, Object> map=new HashMap<String, Object>();
+						map.put("type", Constant.USER);
+						User user=new User();
+						user.setImage(Constant.WEB_SERVER_ADDRESS+(String)recomend.get(i).get("image"));
+						user.setUserid(String.valueOf(recomend.get(i).get("id")));
+						user.setUsername((String)recomend.get(i).get("username"));					
+						user.setLabels((List<String>)recomend.get(i).get("labels"));
+						user.setHuangxin_username((String)recomend.get(i).get("huanxin_username"));
+						user.setIs_friends(String.valueOf(recomend.get(i).get("is_friend")));
+						map.put(Constant.USER, user);
+						mlist.add(map);
+					}else if(recomend.get(i).get("type").equals(Constant.TOPIC)){
+						Map<String, Object> map=new HashMap<String, Object>();
+						map.put("type", Constant.TOPIC);
+						
+						Map m=(Map)recomend.get(i).get("user");						
+						User user=new User();
+						user.setImage(Constant.WEB_SERVER_ADDRESS+(String)m.get("image"));
+						user.setUserid(String.valueOf(m.get("id")));
+						user.setUsername((String)m.get("username"));					
+						user.setLabels((List<String>)m.get("labels"));
+						user.setHuangxin_username((String)m.get("huanxin_username"));
+						map.put(Constant.USER, user);
+						
+						Topic topic=new Topic();
+						topic.setLabel_name((String)recomend.get(i).get("label_name"));
+						topic.setCreate_time((String)recomend.get(i).get("created_at"));
+						topic.setHuangxin_group_id(String.valueOf(recomend.get(i).get("huanxin_group_id")));
+						topic.setBody((String)recomend.get(i).get("body"));
+						topic.setSubject((String)recomend.get(i).get("subject"));
+						map.put(Constant.TOPIC, topic);
+						mlist.add(map);
+					}
+					
+					
+				}	
 				message=Constant.CALLBACKSUCCESS;	
 				code=0;
 			}else
@@ -635,7 +674,7 @@ public class SessionManager extends ISessionManager.Stub {
 	public List convertToUser(easemobchatUser users, ISessionListener callback)
 			throws RemoteException {
 		// TODO Auto-generated method stub
-		List mlist=null;
+		List mlist=new ArrayList();
 		Map<String, List> parts=new HashMap<String, List>();
 		String message=null;
 		int code=1;
@@ -645,7 +684,46 @@ public class SessionManager extends ISessionManager.Stub {
 			if(result.getStatusCode()==HttpStatus.OK){
 				message=Constant.CALLBACKSUCCESS;
 				code=0;
-				mlist=result.getBody();
+				List<Map> recomend=result.getBody();				
+				for(int i=0;i<recomend.size();i++){
+					if(recomend.get(i).get("type").equals(Constant.USER)){
+						Map<String, Object> map=new HashMap<String, Object>();
+						map.put("type", Constant.USER);
+						User user=new User();
+						user.setImage(Constant.WEB_SERVER_ADDRESS+(String)recomend.get(i).get("image"));
+						user.setUserid(String.valueOf(recomend.get(i).get("id")));
+						user.setUsername((String)recomend.get(i).get("username"));					
+						user.setLabels((List<String>)recomend.get(i).get("labels"));
+						user.setHuangxin_username((String)recomend.get(i).get("huanxin_username"));
+						user.setIs_friends(String.valueOf(recomend.get(i).get("is_friend")));
+						map.put(Constant.USER, user);
+						mlist.add(map);
+					}else if(recomend.get(i).get("type").equals(Constant.TOPIC)){
+						Map<String, Object> map=new HashMap<String, Object>();
+						map.put("type", Constant.TOPIC);
+						
+						Map m=(Map)recomend.get(i).get("user");						
+						User user=new User();
+						user.setImage(Constant.WEB_SERVER_ADDRESS+(String)m.get("image"));
+						user.setUserid(String.valueOf(m.get("id")));
+						user.setUsername((String)m.get("username"));					
+						user.setLabels((List<String>)m.get("labels"));
+						user.setHuangxin_username((String)m.get("huanxin_username"));
+						map.put(Constant.USER, user);
+						
+						Topic topic=new Topic();
+						topic.setLabel_name((String)recomend.get(i).get("label_name"));
+						topic.setCreate_time((String)recomend.get(i).get("created_at"));
+						topic.setHuangxin_group_id(String.valueOf(recomend.get(i).get("huanxin_group_id")));
+						topic.setBody((String)recomend.get(i).get("body"));
+						topic.setSubject((String)recomend.get(i).get("subject"));
+						map.put(Constant.TOPIC, topic);
+						mlist.add(map);
+					}	
+					
+				}	
+				
+				
 			}
 		
 		}catch(Exception e){

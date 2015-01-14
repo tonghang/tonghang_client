@@ -5,6 +5,7 @@ import java.util.Map;
 import com.peer.R;
 import com.peer.activitymain.ChatRoomActivity;
 import com.peer.activitymain.PersonalPageActivity;
+import com.peer.client.Topic;
 import com.peer.client.User;
 import com.peer.constant.Constant;
 import com.peer.localDB.LocalStorage;
@@ -62,9 +63,11 @@ public class HomepageAdapter extends BaseAdapter {
 				viewHolder.nikename=(TextView)convertView.findViewById(R.id.tv_nikename);			
 				viewHolder.descripe=(TextView)convertView.findViewById(R.id.tv_descripe);
 				viewHolder.click=(LinearLayout)convertView.findViewById(R.id.ll_clike);
-				LoadImageUtil.imageLoader.displayImage(Constant.WEB_SERVER_ADDRESS+mList.get(position).get("image"), viewHolder.headpic, LoadImageUtil.options);				
-				viewHolder.nikename.setText((String)mList.get(position).get("username"));
-				List<String>list=(List<String>) mList.get(position).get("labels");
+				
+				final User user=(User) mList.get(position).get(Constant.USER);
+				LoadImageUtil.imageLoader.displayImage(user.getImage(), viewHolder.headpic, LoadImageUtil.options);						
+				viewHolder.nikename.setText(user.getUsername());
+				List<String>list=(List<String>) user.getLabels();
 				String labels="";
 				for(String s:list){
 					if(labels.equals("")){
@@ -79,15 +82,15 @@ public class HomepageAdapter extends BaseAdapter {
 					@Override
 					public void onClick(View arg0) {
 						// TODO Auto-generated method stub						
-						PersonpageUtil.getInstance().setPersonid(String.valueOf(mList.get(position).get("id")));
-						PersonpageUtil.getInstance().setHuanxinId((String)mList.get(position).get("huanxin_username"));
-						PersonpageUtil.getInstance().setPersonname((String)mList.get(position).get("username"));
+						PersonpageUtil.getInstance().setPersonid(user.getUserid());
+						PersonpageUtil.getInstance().setHuanxinId(user.getHuangxin_username());
+						PersonpageUtil.getInstance().setPersonname(user.getUsername());
 						if(LocalStorage.getBoolean(mContext, "istestui")){
 							PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
 							Intent intent=new Intent(mContext,PersonalPageActivity.class);
 							mContext.startActivity(intent);
 						}else{
-							if((Boolean)mList.get(position).get("is_friend")){
+							if(Boolean.getBoolean(user.getIs_friends())){
 								PersonpageUtil.getInstance().setPersonpagetype(Constant.FRIENDSPAGE);
 							}else{
 								PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
@@ -103,31 +106,29 @@ public class HomepageAdapter extends BaseAdapter {
 				viewHolder.skillname=(TextView)convertView.findViewById(R.id.tv_skill);			
 				viewHolder.topic=(TextView)convertView.findViewById(R.id.tv_topic);
 				viewHolder.click=(LinearLayout)convertView.findViewById(R.id.ll_clike);
-				viewHolder.time.setText((String)mList.get(position).get("created_at"));
-				viewHolder.skillname.setText((String)mList.get(position).get("label_name"));
-				viewHolder.topic.setText((String)mList.get(position).get("subject"));
+				
+				final Topic topic=(Topic)mList.get(position).get(Constant.TOPIC);
+				
+				viewHolder.time.setText(topic.getCreate_time());
+				viewHolder.skillname.setText(topic.getLabel_name());
+				viewHolder.topic.setText(topic.getSubject());
 				viewHolder.click.setOnClickListener(new View.OnClickListener() {
 					
 					@Override
 					public void onClick(View arg0) {
 						// TODO Auto-generated method stub
 						ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.MULTICHAT);	
-						ChatRoomTypeUtil.getInstance().setHuanxingId(String.valueOf(mList.get(position).get("huanxin_group_id")));
-						ChatRoomTypeUtil.getInstance().setTitle((String)mList.get(position).get("label_name"));
-						ChatRoomTypeUtil.getInstance().setTheme((String)mList.get(position).get("subject"));
-						ChatRoomTypeUtil.getInstance().setTopicId(String.valueOf(mList.get(position).get("id")));
+						ChatRoomTypeUtil.getInstance().setHuanxingId(topic.getHuangxin_group_id());
+						ChatRoomTypeUtil.getInstance().setTitle(topic.getLabel_name());
+						ChatRoomTypeUtil.getInstance().setTheme(topic.getSubject());
+						ChatRoomTypeUtil.getInstance().setTopicId(topic.getTopicid());
 						
 						if(LocalStorage.getBoolean(mContext, "istestui")){
 							Intent intent=new Intent(mContext,ChatRoomActivity.class);
 							mContext.startActivity(intent);
 						}else{
-							Map m=(Map)mList.get(position).get("user");
-							User user=new User();
-							user.setImage(Constant.WEB_SERVER_ADDRESS+(String)m.get("image"));
-							user.setUserid((String)m.get("user_id"));
-							user.setUsername((String)m.get("username"));
-							ChatRoomTypeUtil.getInstance().setUser(user);
-						
+							User user=(User)mList.get(position).get(Constant.USER);
+							ChatRoomTypeUtil.getInstance().setUser(user);	
 							Intent intent=new Intent(mContext,ChatRoomActivity.class);
 							mContext.startActivity(intent);
 						}

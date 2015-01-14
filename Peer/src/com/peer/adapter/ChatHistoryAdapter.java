@@ -19,6 +19,7 @@ import com.easemob.chat.EMMessage;
 import com.easemob.chat.TextMessageBody;
 import com.peer.R;
 import com.peer.activitymain.ChatRoomActivity;
+import com.peer.client.Topic;
 import com.peer.client.User;
 import com.peer.constant.Constant;
 import com.peer.util.ChatRoomTypeUtil;
@@ -60,40 +61,36 @@ public class ChatHistoryAdapter extends BaseAdapter {
 		if(convertView==null){
 			viewHolder=new ViewHolder();
 			if(type.equals(Constant.TOPIC)){
-				EMConversation conversation = EMChatManager.getInstance().getConversation((String)userlist.get(position).get("huanxin_group_id"));
-				
+				final Topic topic=(Topic)userlist.get(position).get(Constant.TOPIC);
+				EMConversation conversation = EMChatManager.getInstance().getConversation(topic.getHuangxin_group_id());				
 				convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_come_listtopic,null,false);
 				viewHolder.nikename=(TextView)convertView.findViewById(R.id.tv_skill);			
 				viewHolder.descripe=(TextView)convertView.findViewById(R.id.tv_topic);
 				viewHolder.time=(TextView)convertView.findViewById(R.id.tv_time);
 				
 				viewHolder.click=(LinearLayout)convertView.findViewById(R.id.ll_clike);
-				viewHolder.click.setGravity(Gravity.CENTER_VERTICAL);
-				LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-						(int) mContext.getResources().getDimension(R.dimen.widgeheight_max));
-				params.leftMargin=(int) mContext.getResources().getDimension(R.dimen.marginsize_around);
-				params.rightMargin=(int) mContext.getResources().getDimension(R.dimen.marginsize_around);				
+//				viewHolder.click.setGravity(Gravity.CENTER_VERTICAL);
+//				LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+//						(int) mContext.getResources().getDimension(R.dimen.widgeheight_max));
+//				params.leftMargin=(int) mContext.getResources().getDimension(R.dimen.marginsize_around);
+//				params.rightMargin=(int) mContext.getResources().getDimension(R.dimen.marginsize_around);				
 				
-				viewHolder.time.setText((String)userlist.get(position).get("created_at"));
-				viewHolder.nikename.setText((String)userlist.get(position).get("label_name"));
-				viewHolder.descripe.setText((String)userlist.get(position).get("subject"));
+				viewHolder.time.setText(topic.getCreate_time());
+				viewHolder.nikename.setText(topic.getLabel_name());
+				viewHolder.descripe.setText(topic.getSubject());
 				
-				viewHolder.click.setLayoutParams(params);
+//				viewHolder.click.setLayoutParams(params);
 				viewHolder.click.setOnClickListener(new View.OnClickListener() {
 					
 					@Override
 					public void onClick(View arg0) {
 						// TODO Auto-generated method stub
 						ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.MULTICHAT);	
-						ChatRoomTypeUtil.getInstance().setHuanxingId(String.valueOf(userlist.get(position).get("huanxin_group_id")));
-						ChatRoomTypeUtil.getInstance().setTitle((String)userlist.get(position).get("label_name"));
-						ChatRoomTypeUtil.getInstance().setTheme((String)userlist.get(position).get("subject"));
-						ChatRoomTypeUtil.getInstance().setTopicId(String.valueOf(userlist.get(position).get("id")));
-						Map m=(Map) userlist.get(position).get("user");
-						User user=new User();
-						user.setImage(Constant.WEB_SERVER_ADDRESS+(String)m.get("image"));
-						user.setUsername((String)m.get("username"));
-						user.setUserid((String)m.get("user_id"));
+						ChatRoomTypeUtil.getInstance().setHuanxingId(topic.getHuangxin_group_id());
+						ChatRoomTypeUtil.getInstance().setTitle(topic.getLabel_name());
+						ChatRoomTypeUtil.getInstance().setTheme(topic.getSubject());
+						ChatRoomTypeUtil.getInstance().setTopicId(topic.getTopicid());
+						User user=(User) userlist.get(position).get(Constant.UNFRIENDSPAGE);
 						ChatRoomTypeUtil.getInstance().setUser(user);
 						Intent intent=new Intent(mContext,ChatRoomActivity.class);
 						mContext.startActivity(intent);
@@ -101,8 +98,9 @@ public class ChatHistoryAdapter extends BaseAdapter {
 				});
 				
 				convertView.setTag(viewHolder);
-			}else if(type.equals(Constant.USER)){					
-				EMConversation conversation = EMChatManager.getInstance().getConversation((String)userlist.get(position).get("huanxin_username"));				
+			}else if(type.equals(Constant.USER)){	
+				final User user=(User) userlist.get(position).get(Constant.USER);
+				EMConversation conversation = EMChatManager.getInstance().getConversation(user.getHuangxin_username());				
 				convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_come_listperson,null,false);				
 				viewHolder.headpic=(ImageView)convertView.findViewById(R.id.im_headpic);
 	
@@ -110,14 +108,14 @@ public class ChatHistoryAdapter extends BaseAdapter {
 				viewHolder.descripe=(TextView)convertView.findViewById(R.id.tv_descripe);
 				viewHolder.click=(LinearLayout)convertView.findViewById(R.id.ll_clike);
 				viewHolder.click.setGravity(Gravity.CENTER_VERTICAL);
-				LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,(int) mContext.getResources().getDimension(R.dimen.widgeheight_max));
-				params.leftMargin=(int) mContext.getResources().getDimension(R.dimen.marginsize_around);
-				params.rightMargin=(int) mContext.getResources().getDimension(R.dimen.marginsize_around);			
-				viewHolder.click.setLayoutParams(params);
+//				LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,(int) mContext.getResources().getDimension(R.dimen.widgeheight_max));
+//				params.leftMargin=(int) mContext.getResources().getDimension(R.dimen.marginsize_around);
+//				params.rightMargin=(int) mContext.getResources().getDimension(R.dimen.marginsize_around);			
+//				viewHolder.click.setLayoutParams(params);
 				
-				LoadImageUtil.imageLoader.displayImage(Constant.WEB_SERVER_ADDRESS+userlist.get(position).get("image"), viewHolder.headpic, LoadImageUtil.options);
+				LoadImageUtil.imageLoader.displayImage(user.getImage(), viewHolder.headpic, LoadImageUtil.options);
 				
-				viewHolder.nikename.setText((String)userlist.get(position).get("username"));
+				viewHolder.nikename.setText(user.getUsername());
 				EMMessage lastMessage = conversation.getLastMessage();
 				TextMessageBody body=(TextMessageBody) lastMessage.getBody();
 				viewHolder.descripe.setText(body.getMessage());
@@ -141,8 +139,8 @@ public class ChatHistoryAdapter extends BaseAdapter {
 						// TODO Auto-generated method stub
 						bd.hide();
 						ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.SINGLECHAT);
-						ChatRoomTypeUtil.getInstance().setTitle((String)userlist.get(position).get("username"));
-						ChatRoomTypeUtil.getInstance().setHuanxingId((String)userlist.get(position).get("huanxin_username"));
+						ChatRoomTypeUtil.getInstance().setTitle(user.getUsername());
+						ChatRoomTypeUtil.getInstance().setHuanxingId(user.getHuangxin_username());
 						Intent intent=new Intent(mContext,ChatRoomActivity.class);
 						mContext.startActivity(intent);							
 					}

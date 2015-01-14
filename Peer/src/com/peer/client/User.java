@@ -17,6 +17,8 @@ public class User implements Parcelable {
 	private String city;
 	private String reason;	
 	private String invitionid;
+	private String huangxin_username;
+	private String is_friends;
 	
 	private List<String> labels=new ArrayList<String>();
 	
@@ -40,6 +42,8 @@ public class User implements Parcelable {
 		password=source.readString();
 		reason=source.readString();
 		invitionid=source.readString();
+		huangxin_username=source.readString();
+		is_friends=source.readString();
 		labels=new ArrayList<String>();
 		source.readList(labels, getClass().getClassLoader());
 	}  	
@@ -75,6 +79,8 @@ public class User implements Parcelable {
 	        dest.writeList(labels);
 	        dest.writeString(reason);
 	        dest.writeString(invitionid);
+	        dest.writeString(huangxin_username);
+	        dest.writeString(is_friends);
 	}
 
 	public String getEmail() {
@@ -165,6 +171,22 @@ public class User implements Parcelable {
 
 	public void setInvitionid(String invitionid) {
 		this.invitionid = invitionid;
+	}
+
+	public String getHuangxin_username() {
+		return huangxin_username;
+	}
+
+	public void setHuangxin_username(String huangxin_username) {
+		this.huangxin_username = huangxin_username;
+	}
+
+	public String getIs_friends() {
+		return is_friends;
+	}
+
+	public void setIs_friends(String is_friends) {
+		this.is_friends = is_friends;
 	}
 
 }
