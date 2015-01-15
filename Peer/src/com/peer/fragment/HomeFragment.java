@@ -14,6 +14,7 @@ import com.peer.activitymain.SearchActivity;
 import com.peer.adapter.HomepageAdapter;
 import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
+import com.peer.constant.Constant;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -109,10 +110,10 @@ public class HomeFragment extends BasicFragment{
 			}			
 		});
 	}
-	private class RefreshTask extends AsyncTask<String, String, Void>{
+	private class RefreshTask extends AsyncTask<String, String, String>{
 
 		@Override
-		protected Void doInBackground(String... arg0) {
+		protected String doInBackground(String... arg0) {
 			// TODO Auto-generated method stub
 			try {
 				Thread.sleep(500);														
@@ -120,16 +121,34 @@ public class HomeFragment extends BasicFragment{
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			if(arg0[0].equals("up")){
-					
+			SessionListener callback=new SessionListener();
+			if(arg0[0].equals("UpToRefresh")){				
+            	try {
+				List uprefrsh=PeerUI.getInstance().getISessionManager().recommendByPage(2, callback);
+				list.addAll(uprefrsh);
+            	} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}else{
+				try {
+					List downrefrsh=PeerUI.getInstance().getISessionManager().recommendByPage(1, callback);
+					list.clear();
+					list.addAll(downrefrsh);
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}		
-			return null;
+			return callback.getMessage();
 		}
 		@Override
-		protected void onPostExecute(Void result) {
+		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
-			adapter.notifyDataSetChanged();
-			mPullrefreshlistview.onRefreshComplete();
+			if(result.equals(Constant.CALLBACKSUCCESS)){
+				adapter.notifyDataSetChanged();
+				mPullrefreshlistview.onRefreshComplete();
+			}		
 		}		
 	}
 	private class RecommendTask extends AsyncTask<Void, Void, List>{

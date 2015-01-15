@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.peer.R;
+import com.peer.client.User;
+import com.peer.constant.Constant;
+import com.peer.widgetutil.LoadImageUtil;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +23,7 @@ public class HistoryMsgAdapter extends BaseAdapter {
 	public HistoryMsgAdapter(Context mContext, List<Map> mlist){
 		this.mContext=mContext;	
 		this.mlist=mlist;
+		LoadImageUtil.initImageLoader(mContext);
 	}
 
 	@Override
@@ -53,7 +58,11 @@ public class HistoryMsgAdapter extends BaseAdapter {
 		}else{
 			convertView.getTag();
 		}
-		viewHolder.content.setText((String)mlist.get(position).get("body"));
+		User user=(User) mlist.get(position).get(Constant.USER);
+		LoadImageUtil.imageLoader.displayImage(user.getImage(), viewHolder.headpic,LoadImageUtil.options);
+		viewHolder.nikename.setText(user.getUsername());
+		
+		viewHolder.content.setText((String)mlist.get(position).get("replybody"));
 		return convertView;
 	}
 	private class ViewHolder{

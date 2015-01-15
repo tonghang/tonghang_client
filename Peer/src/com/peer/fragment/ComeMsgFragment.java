@@ -79,9 +79,6 @@ public class ComeMsgFragment extends BasicFragment {
 		comeMsgTask task=new comeMsgTask();
 		task.execute(users);		
 	}
-	/**
-	 * 刷新页面 待优化。。。
-	 */
 	public void refresh() {
 		list.clear();		
 		list.addAll(loadConversationsWithRecentChat());

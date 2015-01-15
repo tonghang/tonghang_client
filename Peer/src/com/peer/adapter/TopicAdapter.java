@@ -15,11 +15,12 @@ import android.widget.TextView;
 
 import com.peer.R;
 import com.peer.activitymain.TopicHistoryActivity;
+import com.peer.client.Topic;
 
 public class TopicAdapter extends BaseAdapter {
 	private Context mContext;
-	private List<Map> mlist;
-	public TopicAdapter(Context mContext,List<Map> list){
+	private List<Topic> mlist;
+	public TopicAdapter(Context mContext,List<Topic> list){
 		this.mContext=mContext;
 		this.mlist=list;
 	}
@@ -57,9 +58,11 @@ public class TopicAdapter extends BaseAdapter {
 		}else{
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
-		viewHolder.time.setText((String)mlist.get(position).get("created_at"));
-		viewHolder.nikename.setText((String)mlist.get(position).get("label_name"));
-		viewHolder.descripe.setText((String)mlist.get(position).get("subject"));
+		final Topic topic=mlist.get(position);
+				
+		viewHolder.time.setText(topic.getCreate_time());
+		viewHolder.nikename.setText(topic.getLabel_name());
+		viewHolder.descripe.setText(topic.getSubject());
 		viewHolder.click.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -67,7 +70,7 @@ public class TopicAdapter extends BaseAdapter {
 				// TODO Auto-generated method stub
 //				ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.MULTICHAT);
 				Intent intent=new Intent(mContext,TopicHistoryActivity.class);
-				intent.putExtra("topicid",String.valueOf(mlist.get(position).get("id")));
+				intent.putExtra("topicid",String.valueOf(topic.getTopicid()));
 				mContext.startActivity(intent);
 			}
 		});

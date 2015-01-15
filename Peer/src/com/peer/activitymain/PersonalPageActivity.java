@@ -228,9 +228,9 @@ public class PersonalPageActivity extends BasicActivity {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-							if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
+	//						if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
 								finish();
-							}
+	//						}
 						}
 					}).start();
 				}

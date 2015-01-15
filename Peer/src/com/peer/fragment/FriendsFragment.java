@@ -35,8 +35,8 @@ public class FriendsFragment extends BasicFragment {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
 		init();
-		FriendsTask task=new FriendsTask();
-		task.execute();
+//		FriendsTask task=new FriendsTask();
+//		task.execute();
 	}
 	private void init() {
 		// TODO Auto-generated method stub
@@ -48,6 +48,9 @@ public class FriendsFragment extends BasicFragment {
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		if(list!=null){
+			list.clear();
+		}
 		FriendsTask task=new FriendsTask();
 		task.execute();
 	}

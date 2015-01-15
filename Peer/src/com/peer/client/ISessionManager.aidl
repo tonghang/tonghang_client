@@ -3,6 +3,7 @@ package com.peer.client;
 
 // Declare any non-default types here with import statements
 import com.peer.client.ISessionListener;
+import com.peer.client.Topic;
 import com.peer.client.User;
 import com.peer.client.easemobchatUser;
 
@@ -48,7 +49,7 @@ interface ISessionManager {
  	
  	com.peer.client.User personalPage(String targetId,ISessionListener callback);
  	
- 	List topicHistory(String targetId,ISessionListener callback);
+ 	List<com.peer.client.Topic> topicHistory(String targetId,ISessionListener callback);
  	
  	void TopicchatHistory(String topicId,ISessionListener callback);
  	

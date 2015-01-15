@@ -322,6 +322,7 @@ public class SessionManager extends ISessionManager.Stub {
 					user.setUserid(String.valueOf(m.get("id")));
 					user.setBirthday((String)m.get("birth"));
 					user.setLabels((List)m.get("labels"));
+					user.setIs_friends(String.valueOf(m.get("is_friend")));
 					mlist.add(user);
 				}
 				code=0;
@@ -357,6 +358,7 @@ public class SessionManager extends ISessionManager.Stub {
 					user.setUserid(String.valueOf(m.get("id")));
 					user.setBirthday((String)m.get("birth"));
 					user.setLabels((List)m.get("labels"));
+					user.setIs_friends(String.valueOf(m.get("is_friend")));
 					mlist.add(user);
 				}
 				code=0;
@@ -370,19 +372,32 @@ public class SessionManager extends ISessionManager.Stub {
 		callback.onCallBack(code, message);
 		return mlist;
 	}
-	/*get all friends 通过测试*/
+	/*get all friends */
 	@Override
 	public List<User> myFriends() throws RemoteException {
 		// TODO Auto-generated method stub
-		List<User> list=new ArrayList<User>();		
+		List<User> list=new ArrayList<User>();			
+		List result=null;
+		
 		try {
-			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS + "/users/"+userid+"/friends.json",List.class);			
-			if(result.getStatusCode()==HttpStatus.OK){
-				
-				List resultlist=result.getBody();
-				for(int i=0;i<resultlist.size();i++){
+			HttpHeaders headers=new HttpHeaders();			
+			headers.add("x-token", token);			
+						
+			RestTemplate restTemplate=new RestTemplate(true);	
+			
+			restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+			restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
+			restTemplate.getMessageConverters().add(new StringHttpMessageConverter());			
+						
+			ResponseEntity<List> response = restTemplate.exchange(Constant.WEB_SERVER_ADDRESS + "/friends.json",  
+				      HttpMethod.GET,  
+				      new HttpEntity(headers),  
+				      List.class);  		
+			if(response.getStatusCode()==HttpStatus.OK){
+				result=response.getBody();
+				for(int i=0;i<result.size();i++){
 					User u=new User();
-					Map m=(Map) resultlist.get(i);
+					Map m=(Map) result.get(i);
 					u.setImage(Constant.WEB_SERVER_ADDRESS+(String)m.get("image"));
 					u.setLabels((List)m.get("labels"));
 					u.setUsername((String)m.get("username"));
@@ -419,8 +434,8 @@ public class SessionManager extends ISessionManager.Stub {
 					if(((String)m.get("status")).equals(Constant.PENDING)){
 						Map inviter=(Map)m.get("inviter");						
 						u.setImage(Constant.WEB_SERVER_ADDRESS+(String)inviter.get("image"));
-						u.setUsername((String)m.get("username"));
-						u.setUserid(String.valueOf(m.get("id")));
+						u.setUsername((String)inviter.get("username"));
+						u.setUserid(String.valueOf(inviter.get("id")));
 						u.setReason((String)m.get("reason"));
 						u.setInvitionid(String.valueOf(m.get("id")));
 						list.add(u);
@@ -467,16 +482,24 @@ public class SessionManager extends ISessionManager.Stub {
 	}
 	/*label topic history 测试通过*/
 	@Override
-	public List<Map> topicHistory(String targetId,ISessionListener callback) throws RemoteException {
+	public List<Topic> topicHistory(String targetId,ISessionListener callback) throws RemoteException {
 		// TODO Auto-generated method stub				
-		List<Map> body=null;
+		List<Topic>  topiclist=new ArrayList<Topic>();
 		String message=null;
 		int code=1;
 		try {
 			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS + "/topics.json?user_id="+targetId+"&page=1", List.class);						
 			if (result.getStatusCode() == HttpStatus.OK) {	
 				code=0;
-				body = result.getBody();
+				List<Map>	body = result.getBody();
+				for(int i=0;i<body.size();i++){
+					Topic topic=new Topic();
+					topic.setCreate_time((String)body.get(i).get("created_at"));
+					topic.setLabel_name((String)body.get(i).get("label_name"));
+					topic.setSubject((String)body.get(i).get("subject"));
+					topic.setTopicid((String)body.get(i).get("id"));
+					topiclist.add(topic);
+				}			
 				message=Constant.CALLBACKSUCCESS;
 			} else{
 				message=Constant.CALLBACKFAIL;
@@ -488,7 +511,7 @@ public class SessionManager extends ISessionManager.Stub {
 		}	
 		callback.onCallBack(code, message);
 		
-		return body;
+		return topiclist;
 	}
 	/*label topic chat history*/
 	@Override
@@ -585,7 +608,7 @@ public class SessionManager extends ISessionManager.Stub {
 		String message=null;
 		int code=1;
 		try{
-			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/recommendations.json", List.class);
+			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/recommendations.json?page="+page, List.class);
 			if(result.getStatusCode()==HttpStatus.OK){
 				List<Map> recomend=result.getBody();				
 				for(int i=0;i<recomend.size();i++){
@@ -769,19 +792,34 @@ public class SessionManager extends ISessionManager.Stub {
 		}
 		callback.onCallBack(code, message);
 	}
+	//返回的json结构有问题
 	@Override
 	public List TopicReplies(String topicId, ISessionListener callback)
 			throws RemoteException {
 		// TODO Auto-generated method stub
+		List list=null;
 		String message=null;
 		int code=1;	
-		List mlist=null;
+		Map map=null;
 		try{
-			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/topics/"+topicId+"/replies.json",List.class);
+			ResponseEntity<Map> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/topics/"+topicId+"/replies.json",Map.class);
 			if(result.getStatusCode()==HttpStatus.OK){
+				list=new ArrayList();
 				message=Constant.CALLBACKSUCCESS;
 				code=0;
-				mlist=result.getBody();				
+				map=result.getBody();
+				List<Map> mlist=(List) map.get("replies");
+				for(int i=0;i<mlist.size();i++){
+					Map<String, Object> replies=new HashMap<String, Object>();
+					
+					Map usermap=(Map) mlist.get(i).get("user");
+					User user=new User();
+					user.setUsername((String)usermap.get("username"));
+					user.setImage(Constant.WEB_SERVER_ADDRESS+(String)usermap.get("image"));
+					replies.put(Constant.USER, user);
+					replies.put("replybody", mlist.get(i).get("body"));
+					list.add(replies);
+				}
 			}
 		}catch(Exception e){
 			message=Constant.CALLBACKFAIL;
@@ -789,7 +827,7 @@ public class SessionManager extends ISessionManager.Stub {
 		}
 		callback.onCallBack(code, message);
 		
-		return mlist;
+		return list;
 	}
 	
 	@Override
@@ -822,6 +860,7 @@ public class SessionManager extends ISessionManager.Stub {
 		// TODO Auto-generated method stub
 		return username;
 	}
+	//返回的json结构有问题
 	@Override
 	public void deleteFriend(String targetId, ISessionListener callback)
 			throws RemoteException {
@@ -833,10 +872,13 @@ public class SessionManager extends ISessionManager.Stub {
 			headers.add("x-token", token);									
 			RestTemplate restTemplate=new RestTemplate(true);				
 			restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-			restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
-			restTemplate.getMessageConverters().add(new StringHttpMessageConverter());			
-			
-			restTemplate.delete(Constant.WEB_SERVER_ADDRESS + "/friends/"+targetId+".json");
+//			restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
+//			restTemplate.getMessageConverters().add(new StringHttpMessageConverter());			
+//删除成功，但是报错			
+			ResponseEntity<List> response = restTemplate.exchange(Constant.WEB_SERVER_ADDRESS + "/friends/"+targetId+".json",  
+				      HttpMethod.DELETE,  
+				      new HttpEntity(headers),  
+				      List.class); 	
 			message=Constant.CALLBACKSUCCESS;
 			code=0;
 			

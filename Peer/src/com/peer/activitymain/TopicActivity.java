@@ -1,8 +1,6 @@
 package com.peer.activitymain;
 
 import java.util.List;
-import java.util.Map;
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,13 +9,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import com.easemob.chat.core.e;
 import com.peer.R;
 import com.peer.activity.BasicActivity;
-import com.peer.adapter.SkillAdapter;
 import com.peer.adapter.TopicAdapter;
-import com.peer.client.User;
+import com.peer.client.Topic;
 import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
@@ -28,7 +23,7 @@ public class TopicActivity extends BasicActivity {
 	private TextView title,nike,email;
 	private ListView topichistory;
 	private LinearLayout back;
-	private List<Map> mlist;
+	private List<Topic> mlist;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub

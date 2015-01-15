@@ -13,7 +13,7 @@
         android:paddingLeft="20dip"
         android:paddingRight="20dip"
         android:scaleType="centerInside"
-        android:src="@drawable/logo007" >
+        android:src="@drawable/logo" >
     </ImageView>
 
     <TextView

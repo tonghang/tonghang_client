@@ -103,7 +103,7 @@ public class MainActivity extends BasicActivity{
 		myback=(ImageView)findViewById(R.id.iv_backmy);
 			
 		tv_find.setTextColor(getResources().getColor(R.color.bottomtextblue));		
-		findback.setImageResource(R.drawable.find_label_press);
+		findback.setImageResource(R.drawable.peer_press);
 				
 	}
 	
@@ -114,7 +114,7 @@ public class MainActivity extends BasicActivity{
 		tv_friends.setTextColor(getResources().getColor(R.color.bottomtextgray));
 		tv_my.setTextColor(getResources().getColor(R.color.bottomtextgray));		
 		
-		findback.setImageResource(R.drawable.find_label_nol);
+		findback.setImageResource(R.drawable.peer_nol);
 		comeback.setImageResource(R.drawable.come_mess_nol);
 		friendsback.setImageResource(R.drawable.find_label_nol);
 		myback.setImageResource(R.drawable.mysetting_nol);
@@ -123,7 +123,7 @@ public class MainActivity extends BasicActivity{
 		case R.id.ll_find:
 			index=0;			
 			tv_find.setTextColor(getResources().getColor(R.color.bottomtextblue));			
-			findback.setImageResource(R.drawable.find_label_press);
+			findback.setImageResource(R.drawable.peer_press);
 			break;
 		case R.id.ll_come:
 			index=1;			
