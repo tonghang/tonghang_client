@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.http.protocol.HTTP;
+import org.codehaus.jackson.map.DeserializationConfig;
+import org.codehaus.jackson.map.DeserializationConfig.Feature;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -21,11 +24,14 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import android.os.RemoteException;
+
 import com.peer.client.ISessionListener;
 import com.peer.client.ISessionManager;
 import com.peer.client.Topic;
@@ -497,7 +503,7 @@ public class SessionManager extends ISessionManager.Stub {
 					topic.setCreate_time((String)body.get(i).get("created_at"));
 					topic.setLabel_name((String)body.get(i).get("label_name"));
 					topic.setSubject((String)body.get(i).get("subject"));
-					topic.setTopicid((String)body.get(i).get("id"));
+					topic.setTopicid(String.valueOf(body.get(i).get("id")));
 					topiclist.add(topic);
 				}			
 				message=Constant.CALLBACKSUCCESS;
@@ -624,7 +630,8 @@ public class SessionManager extends ISessionManager.Stub {
 						user.setIs_friends(String.valueOf(recomend.get(i).get("is_friend")));
 						map.put(Constant.USER, user);
 						mlist.add(map);
-					}else if(recomend.get(i).get("type").equals(Constant.TOPIC)){
+					}else 
+						if(recomend.get(i).get("type").equals(Constant.TOPIC)){
 						Map<String, Object> map=new HashMap<String, Object>();
 						map.put("type", Constant.TOPIC);
 						
@@ -801,8 +808,15 @@ public class SessionManager extends ISessionManager.Stub {
 		String message=null;
 		int code=1;	
 		Map map=null;
-		try{
-			ResponseEntity<Map> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/topics/"+topicId+"/replies.json",Map.class);
+		try{			
+			RestTemplate restTemplate=new RestTemplate(true);
+		
+			restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());			
+			restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter());
+			restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
+
+			ResponseEntity<Map> result =restTemplate.getForEntity(Constant.WEB_SERVER_ADDRESS+"/topics/"+topicId+".json",  Map.class);
+			
 			if(result.getStatusCode()==HttpStatus.OK){
 				list=new ArrayList();
 				message=Constant.CALLBACKSUCCESS;
@@ -860,7 +874,7 @@ public class SessionManager extends ISessionManager.Stub {
 		// TODO Auto-generated method stub
 		return username;
 	}
-	//返回的json结构有问题
+	
 	@Override
 	public void deleteFriend(String targetId, ISessionListener callback)
 			throws RemoteException {
@@ -872,13 +886,14 @@ public class SessionManager extends ISessionManager.Stub {
 			headers.add("x-token", token);									
 			RestTemplate restTemplate=new RestTemplate(true);				
 			restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-//			restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
-//			restTemplate.getMessageConverters().add(new StringHttpMessageConverter());			
-//删除成功，但是报错			
-			ResponseEntity<List> response = restTemplate.exchange(Constant.WEB_SERVER_ADDRESS + "/friends/"+targetId+".json",  
+			restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter());
+			restTemplate.getMessageConverters().add(new StringHttpMessageConverter());					
+			
+			ResponseEntity<Map> response = restTemplate.exchange(Constant.WEB_SERVER_ADDRESS + "/friends/"+targetId+".json",  
 				      HttpMethod.DELETE,  
 				      new HttpEntity(headers),  
-				      List.class); 	
+				      Map.class); 	
+			
 			message=Constant.CALLBACKSUCCESS;
 			code=0;
 			

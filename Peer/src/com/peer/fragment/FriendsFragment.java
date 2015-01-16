@@ -1,18 +1,13 @@
 package com.peer.fragment;
 
 import java.util.List;
-
 import com.peer.R;
 import com.peer.adapter.FriendsAdapter;
-import com.peer.adapter.HomepageAdapter;
 import com.peer.client.User;
-import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,16 +40,17 @@ public class FriendsFragment extends BasicFragment {
 		seenewfriends.setOnClickListener(this);
 	}
 	@Override
-	public void onResume() {
+	public void setUserVisibleHint(boolean isVisibleToUser) {
 		// TODO Auto-generated method stub
-		super.onResume();
-		if(list!=null){
-			list.clear();
+		super.setUserVisibleHint(isVisibleToUser);
+		if(isVisibleToUser){
+			if(list!=null){
+				list.clear();
+			}
+			FriendsTask task=new FriendsTask();
+			task.execute();
 		}
-		FriendsTask task=new FriendsTask();
-		task.execute();
 	}
-	
 	private class FriendsTask extends AsyncTask<Void, Void, List>{
 
 		@Override

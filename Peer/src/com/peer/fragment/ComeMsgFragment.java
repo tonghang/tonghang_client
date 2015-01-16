@@ -46,11 +46,6 @@ public class ComeMsgFragment extends BasicFragment {
 		init();	
 	}
 	@Override
-	public void onStart() {
-		// TODO Auto-generated method stub
-		super.onStart();		
-	}
-	@Override
 	public void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();

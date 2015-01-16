@@ -1,5 +1,8 @@
 package com.peer.activity;
 
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -40,8 +43,7 @@ public class LoginActivity extends BasicActivity{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		init();	
-		
+		init();		
 	}	
 	private void init() {
 		// TODO Auto-generated method stub		
@@ -99,7 +101,7 @@ public class LoginActivity extends BasicActivity{
 				if(checkNetworkState()){
 					String email=email_login.getText().toString().trim();
 					String password=password_login.getText().toString().trim();
-					pd = ProgressDialog.show(LoginActivity.this,"", "正在登陆请稍候。。。");
+//					pd = ProgressDialog.show(LoginActivity.this,"", "正在登陆请稍候。。。");
 					LoginTask task=new LoginTask();
 					task.execute(email,password);
 				}else{
@@ -163,7 +165,7 @@ public class LoginActivity extends BasicActivity{
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
 			if(result.equals(Constant.CALLBACKSUCCESS)){
-				pd.dismiss();
+//				pd.dismiss();
 				Intent intent=new Intent(LoginActivity.this,MainActivity.class);
 				startActivity(intent);
 				finish();

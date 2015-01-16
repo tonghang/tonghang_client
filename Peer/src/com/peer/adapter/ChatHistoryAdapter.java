@@ -68,18 +68,11 @@ public class ChatHistoryAdapter extends BaseAdapter {
 				viewHolder.descripe=(TextView)convertView.findViewById(R.id.tv_topic);
 				viewHolder.time=(TextView)convertView.findViewById(R.id.tv_time);
 				
-				viewHolder.click=(LinearLayout)convertView.findViewById(R.id.ll_clike);
-//				viewHolder.click.setGravity(Gravity.CENTER_VERTICAL);
-//				LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-//						(int) mContext.getResources().getDimension(R.dimen.widgeheight_max));
-//				params.leftMargin=(int) mContext.getResources().getDimension(R.dimen.marginsize_around);
-//				params.rightMargin=(int) mContext.getResources().getDimension(R.dimen.marginsize_around);				
-				
+				viewHolder.click=(LinearLayout)convertView.findViewById(R.id.ll_clike);			
 				viewHolder.time.setText(topic.getCreate_time());
 				viewHolder.nikename.setText(topic.getLabel_name());
 				viewHolder.descripe.setText(topic.getSubject());
 				
-//				viewHolder.click.setLayoutParams(params);
 				viewHolder.click.setOnClickListener(new View.OnClickListener() {
 					
 					@Override
@@ -90,7 +83,8 @@ public class ChatHistoryAdapter extends BaseAdapter {
 						ChatRoomTypeUtil.getInstance().setTitle(topic.getLabel_name());
 						ChatRoomTypeUtil.getInstance().setTheme(topic.getSubject());
 						ChatRoomTypeUtil.getInstance().setTopicId(topic.getTopicid());
-						User user=(User) userlist.get(position).get(Constant.UNFRIENDSPAGE);
+						
+						User user=(User) userlist.get(position).get(Constant.USER);
 						ChatRoomTypeUtil.getInstance().setUser(user);
 						Intent intent=new Intent(mContext,ChatRoomActivity.class);
 						mContext.startActivity(intent);
@@ -108,10 +102,6 @@ public class ChatHistoryAdapter extends BaseAdapter {
 				viewHolder.descripe=(TextView)convertView.findViewById(R.id.tv_descripe);
 				viewHolder.click=(LinearLayout)convertView.findViewById(R.id.ll_clike);
 				viewHolder.click.setGravity(Gravity.CENTER_VERTICAL);
-//				LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,(int) mContext.getResources().getDimension(R.dimen.widgeheight_max));
-//				params.leftMargin=(int) mContext.getResources().getDimension(R.dimen.marginsize_around);
-//				params.rightMargin=(int) mContext.getResources().getDimension(R.dimen.marginsize_around);			
-//				viewHolder.click.setLayoutParams(params);
 				
 				LoadImageUtil.imageLoader.displayImage(user.getImage(), viewHolder.headpic, LoadImageUtil.options);
 				

@@ -43,20 +43,7 @@
             android:layout_alignBaseline="@+id/tv_skill"
             android:layout_alignBottom="@+id/tv_skill"
             android:layout_alignParentRight="true"
-            android:visibility="gone"
-            android:text="TextView" />
-
-        <TextView
-            android:id="@+id/tv_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/tv_skill"
-            android:layout_alignBottom="@+id/tv_skill"
-            android:layout_alignParentRight="true"
-            android:textSize="@dimen/textsize_smallmiddle"
-            android:layout_marginRight="8dp"
              />
-  
             </RelativeLayout>      
     </LinearLayout>
     <View 
