@@ -318,7 +318,7 @@ public class SessionManager extends ISessionManager.Stub {
 		try {
 			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/users.json?q="+label,List.class);
 			List<Map> list= result.getBody();
-			
+			List<User> friendslist=myFriends();
 			if(result.getStatusCode()==HttpStatus.OK){
 				for(Map m:list){
 					User user=new User();
@@ -328,7 +328,14 @@ public class SessionManager extends ISessionManager.Stub {
 					user.setUserid(String.valueOf(m.get("id")));
 					user.setBirthday((String)m.get("birth"));
 					user.setLabels((List)m.get("labels"));
-					user.setIs_friends(String.valueOf(m.get("is_friend")));
+					for(User u:friendslist){
+						if(u.getUserid().equals(String.valueOf(m.get("id")))){
+							user.setIs_friends("true");
+							break;
+						}else{
+							user.setIs_friends("false");
+						}						
+					}					
 					mlist.add(user);
 				}
 				code=0;
@@ -354,7 +361,7 @@ public class SessionManager extends ISessionManager.Stub {
 		try{
 			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/users.json?q="+username+"",List.class);
 			List<Map> list= result.getBody();			
-			
+			List<User> friendslist=myFriends();
 			if(result.getStatusCode()==HttpStatus.OK){
 				for(Map m:list){
 					User user=new User();
@@ -364,7 +371,14 @@ public class SessionManager extends ISessionManager.Stub {
 					user.setUserid(String.valueOf(m.get("id")));
 					user.setBirthday((String)m.get("birth"));
 					user.setLabels((List)m.get("labels"));
-					user.setIs_friends(String.valueOf(m.get("is_friend")));
+					for(User u:friendslist){
+						if(u.getUserid().equals(String.valueOf(m.get("id")))){
+							user.setIs_friends("true");
+							break;
+						}else{
+							user.setIs_friends("false");
+						}						
+					}	
 					mlist.add(user);
 				}
 				code=0;
