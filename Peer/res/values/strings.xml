@@ -43,6 +43,7 @@
     <string name="checkfriends">身份验证</string>
     <string name="chatmsg">聊天记录</string>
     <!-- 提示用语 -->
+    <string name="remind_login">用户名或密码错误</string>
     <string name="updatesuccess">更新成功</string>
     <string name="erroroldpsw">旧密码不正确</string>
     <string name="errorpswformat">密码格式不正确</string>

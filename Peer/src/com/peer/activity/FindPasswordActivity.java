@@ -73,15 +73,9 @@ public class FindPasswordActivity extends BasicActivity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				if(LocalStorage.getBoolean(FindPasswordActivity.this, "istestui")){
-					Intent intent=new Intent(FindPasswordActivity.this,FindPasswordResult.class);
-					startActivity(intent);
-					finish();					
-				}else{
-					PasswordTask task=new PasswordTask();
-					task.execute(email.getText().toString().trim());
-				}
-							
+				PasswordTask task=new PasswordTask();
+				task.execute(email.getText().toString().trim());		
+				
 			}
 		});
 	}

@@ -54,16 +54,12 @@ public class RegisterAcountActivity extends BasicActivity{
 		complete_registe=(Button)findViewById(R.id.bt_complete_registe);
 		complete_registe.setOnClickListener(this);		
 		back=(LinearLayout)findViewById(R.id.ll_back);
-		back.setOnClickListener(this);
-		if(LocalStorage.getBoolean(this, "istestui")){
-			complete_registe.setEnabled(true);
-		}else{			
-			email_registe.addTextChangedListener(textwatcher);
-			password_registe.addTextChangedListener(textwatcher);
-			repasword_registe.addTextChangedListener(textwatcher);
-			nike_registe.addTextChangedListener(textwatcher);
-			complete_registe.setEnabled(false);
-		}
+		back.setOnClickListener(this);				
+		email_registe.addTextChangedListener(textwatcher);
+		password_registe.addTextChangedListener(textwatcher);
+		repasword_registe.addTextChangedListener(textwatcher);
+		nike_registe.addTextChangedListener(textwatcher);
+		complete_registe.setEnabled(false);		
 	}
 	
 	@Override
@@ -72,24 +68,18 @@ public class RegisterAcountActivity extends BasicActivity{
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.bt_complete_registe:
-			if(LocalStorage.getBoolean(this, "istestui")){
-				Intent intent=new Intent(RegisterAcountActivity.this,RegisterTagActivity.class);
-				startActivity(intent);	
+			if(checkNetworkState()){
+				Register();					
 			}else{
-				if(checkNetworkState()){
-					Register();					
-				}else{
-					ShowMessage(getResources().getString(R.string.Broken_network_prompt));
-				}
-			}	
+				ShowMessage(getResources().getString(R.string.Broken_network_prompt));
+			}		
 			break;
 		default:
 			break;
 		}
 	}
 	private void Register() {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 		String format = "^\\s*\\w+(?:\\.{0,1}[\\w-]+)*@[a-zA-Z0-9]+(?:[-.][a-zA-Z0-9]+)*\\.[a-zA-Z]+\\s*$";
 		String email=email_registe.getText().toString().trim();
 		String password=password_registe.getText().toString().trim();

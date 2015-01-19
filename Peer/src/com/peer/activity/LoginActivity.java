@@ -1,8 +1,5 @@
 package com.peer.activity;
 
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -14,15 +11,10 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import com.peer.R;
 import com.peer.IMimplements.easemobchatImp;
-import com.peer.activitymain.HomePageActivity;
 import com.peer.activitymain.MainActivity;
 import com.peer.client.User;
 import com.peer.client.service.SessionListener;
@@ -36,7 +28,6 @@ public class LoginActivity extends BasicActivity{
 	private EditText email_login,password_login;
 	private Button login_login;
 	private TextView register_login,forget_login,login_remind;
-	private CheckBox testUI;
 	private ProgressDialog pd;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,38 +45,15 @@ public class LoginActivity extends BasicActivity{
 		password_login.addTextChangedListener(textwatcher);
 		
 		login_login=(Button)findViewById(R.id.bt_login_login);
-//		login_login.setEnabled(false);
+
 		register_login=(TextView)findViewById(R.id.tv_register_login);
 		forget_login=(TextView)findViewById(R.id.tv_forgetpasw_login);
-//		login_remind=(TextView)findViewById(R.id.tv_remind_login);
+		login_remind=(TextView)findViewById(R.id.tv_remind_login);
 		
 		register_login.setOnClickListener(this);
 		forget_login.setOnClickListener(this);
 		login_login.setOnClickListener(this);
 		
-		testUI=(CheckBox)findViewById(R.id.cb_testui);
-		if(LocalStorage.getBoolean(this, "istestui")){
-			testUI.setChecked(true);
-			login_login.setEnabled(true);
-		}else{
-			testUI.setChecked(false);
-			login_login.setEnabled(false);
-		}
-		
-		testUI.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
-			@Override
-			public void onCheckedChanged(CompoundButton arg0, boolean isChecked) {
-				// TODO Auto-generated method stub
-				if(isChecked){
-					LocalStorage.saveBoolean(LoginActivity.this, "istestui", true);
-					login_login.setEnabled(true);
-				}else{
-					LocalStorage.saveBoolean(LoginActivity.this, "istestui", false);
-					login_login.setEnabled(false);
-				}
-			}
-		});
 	}
 	
 	@Override
@@ -93,21 +61,15 @@ public class LoginActivity extends BasicActivity{
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.bt_login_login:
-			if(LocalStorage.getBoolean(this, "istestui")){
-				Intent home=new Intent(LoginActivity.this,HomePageActivity.class);
-				startActivity(home);
-				finish();
+			if(checkNetworkState()){
+				String email=email_login.getText().toString().trim();
+				String password=password_login.getText().toString().trim();
+				pd = ProgressDialog.show(LoginActivity.this,"", "正在登陆请稍候。。。");
+				LoginTask task=new LoginTask();
+				task.execute(email,password);
 			}else{
-				if(checkNetworkState()){
-					String email=email_login.getText().toString().trim();
-					String password=password_login.getText().toString().trim();
-//					pd = ProgressDialog.show(LoginActivity.this,"", "正在登陆请稍候。。。");
-					LoginTask task=new LoginTask();
-					task.execute(email,password);
-				}else{
-					ShowMessage(getResources().getString(R.string.Broken_network_prompt));
-				}			
-			}			
+				ShowMessage(getResources().getString(R.string.Broken_network_prompt));
+			}				
 			break;
 		case R.id.tv_register_login:
 			Intent regist=new Intent(LoginActivity.this,RegisterAcountActivity.class);
@@ -165,10 +127,13 @@ public class LoginActivity extends BasicActivity{
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
 			if(result.equals(Constant.CALLBACKSUCCESS)){
-//				pd.dismiss();
+				pd.dismiss();
 				Intent intent=new Intent(LoginActivity.this,MainActivity.class);
 				startActivity(intent);
 				finish();
+			}else{
+				pd.dismiss();
+				login_remind.setText(getResources().getString(R.string.remind_login));
 			}
 				
 		}

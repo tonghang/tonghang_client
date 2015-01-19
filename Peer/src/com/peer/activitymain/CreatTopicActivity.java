@@ -50,18 +50,13 @@ public class CreatTopicActivity extends BasicActivity {
 	}
 	private void getlables() {
 		// TODO Auto-generated method stub
-		if(LocalStorage.getBoolean(this, "istestui")){
-			list=new ArrayList<String>();
-			list.add("美食");
-			list.add("java");
-		}else{
-			try {
-				list=PeerUI.getInstance().getISessionManager().getLabels();
-			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		try {
+			list=PeerUI.getInstance().getISessionManager().getLabels();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		
 	}
 	private void init() {
 		// TODO Auto-generated method stub		
@@ -98,16 +93,10 @@ public class CreatTopicActivity extends BasicActivity {
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.bt_creattopic:
-			if(LocalStorage.getBoolean(this, "istestui")){
-				ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.MULTICHAT);	
-				Intent intent=new Intent(CreatTopicActivity.this,ChatRoomActivity.class);
-				startActivity(intent);
-			}else{
-				if(!TextUtils.isEmpty(topic.getText().toString().trim())&&isselect){
-					CreatTopicTask task=new CreatTopicTask();
-					task.execute(selectlabel,topic.getText().toString().trim());
-				}	
-			}
+			if(!TextUtils.isEmpty(topic.getText().toString().trim())&&isselect){
+				CreatTopicTask task=new CreatTopicTask();
+				task.execute(selectlabel,topic.getText().toString().trim());
+			}		
 			break;
 
 		default:

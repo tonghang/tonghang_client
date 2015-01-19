@@ -107,17 +107,10 @@ public class HomepageAdapter extends BaseAdapter {
 				ChatRoomTypeUtil.getInstance().setTheme(topic.getSubject());
 				ChatRoomTypeUtil.getInstance().setTopicId(topic.getTopicid());
 				
-				if(LocalStorage.getBoolean(mContext, "istestui")){
-					Intent intent=new Intent(mContext,ChatRoomActivity.class);
-					mContext.startActivity(intent);
-				}else{
-					User user=(User)mList.get(position).get(Constant.USER);
-					ChatRoomTypeUtil.getInstance().setUser(user);	
-					Intent intent=new Intent(mContext,ChatRoomActivity.class);
-					mContext.startActivity(intent);
-				}
-				
-				
+				User user=(User)mList.get(position).get(Constant.USER);
+				ChatRoomTypeUtil.getInstance().setUser(user);	
+				Intent intent=new Intent(mContext,ChatRoomActivity.class);
+				mContext.startActivity(intent);		
 			}
 		});		
 	}
@@ -144,19 +137,14 @@ public class HomepageAdapter extends BaseAdapter {
 				PersonpageUtil.getInstance().setPersonid(user.getUserid());
 				PersonpageUtil.getInstance().setHuanxinId(user.getHuangxin_username());
 				PersonpageUtil.getInstance().setPersonname(user.getUsername());
-				if(LocalStorage.getBoolean(mContext, "istestui")){
-					PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
-					Intent intent=new Intent(mContext,PersonalPageActivity.class);
-					mContext.startActivity(intent);
+			
+				if(Boolean.getBoolean(user.getIs_friends())){
+					PersonpageUtil.getInstance().setPersonpagetype(Constant.FRIENDSPAGE);
 				}else{
-					if(Boolean.getBoolean(user.getIs_friends())){
-						PersonpageUtil.getInstance().setPersonpagetype(Constant.FRIENDSPAGE);
-					}else{
-						PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
-					}						
-					Intent intent=new Intent(mContext,PersonalPageActivity.class);
-					mContext.startActivity(intent);
+					PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
 				}						
+				Intent intent=new Intent(mContext,PersonalPageActivity.class);
+				mContext.startActivity(intent);											
 			}
 		});
 	}

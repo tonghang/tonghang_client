@@ -1,15 +1,11 @@
 package com.peer.fragment;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.peer.R;
 import com.peer.activitymain.CreatTopicActivity;
-import com.peer.activitymain.HomePageActivity;
 import com.peer.activitymain.SearchActivity;
 import com.peer.adapter.HomepageAdapter;
 import com.peer.client.service.SessionListener;
@@ -34,8 +30,7 @@ public class HomeFragment extends BasicFragment{
 	private LinearLayout search;
 	private PullToRefreshListView mPullrefreshlistview;	
 	public RelativeLayout errorItem;
-	public TextView errorText;
-	
+	public TextView errorText;	
 	private List list;
 	HomepageAdapter adapter;
 	@Override

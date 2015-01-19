@@ -52,20 +52,12 @@ public class MySkillActivity extends BasicActivity {
 		creatTag=(LinearLayout)findViewById(R.id.ll_createTag_mytag);
 		creatTag.setOnClickListener(this);
 		mytaglistview=(ListView)findViewById(R.id.lv_myskill);
-		if(LocalStorage.getBoolean(this, "istestui")){
-			mlist=new ArrayList<String>();
-			mlist.add("美食");
-			mlist.add("java");
-		}else{
-		
-			try {
-				mlist=PeerUI.getInstance().getISessionManager().getLabels();
-			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
+		try {
+			mlist=PeerUI.getInstance().getISessionManager().getLabels();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 		adapter=new SkillAdapter(this,mlist);
 		mytaglistview.setAdapter(adapter);
 		

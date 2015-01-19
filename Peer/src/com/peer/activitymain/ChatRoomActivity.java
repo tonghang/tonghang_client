@@ -121,55 +121,42 @@ public class ChatRoomActivity extends BasicActivity {
 			rl_owner.setVisibility(View.VISIBLE);
 			tv_tagname.setText(ChatRoomTypeUtil.getInstance().getTitle());
 			User u=ChatRoomTypeUtil.getInstance().getUser();
-				
-			if(LocalStorage.getBoolean(this, "istestui")){
-				
-			}else{
-				nikename.setText(u.getUsername());
-				LoadImageUtil.imageLoader.displayImage(u.getImage(), ownerimg,LoadImageUtil.options);	
-				tv_theme.setText(ChatRoomTypeUtil.getInstance().getTheme());
-				topicId=ChatRoomTypeUtil.getInstance().getTopicId();
-				//加入公开群聊
-				easemobchatImp.getInstance().joingroup(toChatUsername);
-			}
-			
-			
+			nikename.setText(u.getUsername());
+			LoadImageUtil.imageLoader.displayImage(u.getImage(), ownerimg,LoadImageUtil.options);	
+			tv_theme.setText(ChatRoomTypeUtil.getInstance().getTheme());
+			topicId=ChatRoomTypeUtil.getInstance().getTopicId();
+			//加入公开群聊
+			easemobchatImp.getInstance().joingroup(toChatUsername);		
+		
 		}else if(ChatRoomTypeUtil.getInstance().getChatroomtype()==Constant.SINGLECHAT){
 			rl_owner.setVisibility(View.GONE);
 			tv_tagname.setText(ChatRoomTypeUtil.getInstance().getTitle());
 			titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.deletemes), R.color.white));
 		}
-		
-		if(LocalStorage.getBoolean(this, "istestui")){
-			
-		}else{
-			conversation = EMChatManager.getInstance().getConversation(ChatRoomTypeUtil.getInstance().getHuanxingId());
-			for(int i=0;i<conversation.getMsgCount();i++){
-				EMMessage message =conversation.getMessage(i);
-				TextMessageBody body=(TextMessageBody) message.getBody();
-				String content=body.getMessage();			
-				String   time =DateUtils.getTimestampString(new Date(message.getMsgTime())) ; 
-					
-				ChatMsgEntity entity=new ChatMsgEntity();
-				entity.setMessage(content);
-				entity.setDate(time);
+		conversation = EMChatManager.getInstance().getConversation(ChatRoomTypeUtil.getInstance().getHuanxingId());
+		for(int i=0;i<conversation.getMsgCount();i++){
+			EMMessage message =conversation.getMessage(i);
+			TextMessageBody body=(TextMessageBody) message.getBody();
+			String content=body.getMessage();			
+			String   time =DateUtils.getTimestampString(new Date(message.getMsgTime())) ; 
 				
-				if(message.direct==EMMessage.Direct.SEND){
-					entity.setMsgType(Constant.SELF);
-				}else{
-					entity.setMsgType(Constant.OTHER);
-				}			
-				msgList.add(entity);
-			}
+			ChatMsgEntity entity=new ChatMsgEntity();
+			entity.setMessage(content);
+			entity.setDate(time);
 			
-			adapter=new ChatMsgViewAdapter(this, msgList);
-			selflistview.setAdapter(adapter);
-			selflistview.setSelection(selflistview.getCount() - 1);	
-			// 把此会话的未读数置为0
-			conversation.resetUnreadMsgCount();
+			if(message.direct==EMMessage.Direct.SEND){
+				entity.setMsgType(Constant.SELF);
+			}else{
+				entity.setMsgType(Constant.OTHER);
+			}			
+			msgList.add(entity);
+		}	
+		adapter=new ChatMsgViewAdapter(this, msgList);
+		selflistview.setAdapter(adapter);
+		selflistview.setSelection(selflistview.getCount() - 1);	
+		// 把此会话的未读数置为0
+		conversation.resetUnreadMsgCount();		
 			
-		}
-		
 	}
 	private void initChatListener() {
 		// TODO Auto-generated method stub

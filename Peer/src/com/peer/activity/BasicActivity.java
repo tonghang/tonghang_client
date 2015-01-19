@@ -24,11 +24,7 @@ import com.easemob.chat.NotificationCompat;
 import com.easemob.util.EasyUtils;
 import com.peer.R;
 import com.peer.activitymain.ChatRoomActivity;
-import com.peer.activitymain.ComeMessageActivity;
-import com.peer.activitymain.FriendsActivity;
-import com.peer.activitymain.HomePageActivity;
 import com.peer.activitymain.MainActivity;
-import com.peer.activitymain.MyActivity;
 import com.peer.localDB.LocalStorage;
 import com.peer.util.ManagerActivity;
 /**
@@ -154,28 +150,6 @@ public class BasicActivity extends FragmentActivity implements OnClickListener{
 		switch (v.getId()) {
 		case R.id.ll_back:
 			finish();
-			break;
-		case R.id.ll_find:
-			Intent tofind=new Intent(this,HomePageActivity.class);
-			startActivity(tofind);
-			overridePendingTransition(R.anim.fade, R.anim.hold); 
-			break;
-		case R.id.ll_come:
-			Intent tocome=new Intent(this,ComeMessageActivity.class);
-			startActivity(tocome);
-			overridePendingTransition(R.anim.fade, R.anim.hold); 
-			break;
-		case R.id.ll_my:
-			Intent tosetting=new Intent(this,MyActivity.class);
-			startActivity(tosetting);
-			overridePendingTransition(R.anim.fade, R.anim.hold);
-			break;
-		case R.id.ll_friends:
-			Intent tofriends=new Intent(this,FriendsActivity.class);
-			startActivity(tofriends);
-			overridePendingTransition(R.anim.fade, R.anim.hold);
-			break;
-		default:
 			break;
 		}
 	}

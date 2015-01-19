@@ -4,14 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import com.peer.R;
-import com.peer.IMimplements.easemobchatImp;
 import com.peer.activity.BasicActivity;
-import com.peer.adapter.SkillAdapter;
 import com.peer.client.User;
 import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
-import com.peer.localDB.LocalStorage;
 import com.peer.titlepopwindow.ActionItem;
 import com.peer.titlepopwindow.TitlePopup;
 import com.peer.titlepopwindow.TitlePopup.OnItemOnClickListener;
@@ -20,7 +17,6 @@ import com.peer.util.ChatRoomTypeUtil;
 import com.peer.util.ManagerActivity;
 import com.peer.util.PersonpageUtil;
 import com.peer.widgetutil.LoadImageUtil;
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -31,7 +27,6 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -54,26 +49,8 @@ public class PersonalPageActivity extends BasicActivity {
 		setContentView(R.layout.activity_personalpage);
 		init();
 		LoadImageUtil.initImageLoader(this);
-		if(LocalStorage.getBoolean(this, "istestui")){
-			List lablelist=new ArrayList<String>();
-			lablelist.add("我最爱的美食是糖醋排骨");
-			lablelist.add("java是我擅长的编程语言");
-			for(int i=0;i<lablelist.size();i++){
-				String tag=(String) lablelist.get(i);					
-				skill=(TextView) getLayoutInflater().inflate(R.layout.skill, tagContainer, false);
-				skill.setHeight((int)getResources().getDimension(R.dimen.hight));
-				skill.setTextSize(18);
-				skill.setTextColor(getResources().getColor(R.color.white));
-				int pading=(int)getResources().getDimension(R.dimen.pading);
-				skill.setText(tag);
-				skill.setTag(""+i);
-				tagContainer.addView(skill);
-			}	
-		}else{
-			PersonalTask task=new PersonalTask();
-			task.execute(PersonpageUtil.getInstance().getPersonid());
-		}
-				
+		PersonalTask task=new PersonalTask();
+		task.execute(PersonpageUtil.getInstance().getPersonid());	
 	}
 	
 	private void init() {
@@ -99,9 +76,7 @@ public class PersonalPageActivity extends BasicActivity {
 		tagContainer = (AutoWrapLinearLayout) findViewById(R.id.tag_container);
 		send=(Button)findViewById(R.id.send);
 		addfriend=(Button)findViewById(R.id.addfriends);
-		ViewType();	
-		
-		
+		ViewType();			
 	}
 	
 	private void ViewType() {
@@ -113,8 +88,6 @@ public class PersonalPageActivity extends BasicActivity {
 		case Constant.UNFRIENDSPAGE:
 			topic_whose.setText(getResources().getString(R.string.topic_other));
 			title.setText(getResources().getString(R.string.personalpage_other));
-			
-
 			send.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
@@ -128,23 +101,17 @@ public class PersonalPageActivity extends BasicActivity {
 					ManagerActivity.getAppManager().finishActivity();
 				}
 			});
-
 			addfriend.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
 				public void onClick(View arg0) {
-					// TODO Auto-generated method stub	
-					if(LocalStorage.getBoolean(PersonalPageActivity.this, "istestui")){
-						Intent intent=new Intent(PersonalPageActivity.this,AddFriendsActivity.class);
-						startActivity(intent);
-					}else{
-						Intent intent=new Intent(PersonalPageActivity.this,AddFriendsActivity.class);
-						intent.putExtra("userId", userpage.getUserid());
-						intent.putExtra("image", userpage.getImage());
-						intent.putExtra("nike", userpage.getUsername());
-						intent.putExtra("email", userpage.getEmail());
-						startActivity(intent);
-					}	
+					// TODO Auto-generated method stub				
+					Intent intent=new Intent(PersonalPageActivity.this,AddFriendsActivity.class);
+					intent.putExtra("userId", userpage.getUserid());
+					intent.putExtra("image", userpage.getImage());
+					intent.putExtra("nike", userpage.getUsername());
+					intent.putExtra("email", userpage.getEmail());
+					startActivity(intent);								
 				}
 			});
 			break;
@@ -261,7 +228,6 @@ public class PersonalPageActivity extends BasicActivity {
 				nikename.setText(user.getUsername());
 				acount.setText(user.getEmail());
 				city.setText(user.getCity());
-//				birth.setText(user.getBirthday());
 				sex.setText(user.getSex());
 				for(int i=0;i<user.getLabels().size();i++){
 					String tag=user.getLabels().get(i);					

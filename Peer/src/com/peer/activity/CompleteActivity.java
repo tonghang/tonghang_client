@@ -4,10 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
-
 import com.peer.R;
 import com.peer.IMimplements.easemobchatImp;
-import com.peer.activitymain.HomePageActivity;
 import com.peer.activitymain.MainActivity;
 import com.peer.client.User;
 import com.peer.client.service.SessionListener;
@@ -34,13 +32,11 @@ import android.os.RemoteException;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class CompleteActivity extends BasicActivity{
 	private TextView birthday,cityselect,sex,remind,title;
@@ -136,22 +132,16 @@ public class CompleteActivity extends BasicActivity{
 		case R.id.ll_setsex:
 			SexSelect();
 			break;
-		case R.id.bt_login_complete:
-			if(LocalStorage.getBoolean(this, "istestui")){
-				Intent intent=new Intent(CompleteActivity.this,HomePageActivity.class);
-				startActivity(intent);
-				ManagerActivity.getAppManager().finishActivity(RegisterTagActivity.class);
-				ManagerActivity.getAppManager().finishActivity(CompleteActivity.class);
-			}else{				
-				uploadepic_complete.getDrawingCache();
-				photo=uploadepic_complete.getDrawingCache();
-				img=getBitmapByte(photo);
-				if(checkNetworkState()){
-					CommiteToServer();
-				}else{
-					ShowMessage(getResources().getString(R.string.Broken_network_prompt));
-				}
-			}				
+		case R.id.bt_login_complete:				
+			uploadepic_complete.getDrawingCache();
+			photo=uploadepic_complete.getDrawingCache();
+			img=getBitmapByte(photo);
+			if(checkNetworkState()){
+				CommiteToServer();
+			}else{
+				ShowMessage(getResources().getString(R.string.Broken_network_prompt));
+			}	
+							
 			break;
 		}
 	}
@@ -184,7 +174,6 @@ public class CompleteActivity extends BasicActivity{
 						UserDao userdao=new UserDao(CompleteActivity.this);
 						String password=userdao.getPassord(email);											
 						try {
-//							pd = ProgressDialog.show(CompleteActivity.this,"", getResources().getString(R.string.committing));
 							User u=PeerUI.getInstance().getISessionManager().login(email, password, callback2);
 							if(callback2.getMessage().equals(Constant.CALLBACKSUCCESS)){
 								String huanxinid=PeerUI.getInstance().getISessionManager().getHuanxingUser();
@@ -198,11 +187,11 @@ public class CompleteActivity extends BasicActivity{
 								 userbean.setNikename(u.getUsername());
 								 userbean.setImage(u.getImage());
 								 userbean.setSex(u.getSex());
-								 userdao.updateUser(userbean);
-//								 pd.dismiss();	
+								 userdao.updateUser(userbean);	
 								 Intent intent=new Intent(CompleteActivity.this,MainActivity.class);
 								 startActivity(intent);
-								 finish();
+								 ManagerActivity.getAppManager().finishActivity(RegisterTagActivity.class);
+								 ManagerActivity.getAppManager().finishActivity(CompleteActivity.class);
 							}
 							
 						} catch (RemoteException e) {

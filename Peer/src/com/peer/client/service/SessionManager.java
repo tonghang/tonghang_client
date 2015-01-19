@@ -5,11 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.http.protocol.HTTP;
-import org.codehaus.jackson.map.DeserializationConfig;
-import org.codehaus.jackson.map.DeserializationConfig.Feature;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -24,7 +19,6 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -604,7 +598,7 @@ public class SessionManager extends ISessionManager.Stub {
 			headers.add("x-token", token);			
 			
 			HttpEntity<MultiValueMap<String, Object>> requestEntity=
-					new HttpEntity<MultiValueMap<String,Object>>(parts,headers);			
+					new HttpEntity<MultiValueMap<String,Object>>(parts,headers);
 			RestTemplate restTemplate=new RestTemplate(true);	
 			
 			restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());

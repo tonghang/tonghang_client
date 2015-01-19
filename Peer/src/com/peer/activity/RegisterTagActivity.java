@@ -1,14 +1,9 @@
 package com.peer.activity;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import com.peer.R;
-import com.peer.localDB.LocalStorage;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -47,13 +42,10 @@ public class RegisterTagActivity extends BasicActivity {
 		back=(LinearLayout)findViewById(R.id.ll_back);
 		back.setOnClickListener(this);
 		
-		if(LocalStorage.getBoolean(this, "istestui")){
-			registe_tag.setEnabled(true);
-		}else{			
-			tagname1.addTextChangedListener(watcher);
-			tagname2.addTextChangedListener(watcher);
-			registe_tag.setEnabled(false);
-		}
+		tagname1.addTextChangedListener(watcher);
+		tagname2.addTextChangedListener(watcher);
+		registe_tag.setEnabled(false);		
+			
 	}
 	TextWatcher watcher=new TextWatcher() {
 		
@@ -94,12 +86,7 @@ public class RegisterTagActivity extends BasicActivity {
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.bt_registe_tag:
-			if(LocalStorage.getBoolean(this, "istestui")){
-				Intent intent=new Intent(RegisterTagActivity.this,CompleteActivity.class);
-				startActivity(intent);
-			}else{
-				RegisteTag();
-			}
+			RegisteTag();
 			break;
 		default:
 			break;

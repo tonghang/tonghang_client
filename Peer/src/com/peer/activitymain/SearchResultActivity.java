@@ -1,25 +1,20 @@
 package com.peer.activitymain;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.peer.R;
 import com.peer.activity.BasicActivity;
 import com.peer.adapter.SeachResultAdapter;
 import com.peer.adapter.SearchSkillAdapter;
-import com.peer.client.ISessionListener;
 import com.peer.client.User;
 import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
-import com.peer.localDB.LocalStorage;
 import com.peer.util.SearchUtil;
 
 public class SearchResultActivity extends BasicActivity {
@@ -37,50 +32,22 @@ public class SearchResultActivity extends BasicActivity {
 	}
 	private void init() {
 		// TODO Auto-generated method stub
-//		labellist=new ArrayList<String>();
 		String searchtarget=SearchUtil.getInstance().getSearchname();
 		title=(TextView)findViewById(R.id.tv_title);
 		title.setText(getResources().getString(R.string.searchresult));
 		back=(LinearLayout)findViewById(R.id.ll_back);
 		back.setOnClickListener(this);
 		mlistview=(ListView)findViewById(R.id.lv_searchresult);
-		if(LocalStorage.getBoolean(this, "istestui")){
-			if(SearchUtil.getInstance().getSearchtype()==Constant.SEARCHSKILL){	
-				labellist=new ArrayList<String>();
-				for(int i=0;i<20;i++){
-					labellist.add("美食做法");
-				}	
-				SearchSkillAdapter adapter=new SearchSkillAdapter(this,labellist);
-				mlistview.setAdapter(adapter);
-			}else if(SearchUtil.getInstance().getSearchtype()==Constant.SEARCHUSER){
-				userlist=new ArrayList<User>();
-				for(int i=0;i<10;i++){
-					User user=new User();
-					user.setUsername("离尘之影");
-					List<String> labels=new ArrayList<String>();
-					labels.add("美食");
-					labels.add("java");
-					user.setLabels(labels);		
-					userlist.add(user);
-				}			
-				SeachResultAdapter adapter=new SeachResultAdapter(this,userlist);
-				mlistview.setAdapter(adapter);
-			}	
-		}else{
-			if(SearchUtil.getInstance().getSearchtype()==Constant.SEARCHSKILL){				
-				SearchTask task=new SearchTask();
-				task.execute(searchtarget);
-				
-			}else if(SearchUtil.getInstance().getSearchtype()==Constant.SEARCHUSER){
-				SearchTask task=new SearchTask();
-				task.execute(searchtarget);
-			}else if(SearchUtil.getInstance().getSearchtype()==Constant.SEARCHUSERBYLABEL){
-				SearchTask task=new SearchTask();
-				task.execute(searchtarget);
-				
-			}
-		}
-			
+		if(SearchUtil.getInstance().getSearchtype()==Constant.SEARCHSKILL){				
+			SearchTask task=new SearchTask();
+			task.execute(searchtarget);			
+		}else if(SearchUtil.getInstance().getSearchtype()==Constant.SEARCHUSER){
+			SearchTask task=new SearchTask();
+			task.execute(searchtarget);
+		}else if(SearchUtil.getInstance().getSearchtype()==Constant.SEARCHUSERBYLABEL){
+			SearchTask task=new SearchTask();
+			task.execute(searchtarget);			
+		}				
 	}
 	private class SearchTask extends AsyncTask<String, String, String>{
 

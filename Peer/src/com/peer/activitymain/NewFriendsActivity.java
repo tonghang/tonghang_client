@@ -39,24 +39,9 @@ public class NewFriendsActivity extends BasicActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_newfriends);
 		init();		
-		registEventBus();
-		if(LocalStorage.getBoolean(this, "istestui")){
-			mlist=new ArrayList<User>();
-			User user=new User();
-			user.setUsername("离尘之影");
-			user.setReason("我是美食家");
-			
-			for(int i=0;i<5;i++){
-				mlist.add(user);
-			}
-			adapter=new NewfriendsAdapter(NewFriendsActivity.this,mlist);
-			mlistview.setAdapter(adapter);
-			
-		}else{
-			InvitationsTask task=new InvitationsTask();
-			task.execute();
-		}
-		
+		registEventBus();		
+		InvitationsTask task=new InvitationsTask();
+		task.execute();	
 	}	
 	
 	private void init() {

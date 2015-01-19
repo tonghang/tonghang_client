@@ -106,20 +106,14 @@ public class PersonalMessageActivity extends BasicActivity implements OnClickLis
 		
 		update=(Button)findViewById(R.id.bt_update);
 		update.setOnClickListener(this);
-		if(LocalStorage.getBoolean(this, "istestui")){
-			
-		}else{
-			String email=LocalStorage.getString(this,Constant.EMAIL);
-			UserDao userdao=new UserDao(this);
-			UserBean u=userdao.findOne(email);
-			sex.setText(u.getSex());
-			birthday.setText(u.getAge());
-			address.setText(u.getCity());
-			nikename.setText(u.getNikename());
-			LoadImageUtil.imageLoader.displayImage(u.getImage(), headpic_personMSG, LoadImageUtil.options);
-		}
-		
-				
+		String email=LocalStorage.getString(this,Constant.EMAIL);
+		UserDao userdao=new UserDao(this);
+		UserBean u=userdao.findOne(email);
+		sex.setText(u.getSex());
+		birthday.setText(u.getAge());
+		address.setText(u.getCity());
+		nikename.setText(u.getNikename());
+		LoadImageUtil.imageLoader.displayImage(u.getImage(), headpic_personMSG, LoadImageUtil.options);				
 	}
 
 	@Override

@@ -98,18 +98,12 @@ public class SearchActivity extends BasicActivity {
 			mLayoutClearSearchText.setVisibility(View.GONE);
 			break;
 		case R.id.tv_search_search:
-			if(LocalStorage.getBoolean(this, "istestui")){
-				 Intent intent=new Intent(SearchActivity.this, SearchResultActivity.class);
-				 startActivity(intent);
+			String searchtaget=contentsearch.getText().toString().trim();
+			if(TextUtils.isEmpty(searchtaget)){
+				ShowMessage("搜索框不能为空");
 			}else{
-				String searchtaget=contentsearch.getText().toString().trim();
-				if(TextUtils.isEmpty(searchtaget)){
-					ShowMessage("搜索框不能为空");
-				}else{
-					Search(searchtaget);
-				}	
-			}
-								
+				Search(searchtaget);
+			}										
 			break;
 		case R.id.ll_back:
 			imm.hideSoftInputFromWindow(contentsearch.getWindowToken(), 0);

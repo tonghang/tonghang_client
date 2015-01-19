@@ -83,18 +83,10 @@ public class SearchSkillAdapter extends BaseAdapter {
 				@Override
 				public void onClick(View arg0) {
 					// TODO Auto-generated method stub
-					if(LocalStorage.getBoolean(mContext, "istestui")){
-						SearchUtil.getInstance().setSearchtype(Constant.SEARCHUSER);
-						Intent intent=new Intent(mContext,SearchResultActivity.class);
-						mContext.startActivity(intent);						
-						((Activity) mContext).finish();
-					}else{
-						SearchUtil.getInstance().setSearchtype(Constant.SEARCHUSERBYLABEL);
-						Intent intent=new Intent(mContext,SearchResultActivity.class);
-						mContext.startActivity(intent);
-						((Activity) mContext).finish();
-					}
-					
+					SearchUtil.getInstance().setSearchtype(Constant.SEARCHUSERBYLABEL);
+					Intent intent=new Intent(mContext,SearchResultActivity.class);
+					mContext.startActivity(intent);
+					((Activity) mContext).finish();
 				}
 			});			
 			int r2=random.nextInt(255);
@@ -110,18 +102,11 @@ public class SearchSkillAdapter extends BaseAdapter {
 					@Override
 					public void onClick(View arg0) {
 						// TODO Auto-generated method stub
+						SearchUtil.getInstance().setSearchtype(Constant.SEARCHUSERBYLABEL);
+						Intent intent=new Intent(mContext,SearchResultActivity.class);
+						mContext.startActivity(intent);						
+						((Activity) mContext).finish();		
 						
-						if(LocalStorage.getBoolean(mContext, "istestui")){
-							SearchUtil.getInstance().setSearchtype(Constant.SEARCHUSER);
-							Intent intent=new Intent(mContext,SearchResultActivity.class);
-							mContext.startActivity(intent);						
-							((Activity) mContext).finish();
-						}else{
-							SearchUtil.getInstance().setSearchtype(Constant.SEARCHUSERBYLABEL);
-							Intent intent=new Intent(mContext,SearchResultActivity.class);
-							mContext.startActivity(intent);						
-							((Activity) mContext).finish();
-						}
 					}
 				});
 			}else{
