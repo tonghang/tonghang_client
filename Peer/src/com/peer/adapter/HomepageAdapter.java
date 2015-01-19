@@ -53,42 +53,32 @@ public class HomepageAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parentgroup) {
 		// TODO Auto-generated method stub
-		ViewHolder viewHolder=null;
-		ViewHolder viewHoldertopic=null;
-		String type=(String) mList.get(position).get("type");	
-//		if(convertView==null){			
-			if(type.equals(Constant.USER)){
-				viewHolder=new ViewHolder();
-				convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_home_listperson,null,false);				
-				viewHolder.headpic=(ImageView)convertView.findViewById(R.id.im_headpic);
-				viewHolder.nikename=(TextView)convertView.findViewById(R.id.tv_nikename);			
-				viewHolder.descripe=(TextView)convertView.findViewById(R.id.tv_descripe);
-				viewHolder.click=(LinearLayout)convertView.findViewById(R.id.ll_clike);
-				convertView.setTag(viewHolder);							
-			}else if(type.equals(Constant.TOPIC)){
-				viewHoldertopic=new ViewHolder();
-				convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_home_listtopic,null,false);
-				viewHoldertopic.time=(TextView)convertView.findViewById(R.id.tv_time);
-				viewHoldertopic.skillname=(TextView)convertView.findViewById(R.id.tv_skill);			
-				viewHoldertopic.topic=(TextView)convertView.findViewById(R.id.tv_topic);
-				viewHoldertopic.click=(LinearLayout)convertView.findViewById(R.id.ll_clike);
-				convertView.setTag(viewHoldertopic);
-			}
-//		}else{
-//			if(type.equals(Constant.USER)){
-//				viewHolder = (ViewHolder)convertView.getTag();
-//			}else if(type.equals(Constant.TOPIC)){
-//				viewHoldertopic=(ViewHolder)convertView.getTag();
-//			}			
-//		}
+		ViewHolder viewHolder=null;		
+		String type=(String) mList.get(position).get("type");			
 		if(type.equals(Constant.USER)){
+			viewHolder=new ViewHolder();
+			convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_home_listperson,null,false);				
+			viewHolder.headpic=(ImageView)convertView.findViewById(R.id.im_headpic);
+			viewHolder.nikename=(TextView)convertView.findViewById(R.id.tv_nikename);			
+			viewHolder.descripe=(TextView)convertView.findViewById(R.id.tv_descripe);
+			viewHolder.click=(LinearLayout)convertView.findViewById(R.id.ll_clike);
 			User user=(User) mList.get(position).get(Constant.USER);
-			setUserView(viewHolder,user);			
+			setUserView(viewHolder,user);
+			convertView.setTag(viewHolder);							
 		}else if(type.equals(Constant.TOPIC)){
+			viewHolder=new ViewHolder();
+			convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_home_listtopic,null,false);
+			viewHolder.time=(TextView)convertView.findViewById(R.id.tv_time);
+			viewHolder.skillname=(TextView)convertView.findViewById(R.id.tv_skill);			
+			viewHolder.topic=(TextView)convertView.findViewById(R.id.tv_topic);
+			viewHolder.click=(LinearLayout)convertView.findViewById(R.id.ll_clike);
 			Topic topic=(Topic)mList.get(position).get(Constant.TOPIC);
-			setTopicView(viewHoldertopic,topic,position);
-			
-		}	
+			setTopicView(viewHolder,topic,position);
+			convertView.setTag(viewHolder);
+		}
+		if(convertView!=null){
+			viewHolder = (ViewHolder)convertView.getTag();
+		}		
 		return convertView;
 	}
 	private void setTopicView(ViewHolder viewHolder, final Topic topic,final int position) {

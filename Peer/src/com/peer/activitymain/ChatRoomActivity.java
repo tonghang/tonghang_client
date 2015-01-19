@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +23,6 @@ import android.widget.ScrollView;
 import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
-
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMMessage;
@@ -36,10 +34,10 @@ import com.peer.IMimplements.easemobchatImp;
 import com.peer.activity.BasicActivity;
 import com.peer.adapter.ChatMsgViewAdapter;
 import com.peer.client.User;
+import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
 import com.peer.entity.ChatMsgEntity;
-import com.peer.localDB.LocalStorage;
 import com.peer.titlepopwindow.ActionItem;
 import com.peer.titlepopwindow.TitlePopup;
 import com.peer.titlepopwindow.TitlePopup.OnItemOnClickListener;
@@ -84,8 +82,7 @@ public class ChatRoomActivity extends BasicActivity {
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
+		}		
 		toChatUsername=ChatRoomTypeUtil.getInstance().getHuanxingId();
 		titlePopup = new TitlePopup(this, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);	
 		rl_owner=(RelativeLayout)findViewById(R.id.host_imfor);		
@@ -109,8 +106,6 @@ public class ChatRoomActivity extends BasicActivity {
 		back.setOnClickListener(this);
 
 		messagebody=(EditText)findViewById(R.id.et_sendmessage);
-
-//		manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		hideKeyboard();
 
 		sendmessage=(Button)findViewById(R.id.btn_send);
@@ -213,12 +208,53 @@ public class ChatRoomActivity extends BasicActivity {
 
 			break;
 		case R.id.btn_send:
-			sendMessage();
+			if(ChatRoomTypeUtil.getInstance().getChatroomtype()==Constant.MULTICHAT){
+				reply();
+			}else{
+				sendMessage();
+			}			
 			break;
 		default:
 			break;
 		}
 	}
+	private void reply() {
+		// TODO Auto-generated method stub
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				final String content=messagebody.getText().toString().trim();
+				
+				SessionListener callback=new SessionListener();
+				try {
+					PeerUI.getInstance().getISessionManager().replyTopic(ChatRoomTypeUtil.getInstance().getTopicId(), content, callback);
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
+					runOnUiThread(new Runnable() {
+						public void run() {
+							SimpleDateFormat   formatter   =   new   SimpleDateFormat   ("yyyy年MM月dd日   HH:mm:ss     ");     
+							 Date   curDate   =   new   Date(System.currentTimeMillis());//获取当前时间     
+							String   str   =   formatter.format(curDate);     
+							ChatMsgEntity entity=new ChatMsgEntity();
+							entity.setDate(str);
+							entity.setMessage(content);
+							entity.setMsgType(Constant.SELF);					
+							msgList.add(entity);
+							adapter.notifyDataSetChanged();
+							selflistview.setSelection(selflistview.getCount() - 1);		
+							messagebody.setText("");
+						}
+					});					
+				}				
+			}
+		}).start();		
+	}
+
 	private void sendMessage() {
 		// TODO Auto-generated method stub
 		if(EMChatManager.getInstance().isConnected()){

@@ -658,6 +658,7 @@ public class SessionManager extends ISessionManager.Stub {
 						topic.setHuangxin_group_id(String.valueOf(recomend.get(i).get("huanxin_group_id")));
 						topic.setBody((String)recomend.get(i).get("body"));
 						topic.setSubject((String)recomend.get(i).get("subject"));
+						topic.setTopicid(String.valueOf(recomend.get(i).get("id")));
 						map.put(Constant.TOPIC, topic);
 						mlist.add(map);
 					}
@@ -807,7 +808,6 @@ public class SessionManager extends ISessionManager.Stub {
 		}
 		callback.onCallBack(code, message);
 	}
-	//返回的json结构有问题
 	@Override
 	public List TopicReplies(String topicId, ISessionListener callback)
 			throws RemoteException {
@@ -816,15 +816,16 @@ public class SessionManager extends ISessionManager.Stub {
 		String message=null;
 		int code=1;	
 		Map map=null;
-		try{			
-			RestTemplate restTemplate=new RestTemplate(true);
-		
+		try{
+			HttpHeaders headers=new HttpHeaders();			
+			headers.add("x-token", token);	
+			RestTemplate restTemplate=new RestTemplate(true);		
 			restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());			
 			restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter());
 			restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
-
-			ResponseEntity<Map> result =restTemplate.getForEntity(Constant.WEB_SERVER_ADDRESS+"/topics/"+topicId+".json",  Map.class);
-			
+//			ResponseEntity<Map> result =restTemplate.exchange(Constant.WEB_SERVER_ADDRESS+"/topics/"+topicId+".json", HttpMethod.POST, 
+//					new HttpEntity(headers), Map.class);
+			ResponseEntity<Map> result=DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/topics/"+topicId+".json", Map.class);
 			if(result.getStatusCode()==HttpStatus.OK){
 				list=new ArrayList();
 				message=Constant.CALLBACKSUCCESS;
@@ -839,7 +840,7 @@ public class SessionManager extends ISessionManager.Stub {
 					user.setUsername((String)usermap.get("username"));
 					user.setImage(Constant.WEB_SERVER_ADDRESS+(String)usermap.get("image"));
 					replies.put(Constant.USER, user);
-					replies.put("replybody", mlist.get(i).get("body"));
+					replies.put("replybody", (String)mlist.get(i).get("body"));
 					list.add(replies);
 				}
 			}
@@ -906,6 +907,36 @@ public class SessionManager extends ISessionManager.Stub {
 			code=0;
 			
 		}catch(Exception e){
+			message=Constant.CALLBACKFAIL;
+			e.printStackTrace();
+		}
+		callback.onCallBack(code, message);
+	}
+	@Override
+	public void replyTopic(String topicId, String content,
+			ISessionListener callback) throws RemoteException {
+		// TODO Auto-generated method stub
+		Map<String, Object> parts=new HashMap<String, Object>();			
+		String message = null;
+		int code=1;
+		String id=null;
+		try {	
+			parts.put("body", content);
+			
+			HttpHeaders headers=new HttpHeaders();			
+			headers.add("x-token", token);								
+			RestTemplate restTemplate=new RestTemplate(true);				
+			restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+			restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter());
+			restTemplate.getMessageConverters().add(new StringHttpMessageConverter());					
+		
+			ResponseEntity<Map> response =restTemplate.postForEntity(Constant.WEB_SERVER_ADDRESS+"/topics/"+topicId+"/replies.json", 
+					new HttpEntity(headers), Map.class, parts);
+			if(response.getStatusCode()==HttpStatus.OK){
+				message=Constant.CALLBACKSUCCESS;
+				code=0;
+			}
+		}catch (Exception e){
 			message=Constant.CALLBACKFAIL;
 			e.printStackTrace();
 		}

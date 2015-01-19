@@ -62,7 +62,7 @@ public class HistoryMsgAdapter extends BaseAdapter {
 		LoadImageUtil.imageLoader.displayImage(user.getImage(), viewHolder.headpic,LoadImageUtil.options);
 		viewHolder.nikename.setText(user.getUsername());
 		
-		viewHolder.content.setText((String)mlist.get(position).get("replybody"));
+//		viewHolder.content.setText((String)mlist.get(position).get("replybody"));
 		return convertView;
 	}
 	private class ViewHolder{
