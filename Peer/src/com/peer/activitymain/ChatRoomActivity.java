@@ -73,8 +73,7 @@ public class ChatRoomActivity extends BasicActivity {
 		init();
 		initChatListener();
 		
-	}
-	
+	}	
 	private void init() {
 		// TODO Auto-generated method stub
 		try {

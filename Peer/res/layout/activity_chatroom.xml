@@ -51,20 +51,20 @@
         android:background="@color/chat_input_back" >
         <Button
             android:id="@+id/btn_send"
-            android:layout_width="50dp"
-            android:layout_height="32dp"
+            android:layout_width="64dp"
+            android:layout_height="40dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="8dp"
             android:background="@drawable/selector_back"
-            android:textSize="@dimen/textsize_small"
+            android:textSize="@dimen/textsize_smallmiddle"
             android:textColor="@color/white"
             android:text="发送" />
 
         <EditText
             android:id="@+id/et_sendmessage"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:layout_margin="8dp"
             android:layout_toLeftOf="@+id/btn_send"

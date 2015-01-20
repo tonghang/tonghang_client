@@ -33,6 +33,8 @@ public class ComeMsgFragment extends BasicFragment {
 	private ChatHistoryAdapter adapter;
 	private List<EMConversation> list;
 	private List<Map> easemobchatusers=new ArrayList<Map>();
+	
+	private String isnumber = "^\\d+$";//正则用来匹配纯数字
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -45,28 +47,16 @@ public class ComeMsgFragment extends BasicFragment {
 		super.onActivityCreated(savedInstanceState);
 		init();	
 	}
-	@Override
-	public void onPause() {
-		// TODO Auto-generated method stub
-		super.onPause();
-//		groups = EMGroupManager.getInstance().getAllGroups();
-	}	
 	private void init() {
 		// TODO Auto-generated method stub	
-		groups = EMGroupManager.getInstance().getAllGroups();
+//		groups = EMGroupManager.getInstance().getAllGroups();
 		list=loadConversationsWithRecentChat();		
 		ListView_come=(ListView)getView().findViewById(R.id.lv_come);	
 		for(EMConversation em:loadConversationsWithRecentChat()){
 			Map m=new HashMap<String, Object>();
 			m.put("username", em.getUserName());
-			boolean isgroup=false;
-			for (EMGroup group : groups) {
-				if (group.getGroupId().equals(em.getUserName())) {
-					isgroup=true;
-					break;
-				}
-			}
-			m.put("is_group", isgroup);			
+			/*环信的群组ID为纯数字，用正则匹配来判断是不是群组*/
+			m.put("is_group", em.getUserName().matches(isnumber));			
 			easemobchatusers.add(m);
 		}
 		easemobchatUser users=new easemobchatUser();
@@ -75,29 +65,22 @@ public class ComeMsgFragment extends BasicFragment {
 		task.execute(users);		
 	}
 	public void refresh() {
-		list.clear();		
+		if(list!=null){
+			list.clear();
+		}				
 		list.addAll(loadConversationsWithRecentChat());
 		easemobchatusers.clear();
 		for(EMConversation em:loadConversationsWithRecentChat()){
 			Map m=new HashMap<String, Object>();
 			m.put("username", em.getUserName());
-			boolean isgroup=false;
-			for (EMGroup group : groups) {
-				if (group.getGroupId().equals(em.getUserName())) {
-					isgroup=true;
-					break;
-				}
-			}
-			m.put("is_group", isgroup);
+			/*环信的群组ID为纯数字，用正则匹配来判断是不是群组*/
+			m.put("is_group", em.getUserName().matches(isnumber));
 			easemobchatusers.add(m);
 		}
 		easemobchatUser users=new easemobchatUser();
 		users.setEasemobchatusers(easemobchatusers);
 		comeMsgTask task=new comeMsgTask();
 		task.execute(users);		
-//		adapter=new ChatHistoryAdapter(getActivity(),1, list);
-//		ListView_come.setAdapter(adapter);
-//		adapter.notifyDataSetChanged();
 	}
 	
 	/**

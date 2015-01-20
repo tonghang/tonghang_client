@@ -73,6 +73,13 @@ public class ChatHistoryAdapter extends BaseAdapter {
 				viewHolder.nikename.setText(topic.getLabel_name());
 				viewHolder.descripe.setText(topic.getSubject());
 				
+				final BadgeView bd=new BadgeView(mContext, viewHolder.click);
+				if (conversation.getUnreadMsgCount() > 0) {				
+					bd.setText(String.valueOf(conversation.getUnreadMsgCount()));
+					bd.show();
+				}else{
+					bd.hide();
+				}		
 				viewHolder.click.setOnClickListener(new View.OnClickListener() {
 					
 					@Override

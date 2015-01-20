@@ -5,14 +5,19 @@
     android:orientation="vertical" >
     <LinearLayout 
         android:id="@+id/ll_clike"
-        android:layout_margin="8dp"
+        android:clickable="true"
+        android:background="@drawable/selector_presseffect" 
         android:layout_width="match_parent"
-        android:layout_height="@dimen/widgeheight_max"
+        android:layout_height="80dp"
         android:orientation="vertical"
         >
         <RelativeLayout 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             >
         <TextView 
             android:id="@+id/tv_skill"
@@ -21,7 +26,7 @@
             android:lines="1"
             android:ellipsize="end"
             android:textSize="@dimen/textsize_middle"
-            
+            android:text="标题"
             android:textColor="@color/black"
             />
 
@@ -32,9 +37,11 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:ellipsize="end"
-            
+            android:text="   内容内容内容内容内容内容内容内容内容内容内容内容内容内容内内容内容"
             android:textColor="@color/deepgray"
             android:textSize="@dimen/textsize_smallmiddle" />
+
+
 
         <TextView
             android:id="@+id/tv_time"
@@ -43,7 +50,10 @@
             android:layout_alignBaseline="@+id/tv_skill"
             android:layout_alignBottom="@+id/tv_skill"
             android:layout_alignParentRight="true"
-             />
+            android:textSize="@dimen/textsize_smallmiddle"
+            android:layout_marginRight="8dp"
+            android:text="2015-1-1" />
+  
             </RelativeLayout>      
     </LinearLayout>
     <View 

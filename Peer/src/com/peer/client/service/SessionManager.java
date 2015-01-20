@@ -638,8 +638,7 @@ public class SessionManager extends ISessionManager.Stub {
 						user.setIs_friends(String.valueOf(recomend.get(i).get("is_friend")));
 						map.put(Constant.USER, user);
 						mlist.add(map);
-					}else 
-						if(recomend.get(i).get("type").equals(Constant.TOPIC)){
+					}else if(recomend.get(i).get("type").equals(Constant.TOPIC)){
 						Map<String, Object> map=new HashMap<String, Object>();
 						map.put("type", Constant.TOPIC);
 						
@@ -756,6 +755,7 @@ public class SessionManager extends ISessionManager.Stub {
 						topic.setHuangxin_group_id(String.valueOf(recomend.get(i).get("huanxin_group_id")));
 						topic.setBody((String)recomend.get(i).get("body"));
 						topic.setSubject((String)recomend.get(i).get("subject"));
+						topic.setTopicid(String.valueOf(recomend.get(i).get("id")));
 						map.put(Constant.TOPIC, topic);
 						mlist.add(map);
 					}	

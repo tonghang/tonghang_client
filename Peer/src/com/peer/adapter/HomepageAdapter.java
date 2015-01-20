@@ -8,11 +8,9 @@ import com.peer.activitymain.PersonalPageActivity;
 import com.peer.client.Topic;
 import com.peer.client.User;
 import com.peer.constant.Constant;
-import com.peer.localDB.LocalStorage;
 import com.peer.util.ChatRoomTypeUtil;
 import com.peer.util.PersonpageUtil;
 import com.peer.widgetutil.LoadImageUtil;
-
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
