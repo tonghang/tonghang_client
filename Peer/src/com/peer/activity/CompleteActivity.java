@@ -140,8 +140,7 @@ public class CompleteActivity extends BasicActivity{
 				CommiteToServer();
 			}else{
 				ShowMessage(getResources().getString(R.string.Broken_network_prompt));
-			}	
-							
+			}								
 			break;
 		}
 	}
@@ -189,9 +188,7 @@ public class CompleteActivity extends BasicActivity{
 								 userbean.setSex(u.getSex());
 								 userdao.updateUser(userbean);	
 								 Intent intent=new Intent(CompleteActivity.this,MainActivity.class);
-								 startActivity(intent);
-								 ManagerActivity.getAppManager().finishActivity(RegisterTagActivity.class);
-								 ManagerActivity.getAppManager().finishActivity(CompleteActivity.class);
+								 startActivity(intent);																
 							}
 							
 						} catch (RemoteException e) {
