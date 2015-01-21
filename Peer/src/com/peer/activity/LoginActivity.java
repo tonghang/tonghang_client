@@ -64,7 +64,7 @@ public class LoginActivity extends BasicActivity{
 			if(checkNetworkState()){
 				String email=email_login.getText().toString().trim();
 				String password=password_login.getText().toString().trim();
-				pd = ProgressDialog.show(LoginActivity.this,"", "正在登陆请稍候。。。");
+//				pd = ProgressDialog.show(LoginActivity.this,"", "正在登陆请稍候。。。");
 				LoginTask task=new LoginTask();
 				task.execute(email,password);
 			}else{
@@ -127,7 +127,7 @@ public class LoginActivity extends BasicActivity{
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
 			if(result.equals(Constant.CALLBACKSUCCESS)){
-				pd.dismiss();
+//				pd.dismiss();
 				Intent intent=new Intent(LoginActivity.this,MainActivity.class);
 				startActivity(intent);
 				finish();

@@ -2,19 +2,15 @@ package com.peer.application;
 
 import java.util.Iterator;
 import java.util.List;
-
-import com.easemob.chat.EMChat;
-import com.easemob.chat.EMChatManager;
-import com.easemob.chat.EMChatOptions;
-import com.peer.client.ServiceAction;
-import com.peer.client.ui.PeerUI;
-import com.peer.util.HomeWatcher;
-import com.peer.util.OnHomePressedListener;
-
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import cn.jpush.android.api.JPushInterface;
+import com.easemob.chat.EMChat;
+import com.easemob.chat.EMChatManager;
+import com.peer.client.ServiceAction;
+import com.peer.client.ui.PeerUI;
 
 public class Peerapplication extends Application {
 	private static Peerapplication instance=null;
@@ -24,6 +20,8 @@ public class Peerapplication extends Application {
 		instance=this;	
 		initwebsevice();
 		initEMChat();
+		JPushInterface.setDebugMode(true);
+		JPushInterface.init(this);
 	}	
 	private void initwebsevice() {
 		// TODO Auto-generated method stub

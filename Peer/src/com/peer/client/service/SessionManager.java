@@ -106,13 +106,13 @@ public class SessionManager extends ISessionManager.Stub {
 			parts.put("password", password);
 			
 			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "/users.json"
-					, parts, Map.class);		
-					
+					, parts, Map.class);							
 			Map body = result.getBody();
 			if (result.getStatusCode() == HttpStatus.OK) {
 				code=0;	
 				String id=String.valueOf(body.get("id"));
-				userid=id;				
+				userid=id;
+				huanxin_user=(String) body.get("huanxin_username");
 				message = Constant.CALLBACKSUCCESS;
 			} else {
 				message = Constant.CALLBACKFAIL;
@@ -916,25 +916,30 @@ public class SessionManager extends ISessionManager.Stub {
 	public void replyTopic(String topicId, String content,
 			ISessionListener callback) throws RemoteException {
 		// TODO Auto-generated method stub
-		Map<String, Object> parts=new HashMap<String, Object>();			
+		MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();						
 		String message = null;
 		int code=1;
 		String id=null;
 		try {	
-			parts.put("body", content);
+			parts.add("body", content);
 			
 			HttpHeaders headers=new HttpHeaders();			
-			headers.add("x-token", token);								
-			RestTemplate restTemplate=new RestTemplate(true);				
+			headers.add("x-token", token);			
+			
+			HttpEntity<MultiValueMap<String, Object>> requestEntity=
+					new HttpEntity<MultiValueMap<String,Object>>(parts,headers);
+			RestTemplate restTemplate=new RestTemplate(true);	
+			
 			restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-			restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter());
-			restTemplate.getMessageConverters().add(new StringHttpMessageConverter());					
-		
+			restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
+			restTemplate.getMessageConverters().add(new StringHttpMessageConverter());			
+			
 			ResponseEntity<Map> response =restTemplate.postForEntity(Constant.WEB_SERVER_ADDRESS+"/topics/"+topicId+"/replies.json", 
-					new HttpEntity(headers), Map.class, parts);
+					requestEntity, Map.class, parts);
 			if(response.getStatusCode()==HttpStatus.OK){
 				message=Constant.CALLBACKSUCCESS;
 				code=0;
+				response.getBody();
 			}
 		}catch (Exception e){
 			message=Constant.CALLBACKFAIL;

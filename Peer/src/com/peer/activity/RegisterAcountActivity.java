@@ -1,5 +1,7 @@
 package com.peer.activity;
 
+import java.util.Set;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -8,11 +10,15 @@ import android.os.RemoteException;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
 
 import com.easemob.EMError;
 import com.easemob.chat.EMChatManager;
@@ -146,6 +152,18 @@ public class RegisterAcountActivity extends BasicActivity{
 				
 				PeerUI.getInstance().getISessionManager().register(paramer[0], paramer[1], paramer[2], callback);
 				if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
+					String huanxing_username=PeerUI.getInstance().getISessionManager().getHuanxingUser();
+					
+					JPushInterface.setAlias(getApplication(), huanxing_username, new TagAliasCallback() {
+						
+						@Override
+						public void gotResult(int code, String arg1, Set<String> arg2) {
+							// TODO Auto-generated method stub
+							System.out.println("code"+code);
+							Log.i("注册极光结果放回", String.valueOf(code));
+//							Toast.makeText(RegisterAcountActivity.this, code, 0).show();
+						}
+					});
 					
 					LocalStorage.saveString(RegisterAcountActivity.this, Constant.EMAIL, paramer[0]);
 					UserBean u=new UserBean();

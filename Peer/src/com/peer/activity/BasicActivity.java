@@ -122,9 +122,9 @@ public class BasicActivity extends FragmentActivity implements OnClickListener{
 	     if(LocalStorage.getBoolean(this, "vibrate")){
 	    	 notification.defaults = Notification.DEFAULT_VIBRATE;
 	     }
-	     if(LocalStorage.getBoolean(this, "sound")&&LocalStorage.getBoolean(this, "vibrate")){
-	    	 notification.defaults = Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND; 
-	     }		
+//	     if(LocalStorage.getBoolean(this, "sound")&&LocalStorage.getBoolean(this, "vibrate")){
+//	    	 notification.defaults = Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND; 
+//	     }		
 	}
 	/**
 	 *  Prompt information to user
