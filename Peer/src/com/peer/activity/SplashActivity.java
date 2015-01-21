@@ -1,6 +1,8 @@
 package com.peer.activity;
 
 
+import cn.jpush.android.api.JPushInterface;
+
 import com.peer.R;
 
 import android.content.Intent;
@@ -33,6 +35,12 @@ public class SplashActivity extends BasicActivity {
 		AlphaAnimation animation = new AlphaAnimation(0.3f, 1.0f);
 		animation.setDuration(2000);
 		rootLayout.startAnimation(animation);
+	}
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+//		JPushInterface.onResume();
 	}
 	@Override
 	protected void onStart() {

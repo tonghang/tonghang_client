@@ -132,7 +132,7 @@ public class LoginActivity extends BasicActivity{
 				startActivity(intent);
 				finish();
 			}else{
-				pd.dismiss();
+//				pd.dismiss();
 				login_remind.setText(getResources().getString(R.string.remind_login));
 			}
 				

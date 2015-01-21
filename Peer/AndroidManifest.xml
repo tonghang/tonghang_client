@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.peer"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="18" />
+    <!-- 极光推送 -->
+     <permission
+        android:name="com.peer.permission.JPUSH_MESSAGE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="com.peer.permission.JPUSH_MESSAGE" />
+    
+     <!-- Required  一些系统要求的权限，如访问网络等-->
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/> 
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <!-- Optional for location -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+
+     <permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />
+
+    <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />
+    
+    <application
+        android:name="com.peer.application.Peerapplication"
+        android:allowBackup="true"
+        android:icon="@drawable/logo"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme"
+        >
+        <activity
+            android:name="com.peer.activity.SplashActivity"
+            android:label="@string/app_name" 
+            android:theme="@style/horizontal_slide"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!-- 登陆注册activity -->
+        
+        <activity android:name="com.peer.activity.LoginActivity"></activity>
+        <activity android:name="com.peer.activity.GetAddressInfoActivity"></activity>
+        <activity android:name="com.peer.activity.RegisterAcountActivity"></activity>
+    	<activity android:name="com.peer.activity.RegisterTagActivity"></activity>
+    	<activity android:name="com.peer.activity.CompleteActivity"></activity>
+    	<activity android:name="com.peer.activity.FindPasswordActivity"></activity>
+    	<activity android:name="com.peer.activity.FindPasswordResult"></activity>
+    
+    	<activity android:name="com.peer.activity.UpdatePasswordActivity"></activity>
+    	<activity android:name="com.peer.activity.FeedBackActivity"></activity>
+    	<activity android:name="com.peer.activity.MessageNotifyActivity"></activity>
+    	<activity android:name="com.peer.activity.MySkillActivity"></activity>
+    	<activity android:name="com.peer.activity.MyAcountActivity"></activity>
+    	<activity android:name="com.peer.activity.NewFunctionActivity"></activity>
+    	<activity android:name="com.peer.activity.PersonalMessageActivity"></activity>
+    	<activity android:name="com.peer.activity.SettingActivity"></activity>
+   		<activity android:name="com.peer.activity.UpdateNikeActivity"></activity>
+    	<!-- 核心activity -->
+    	<activity
+    	    android:theme="@style/horizontal_slide"
+    	    android:launchMode="singleTask"
+    	     android:name="com.peer.activitymain.MainActivity"></activity>
+    	<activity 
+    	    android:launchMode="singleTask"
+    	    android:name="com.peer.activitymain.HomePageActivity"></activity>
+    	<activity 
+    	    android:launchMode="singleTask"
+    	    android:name="com.peer.activitymain.ComeMessageActivity"></activity>
+    	<activity 
+    	    android:launchMode="singleTask"
+    	    android:name="com.peer.activitymain.MyActivity"></activity>
+    	<activity 
+    	    android:launchMode="singleTask"
+    	    android:name="com.peer.activitymain.FriendsActivity"></activity>
+    	<activity 
+    	    android:launchMode="singleTask"
+    	    android:name="com.peer.activitymain.SearchActivity"></activity>
+    	<activity android:name="com.peer.activitymain.ChatRoomActivity"></activity>
+    	<activity android:name="com.peer.activitymain.ChatRoomListnikeActivity"></activity>
+    	<activity android:name="com.peer.activitymain.PersonalPageActivity"></activity>
+    	<activity android:name="com.peer.activitymain.NewFriendsActivity"></activity>
+    	<activity android:name="com.peer.activitymain.SearchResultActivity"></activity>
+    	<activity 
+    	    android:launchMode="singleTask"
+    	     android:configChanges="orientation|keyboardHidden" 
+    	    android:name="com.peer.activitymain.CreatTopicActivity"></activity>
+    	<activity android:name="com.peer.activitymain.TopicActivity"></activity>
+    	<activity android:name="com.peer.activitymain.AddFriendsActivity"></activity>
+    	<activity android:name="com.peer.activitymain.TopicHistoryActivity"></activity>
+    <!-- 自己的service -->
+    <service
+            android:name="com.peer.client.service.PeerClientService"
+            android:enabled="true"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="com.peer.client.service"/>
+                <action android:name="com.peer.client.service.ISessionManager" />
+                <action android:name="com.peer.client.service.IRemoteService"/>
+            </intent-filter>
+        </service> 
+        <receiver
+		    android:name="com.peer.client.service.BootReceiver"
+		    android:enabled="true" >
+		    <intent-filter>
+		        <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+		    </intent-filter>
+		</receiver>
+    
+        
+         <!-- 设置环信应用的appkey -->
+        <meta-data
+            android:name="EASEMOB_APPKEY"
+            android:value="tonghang#tonghang" />
+        <!-- 声明sdk所需的service -->
+        <service android:name="com.easemob.chat.EMChatService" />
+        
+        <!-- 友盟自动升级 -->
+         <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="5476bf42fd98c5bf59000ae5" >
+        </meta-data>
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="Umeng" >
+        </meta-data>
+
+        <service
+            android:name="com.umeng.update.net.DownloadingService"
+            android:process=":DownloadingService" >
+        </service>
+        <activity 
+	    android:name="com.umeng.update.UpdateDialogActivity"
+	    android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+		</activity>
+		
+        
+         <!--极光推送  Required SDK核心功能-->
+        <activity
+            android:name="cn.jpush.android.ui.PushActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:configChanges="orientation|keyboardHidden" >
+            <intent-filter>
+                <action android:name="cn.jpush.android.ui.PushActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="com.peer" />
+            </intent-filter>
+        </activity>
+        <!-- Required  SDK核心功能-->
+        <service
+            android:name="cn.jpush.android.service.DownloadService"
+            android:enabled="true"
+            android:exported="false" >
+        </service>
+    
+        
+        <!-- Required SDK 核心功能-->
+        <service
+            android:name="cn.jpush.android.service.PushService"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.REGISTER" />
+                <action android:name="cn.jpush.android.intent.REPORT" />
+                <action android:name="cn.jpush.android.intent.PushService" />
+                <action android:name="cn.jpush.android.intent.PUSH_TIME" />
+                
+            </intent-filter>
+        </service>
+        
+        <!-- Required SDK核心功能-->
+        <receiver
+            android:name="cn.jpush.android.service.PushReceiver"
+            android:enabled="true" >
+             <intent-filter android:priority="1000">
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />   <!--Required  显示通知栏 -->
+                <category android:name="com.peer" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+             <!-- Optional -->
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+                <data android:scheme="package" />
+            </intent-filter>
+   
+        </receiver>
+        
+        <!-- User defined.  For test only  用户自定义的广播接收器-->
+        <receiver
+            android:name="com.peer.Jpush.receiver.MyReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.REGISTRATION" /> <!--Required  用户注册SDK的intent-->
+                <action android:name="cn.jpush.android.intent.UNREGISTRATION" />  
+                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" /> <!--Required  用户接收SDK消息的intent-->
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" /> <!--Required  用户接收SDK通知栏信息的intent-->
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" /> <!--Required  用户打开自定义通知栏的intent-->
+                <action android:name="cn.jpush.android.intent.ACTION_RICHPUSH_CALLBACK" /> <!--Optional 用户接受Rich Push Javascript 回调函数的intent-->
+                <action android:name="cn.jpush.android.intent.CONNECTION" /><!-- 接收网络变化 连接/断开 since 1.6.3 -->
+                <category android:name="com.peer" />
+            </intent-filter>
+        </receiver>
+        
+        <!-- Required SDK核心功能-->
+        <receiver android:name="cn.jpush.android.service.AlarmReceiver" />
+        
+        <!-- Required  . Enable it you can get statistics data with channel -->
+        <meta-data android:name="JPUSH_CHANNEL" android:value="developer-default"/>
+        <meta-data android:name="JPUSH_APPKEY" android:value="eb4e79c4ab182d725ec2ff15"/> 
+        
+    </application>
+
+</manifest>

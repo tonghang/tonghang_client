@@ -40,6 +40,7 @@ public class SessionManager extends ISessionManager.Stub {
 	private String userid=null;
 	private String imageURL=null;
 	private String username=null;
+	private int page;
 	private List<String> labels=null;
 	/*web login 通过测试*/
 	@Override
@@ -87,8 +88,7 @@ public class SessionManager extends ISessionManager.Stub {
 			// TODO Auto-generated catch block
 			message = Constant.CALLBACKFAIL;
 			e.printStackTrace();
-		}
-		
+		}		
 		callback.onCallBack(code, message);
 		return user;
 	}
@@ -615,9 +615,10 @@ public class SessionManager extends ISessionManager.Stub {
 	}
 	/*用户首页推荐 通过测试*/
 	@Override
-	public List recommendByPage(int page, ISessionListener callback)
+	public List recommend(int page, ISessionListener callback)
 			throws RemoteException {
 		// TODO Auto-generated method stub
+		this.page=page;
 		List mlist=new ArrayList();
 		String message=null;
 		int code=1;
@@ -946,6 +947,13 @@ public class SessionManager extends ISessionManager.Stub {
 			e.printStackTrace();
 		}
 		callback.onCallBack(code, message);
+	}
+	@Override
+	public List recommendByPage( ISessionListener callback)
+			throws RemoteException {
+		// TODO Auto-generated method stub
+		this.page=page+1;
+		return recommend(page, callback);
 	}
 
 	

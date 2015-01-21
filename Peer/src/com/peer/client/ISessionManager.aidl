@@ -39,7 +39,9 @@ interface ISessionManager {
     
     List<com.peer.client.User> searchUsersByNickName(String username,ISessionListener callback);
  	
- 	List recommendByPage(int page, ISessionListener callback);
+ 	List recommendByPage(ISessionListener callback);
+ 	
+ 	List recommend(int page, ISessionListener callback);
  	
  	List convertToUser(in com.peer.client.easemobchatUser users, ISessionListener callback);
  

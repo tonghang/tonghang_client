@@ -119,7 +119,7 @@ public class HomeFragment extends BasicFragment{
 			SessionListener callback=new SessionListener();
 			if(arg0[0].equals("UpToRefresh")){				
             	try {
-				List uprefrsh=PeerUI.getInstance().getISessionManager().recommendByPage(2, callback);
+				List uprefrsh=PeerUI.getInstance().getISessionManager().recommendByPage(callback);
 				list.addAll(uprefrsh);
             	} catch (RemoteException e) {
 					// TODO Auto-generated catch block
@@ -127,7 +127,7 @@ public class HomeFragment extends BasicFragment{
 				}
 			}else{
 				try {
-					List downrefrsh=PeerUI.getInstance().getISessionManager().recommendByPage(1, callback);
+					List downrefrsh=PeerUI.getInstance().getISessionManager().recommend(1, callback);
 					list.clear();
 					list.addAll(downrefrsh);
 				} catch (RemoteException e) {
@@ -154,7 +154,7 @@ public class HomeFragment extends BasicFragment{
 			SessionListener callback=new SessionListener();
          
             try {
-            	list=PeerUI.getInstance().getISessionManager().recommendByPage(1, callback);
+            	list=PeerUI.getInstance().getISessionManager().recommend(1, callback);
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
