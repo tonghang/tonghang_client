@@ -60,7 +60,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
              android:lines="1"
-             android:hint="最多六个字"
+             android:hint="最多十二个字符"
             android:textSize="@dimen/textsize_middle"
             android:background="@color/white"/>
 
@@ -96,7 +96,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
              android:lines="1"
-            android:hint="最多六个字"
+            android:hint="最多十二个字符"
             android:textSize="@dimen/textsize_middle"
             android:background="@color/white"/>
 
@@ -133,7 +133,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
              android:lines="1"
-             android:hint="最多六个字"
+             android:hint="最多十二个字符"
             android:textSize="@dimen/textsize_middle"
             android:background="@color/white"/>
 
@@ -167,7 +167,7 @@
             android:layout_height="40dp"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"            
-             android:hint="最多六个字"
+             android:hint="最多十二个字符"
               android:lines="1"
             android:textSize="@dimen/textsize_middle"
             android:background="@color/white"/>
@@ -202,7 +202,7 @@
             android:layout_height="40dp"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-             android:hint="最多六个字"
+             android:hint="最多十二个字符"
               android:lines="1"
             android:textSize="@dimen/textsize_middle"
             android:background="@color/white"/>

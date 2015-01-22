@@ -10,6 +10,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -71,9 +74,10 @@ public class ChatRoomActivity extends BasicActivity {
 		setContentView(R.layout.activity_chatroom);
 		LoadImageUtil.initImageLoader(this);
 		init();
-		initChatListener();
-		
+		roomType();
+		initChatListener();		
 	}	
+	
 	private void init() {
 		// TODO Auto-generated method stub
 		try {
@@ -109,7 +113,50 @@ public class ChatRoomActivity extends BasicActivity {
 
 		sendmessage=(Button)findViewById(R.id.btn_send);
 		sendmessage.setOnClickListener(this);	
+		sendmessage.setEnabled(true);
+		messagebody.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+				// TODO Auto-generated method stub
+				if(TextUtils.isEmpty(messagebody.getText().toString().trim())){
+					sendmessage.setEnabled(false);
+				}else{
+					sendmessage.setEnabled(true);
+				}
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+					int arg3) {
+				// TODO Auto-generated method stub
 				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable arg0) {
+				// TODO Auto-generated method stub
+				if(TextUtils.isEmpty(messagebody.getText().toString().trim())){
+					sendmessage.setEnabled(false);
+				}else{
+					sendmessage.setEnabled(true);
+				}
+			}
+		});
+							
+	}
+	private void initChatListener() {
+		// TODO Auto-generated method stub
+		// 注册接收消息广播
+		receiver = new NewMessageBroadcastReceiver();
+		IntentFilter intentFilter = new IntentFilter(EMChatManager.getInstance().getNewMessageBroadcastAction());
+		// 设置广播的优先级别大于Mainacitivity,这样如果消息来的时候正好在chat页面，直接显示消息，而不是提示消息未读
+		intentFilter.setPriority(5);
+		registerReceiver(receiver, intentFilter);
+		
+	}
+	private void roomType() {
+		// TODO Auto-generated method stub
 		if(ChatRoomTypeUtil.getInstance().getChatroomtype()==Constant.MULTICHAT){
 			titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.exitroom), R.color.white));
 			rl_owner.setVisibility(View.VISIBLE);
@@ -149,18 +196,7 @@ public class ChatRoomActivity extends BasicActivity {
 		selflistview.setAdapter(adapter);
 		selflistview.setSelection(selflistview.getCount() - 1);	
 		// 把此会话的未读数置为0
-		conversation.resetUnreadMsgCount();		
-			
-	}
-	private void initChatListener() {
-		// TODO Auto-generated method stub
-		// 注册接收消息广播
-		receiver = new NewMessageBroadcastReceiver();
-		IntentFilter intentFilter = new IntentFilter(EMChatManager.getInstance().getNewMessageBroadcastAction());
-		// 设置广播的优先级别大于Mainacitivity,这样如果消息来的时候正好在chat页面，直接显示消息，而不是提示消息未读
-		intentFilter.setPriority(5);
-		registerReceiver(receiver, intentFilter);
-		
+		conversation.resetUnreadMsgCount();	
 	}
 	private void popupwindow() {
 		// TODO Auto-generated method stub		

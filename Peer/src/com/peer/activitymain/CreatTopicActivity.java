@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -59,9 +61,9 @@ public class CreatTopicActivity extends BasicActivity {
 		
 	}
 	private void init() {
-		// TODO Auto-generated method stub		
-		topic=(EditText)findViewById(R.id.et_topic);
+		// TODO Auto-generated method stub				
 		creattopic=(Button)findViewById(R.id.bt_creattopic);
+		creattopic.setEnabled(false);
 		creattopic.setOnClickListener(this);
 		title=(TextView)findViewById(R.id.tv_title);
 		title.setText(getResources().getString(R.string.createtopic));
@@ -86,6 +88,37 @@ public class CreatTopicActivity extends BasicActivity {
 				System.out.println("选中的标签是："+tempButton.getText().toString());
 			}
 		});
+		topic=(EditText)findViewById(R.id.et_topic);
+		topic.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+				// TODO Auto-generated method stub
+				if(isselect&&TextUtils.isEmpty(topic.getText().toString().trim())){
+					creattopic.setEnabled(false);
+				}else{
+					creattopic.setEnabled(true);
+				}
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+					int arg3) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable arg0) {
+				// TODO Auto-generated method stub
+				if(isselect&&TextUtils.isEmpty(topic.getText().toString().trim())){
+					creattopic.setEnabled(false);
+				}else{
+					creattopic.setEnabled(true);
+				}
+				
+			}
+		});
 	}
 	@Override
 	public void onClick(View v) {
@@ -93,10 +126,12 @@ public class CreatTopicActivity extends BasicActivity {
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.bt_creattopic:
-			if(!TextUtils.isEmpty(topic.getText().toString().trim())&&isselect){
+			if(checkNetworkState()){
 				CreatTopicTask task=new CreatTopicTask();
 				task.execute(selectlabel,topic.getText().toString().trim());
-			}		
+			}else{
+				ShowMessage(getResources().getString(R.string.Broken_network_prompt));
+			}
 			break;
 
 		default:

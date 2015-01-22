@@ -75,17 +75,30 @@ public class SearchResultActivity extends BasicActivity {
 			// TODO Auto-generated method stub
 			if(result.equals(Constant.CALLBACKSUCCESS)){
 				if(SearchUtil.getInstance().getSearchtype()==Constant.SEARCHSKILL){				
-					SearchSkillAdapter adapter=new SearchSkillAdapter(SearchResultActivity.this,labellist);
-					mlistview.setAdapter(adapter);
+					if(labellist.isEmpty()){
+						ShowMessage(getResources().getString(R.string.search_null));
+					}else{
+						SearchSkillAdapter adapter=new SearchSkillAdapter(SearchResultActivity.this,labellist);
+						mlistview.setAdapter(adapter);
+					}
+					
 				}else if(SearchUtil.getInstance().getSearchtype()==Constant.SEARCHUSER){
-					SeachResultAdapter adapter=new SeachResultAdapter(SearchResultActivity.this,userlist);
-					mlistview.setAdapter(adapter);
+					if(userlist.isEmpty()){
+						ShowMessage(getResources().getString(R.string.search_null));
+					}else{
+						SeachResultAdapter adapter=new SeachResultAdapter(SearchResultActivity.this,userlist);
+						mlistview.setAdapter(adapter);
+					}
 				}else if(SearchUtil.getInstance().getSearchtype()==Constant.SEARCHUSERBYLABEL){
-					SeachResultAdapter adapter=new SeachResultAdapter(SearchResultActivity.this,userlist);
-					mlistview.setAdapter(adapter);
+					if(userlist.isEmpty()){
+						ShowMessage(getResources().getString(R.string.search_null));
+					}else{
+						SeachResultAdapter adapter=new SeachResultAdapter(SearchResultActivity.this,userlist);
+						mlistview.setAdapter(adapter);
+					}					
 				}
 			}else{
-				ShowMessage("未搜索到您想查找的内容！");
+				ShowMessage("搜索失败");
 			}
 			
 		}

@@ -101,7 +101,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textSize="@dimen/textsize_large"
-            android:text="登陆"
+            android:text="登录"
             android:background="@drawable/selector_login"
             />
     </LinearLayout>

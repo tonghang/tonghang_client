@@ -112,7 +112,7 @@ public class RegisterTagActivity extends BasicActivity {
 		}
 		if(!t1.equals("")&&!t2.equals("")){
 			for(int j=0;j<list.size();j++){	
-				if(list.get(j).length()<7){
+				if(list.get(j).length()<13){
 					Tolong=false;
 				}else{
 					Tolong=true;

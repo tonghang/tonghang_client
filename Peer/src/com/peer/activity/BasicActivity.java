@@ -80,12 +80,12 @@ public class BasicActivity extends FragmentActivity implements OnClickListener{
 		int munite=c.get(Calendar.MINUTE);
         NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 	      //构建一个通知对象(需要传递的参数有三个,分别是图标,标题和 时间)
-	    Notification notification = new Notification(R.drawable.logo,"职客",System.currentTimeMillis());
+	    Notification notification = new Notification(R.drawable.logo,"同行",System.currentTimeMillis());
 	    Intent intent = new Intent(BasicActivity.this,MainActivity.class);
 	     
 	      
 	      PendingIntent pendingIntent = PendingIntent.getActivity(BasicActivity.this,0,intent,0);                                                                          notification.setLatestEventInfo(getApplicationContext(), "通知标题", "通知显示的内容", pendingIntent);
-	      notification.setLatestEventInfo(this, "职客",ticker, pendingIntent);	     
+	      notification.setLatestEventInfo(this, "同行",ticker, pendingIntent);	     
 	      notification.flags = Notification.FLAG_AUTO_CANCEL;//点击后自动消失	
 	      int starth=LocalStorage.getInt(BasicActivity.this, "starth", 22);
 	      int startm=LocalStorage.getInt(BasicActivity.this, "startm", 30);

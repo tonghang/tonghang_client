@@ -1,5 +1,7 @@
 package com.peer.activity;
 
+import java.util.List;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -64,9 +66,8 @@ public class LoginActivity extends BasicActivity{
 			if(checkNetworkState()){
 				String email=email_login.getText().toString().trim();
 				String password=password_login.getText().toString().trim();
-//				pd = ProgressDialog.show(LoginActivity.this,"", "正在登陆请稍候。。。");
-				LoginTask task=new LoginTask();
-				task.execute(email,password);
+				pd = ProgressDialog.show(LoginActivity.this,"", "正在登陆请稍候。。。");
+				Login(email,password);
 			}else{
 				ShowMessage(getResources().getString(R.string.Broken_network_prompt));
 			}				
@@ -83,63 +84,69 @@ public class LoginActivity extends BasicActivity{
 			break;
 		}
 	}
-	private class LoginTask extends AsyncTask<String, String, String>{		
-		@Override
-		protected String doInBackground(String... paramer) {
-			// TODO Auto-generated method stub						
-			SessionListener callback=new SessionListener();
-			try {
-				
-				User u=PeerUI.getInstance().getISessionManager().login(paramer[0], paramer[1], callback);
-				
-				if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
-					String huanxinid=PeerUI.getInstance().getISessionManager().getHuanxingUser();
-					easemobchatImp.getInstance().login(huanxinid, paramer[1]);
-					easemobchatImp.getInstance().loadConversationsandGroups();					
-//本地存储操作。。。			
-					 String userid=PeerUI.getInstance().getISessionManager().getUserId();
-					
-					 LocalStorage.saveString(LoginActivity.this, Constant.EMAIL, paramer[0]);
-					 UserDao userdao=new UserDao(LoginActivity.this);
-					 com.peer.localDBbean.UserBean userbean=new com.peer.localDBbean.UserBean();
-					 userbean.setEmail(paramer[0]);
-					 userbean.setPassword(paramer[1]);
-					 userbean.setAge(u.getBirthday());
-					 userbean.setCity(u.getCity());
-					 userbean.setNikename(u.getUsername());
-					 userbean.setImage(u.getImage());
-					 userbean.setSex(u.getSex());
-					 if(userdao.findOne(paramer[0])==null){						
-						 userdao.addUser(userbean);
-					 }else{
-						 userdao.updateUser(userbean);
-					 }
-					 
-				}
+	public void Login(final String username,final String password){
+		Thread t=new Thread(new Runnable() {
 			
-			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}			
-			return callback.getMessage();
-		}
-		@Override
-		protected void onPostExecute(String result) {
-			// TODO Auto-generated method stub
-			if(result.equals(Constant.CALLBACKSUCCESS)){
-//				pd.dismiss();
-				Intent intent=new Intent(LoginActivity.this,MainActivity.class);
-				startActivity(intent);
-				finish();
-			}else{
-//				pd.dismiss();
-				login_remind.setText(getResources().getString(R.string.remind_login));
-			}
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
 				
-		}
-		
+				SessionListener callback=new SessionListener();
+				try {
+					
+					User u=PeerUI.getInstance().getISessionManager().login(username, password, callback);
+					
+					if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){											
+	//本地存储操作。。。			
+						String userid=PeerUI.getInstance().getISessionManager().getUserId();
+						
+						 LocalStorage.saveString(LoginActivity.this, Constant.EMAIL, username);
+						 UserDao userdao=new UserDao(LoginActivity.this);
+						 com.peer.localDBbean.UserBean userbean=new com.peer.localDBbean.UserBean();
+						 userbean.setEmail(username);
+						 userbean.setPassword(password);
+						 userbean.setAge(u.getBirthday());
+						 userbean.setCity(u.getCity());
+						 userbean.setNikename(u.getUsername());
+						 userbean.setImage(u.getImage());
+						 userbean.setSex(u.getSex());
+						 if(userdao.findOne(username)==null){						
+							 userdao.addUser(userbean);
+						 }else{
+							 userdao.updateUser(userbean);
+						 }
+						 
+						 List<String> labels=PeerUI.getInstance().getISessionManager().getLabels();
+						 if(labels.isEmpty()){
+							 pd.dismiss();
+							 Intent intent=new Intent(LoginActivity.this,RegisterTagActivity.class);
+							 startActivity(intent);
+						 }else{
+							pd.dismiss();
+							String huanxinid=PeerUI.getInstance().getISessionManager().getHuanxingUser();
+							easemobchatImp.getInstance().login(huanxinid, password);
+							easemobchatImp.getInstance().loadConversationsandGroups();	
+							Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+							startActivity(intent);
+							finish();
+						 }
+					}else{						
+						runOnUiThread(new Runnable() {
+							public void run() {
+								pd.dismiss();
+								login_remind.setText(getResources().getString(R.string.remind_login));
+							}
+						});						
+					}
+				
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}	
+			}
+		});
+		t.start();
 	}
-
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// TODO Auto-generated method stub

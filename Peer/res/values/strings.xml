@@ -29,7 +29,7 @@
     <string name="updatepassword">修改密码</string>
     <string name="address">居住地址</string>
     <string name="updatenike">修改昵称</string>
-   
+   <string name="search_null">未搜索到您想搜索的内容</string>
     
     
     <string name="searchresult">搜索结果</string>
@@ -44,6 +44,7 @@
     <string name="chatmsg">聊天记录</string>
     <!-- 提示用语 -->
     <string name="remind_login">用户名或密码错误</string>
+     <string name="remind_forgetpass">您输入的邮箱不存在</string>
     <string name="updatesuccess">更新成功</string>
     <string name="erroroldpsw">旧密码不正确</string>
     <string name="errorpswformat">密码格式不正确</string>
@@ -61,8 +62,8 @@
     <string name="commit">提交成功</string>
     <string name="addfriendssuccess">发送成功</string>
     
-    <string name="skillname">秀场名不能超过六个中文</string>
-    <string name="repetskill">不能有重复技能</string>
+    <string name="skillname">技能名不能超过12个字符</string>
+    <string name="repetskill">技能名不可重复</string>
     <string name="skillnull">技能1和技能2不能为空</string>
     <string name="cleancash">缓存清理成功</string>
     <string name="exitlogin">退出登陆</string>

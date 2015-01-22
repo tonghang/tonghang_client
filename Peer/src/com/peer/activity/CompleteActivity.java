@@ -153,7 +153,7 @@ public class CompleteActivity extends BasicActivity{
 			remind.setText(getResources().getString(R.string.selectbirthday));
 			return;
 		}else{
-			pd = ProgressDialog.show(CompleteActivity.this,getResources().getString(R.string.committing), getResources().getString(R.string.committing));
+			pd = ProgressDialog.show(CompleteActivity.this,"", getResources().getString(R.string.committing));
 			Thread t=new Thread(){
 				@Override
 				public void run() {

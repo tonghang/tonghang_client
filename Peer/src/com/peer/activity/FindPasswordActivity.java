@@ -4,8 +4,6 @@ import com.peer.R;
 import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
-import com.peer.localDB.LocalStorage;
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -37,6 +35,7 @@ public class FindPasswordActivity extends BasicActivity {
 		remind=(TextView)findViewById(R.id.email_test);
 		email=(EditText)findViewById(R.id.et_email_find);
 		find=(Button)findViewById(R.id.bt_findpassword);
+		find.setEnabled(false);
 		email.addTextChangedListener(new TextWatcher() {
 			
 			@Override
@@ -73,9 +72,12 @@ public class FindPasswordActivity extends BasicActivity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				PasswordTask task=new PasswordTask();
-				task.execute(email.getText().toString().trim());		
-				
+				if(checkNetworkState()){
+					PasswordTask task=new PasswordTask();
+					task.execute(email.getText().toString().trim());
+				}else{
+					ShowMessage(getResources().getString(R.string.Broken_network_prompt));
+				}			
 			}
 		});
 	}
@@ -102,6 +104,8 @@ public class FindPasswordActivity extends BasicActivity {
 				Intent intent=new Intent(FindPasswordActivity.this,FindPasswordResult.class);
 				startActivity(intent);
 				finish();
+			}else{
+				remind.setText(getResources().getString(R.string.remind_forgetpass));
 			}
 		}
 	}

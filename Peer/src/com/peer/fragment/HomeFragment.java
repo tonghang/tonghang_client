@@ -20,6 +20,8 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -62,6 +64,7 @@ public class HomeFragment extends BasicFragment{
 		
 		
 		RefreshListner();
+		
 	}
 	@Override
 	public void onClick(View v) {

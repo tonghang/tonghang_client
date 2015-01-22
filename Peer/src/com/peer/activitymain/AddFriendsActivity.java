@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -51,13 +54,43 @@ public class AddFriendsActivity extends BasicActivity {
 		back.setOnClickListener(this);
 		send=(Button)findViewById(R.id.bt_send);
 		send.setOnClickListener(this);
-		reson=(EditText)findViewById(R.id.add_reson);
+		send.setEnabled(false);
 		headpic=(ImageView)findViewById(R.id.personhead);
 		LoadImageUtil.imageLoader.displayImage(image, headpic, LoadImageUtil.options);
 		tv_nike=(TextView)findViewById(R.id.personnike);
 		tv_nike.setText(nike);
 		tv_email=(TextView)findViewById(R.id.email);
-		tv_email.setText(email);		
+		tv_email.setText(email);
+		reson=(EditText)findViewById(R.id.add_reson);
+		reson.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+				// TODO Auto-generated method stub
+				if(TextUtils.isEmpty(reson.getText().toString().trim())){
+					send.setEnabled(false);
+				}else{
+					send.setEnabled(true);
+				}
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+					int arg3) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable arg0) {
+				// TODO Auto-generated method stub
+				if(TextUtils.isEmpty(reson.getText().toString().trim())){
+					send.setEnabled(false);
+				}else{
+					send.setEnabled(true);
+				}
+			}
+		});
 	}
 	@Override
 	public void onClick(View v) {
@@ -65,10 +98,12 @@ public class AddFriendsActivity extends BasicActivity {
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.bt_send:
-			reson.getText().toString().trim();
-			AddFriendsTask task=new AddFriendsTask();
-			task.execute(id,reson.getText().toString().trim());
-			
+			if(checkNetworkState()){
+				AddFriendsTask task=new AddFriendsTask();
+				task.execute(id,reson.getText().toString().trim());
+			}else{
+				ShowMessage(getResources().getString(R.string.Broken_network_prompt));
+			}		
 			break;
 
 		default:

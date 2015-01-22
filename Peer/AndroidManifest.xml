@@ -81,18 +81,6 @@
     	     android:name="com.peer.activitymain.MainActivity"></activity>
     	<activity 
     	    android:launchMode="singleTask"
-    	    android:name="com.peer.activitymain.HomePageActivity"></activity>
-    	<activity 
-    	    android:launchMode="singleTask"
-    	    android:name="com.peer.activitymain.ComeMessageActivity"></activity>
-    	<activity 
-    	    android:launchMode="singleTask"
-    	    android:name="com.peer.activitymain.MyActivity"></activity>
-    	<activity 
-    	    android:launchMode="singleTask"
-    	    android:name="com.peer.activitymain.FriendsActivity"></activity>
-    	<activity 
-    	    android:launchMode="singleTask"
     	    android:name="com.peer.activitymain.SearchActivity"></activity>
     	<activity android:name="com.peer.activitymain.ChatRoomActivity"></activity>
     	<activity android:name="com.peer.activitymain.ChatRoomListnikeActivity"></activity>
