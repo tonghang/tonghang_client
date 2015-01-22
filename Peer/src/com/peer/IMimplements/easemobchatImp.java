@@ -120,5 +120,15 @@ public class easemobchatImp implements IM{
 		// TODO Auto-generated method stub
 		EMChatManager.getInstance().logout();
 	}
+	@Override
+	public void exitgroup(String groupid) {
+		// TODO Auto-generated method stub
+		try {
+			EMGroupManager.getInstance().exitFromGroup(groupid);
+		} catch (EaseMobException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 }

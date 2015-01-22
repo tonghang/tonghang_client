@@ -567,16 +567,48 @@ public class SessionManager extends ISessionManager.Stub {
 	}
 	/*update password 通过测试*/
 	@Override
-	public void updatePassword(String newPassword)
+	public void updatePassword(String newPassword , ISessionListener callback)
 			throws RemoteException {
 		// TODO Auto-generated method stub
-		Map m=new HashMap<String, String>();
-		m.put("password", newPassword);
+		MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+		String message=null;
+		int code=1;
 		try{
-			DataUtil.putEntity(Constant.WEB_SERVER_ADDRESS + "/users/"+userid+".json", m);
+			parts.add("password", newPassword);
+			HttpHeaders headers=new HttpHeaders();
+			headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+			HttpEntity<MultiValueMap<String, Object>> requestEntity=
+					new HttpEntity<MultiValueMap<String,Object>>(parts,headers);			
+			RestTemplate restTemplate=new RestTemplate(true);			
+			List<HttpMessageConverter<?>> formPartConverters = new ArrayList<HttpMessageConverter<?>>();
+			formPartConverters.add(new ByteArrayHttpMessageConverter());
+			StringHttpMessageConverter formStringHttpMessageConverter = new StringHttpMessageConverter(Charset.forName("UTF-8"));
+			formStringHttpMessageConverter.setWriteAcceptCharset(false);
+			formPartConverters.add(formStringHttpMessageConverter);
+			formPartConverters.add(new ResourceHttpMessageConverter());
+			
+			List<HttpMessageConverter<?>> partConverters = new ArrayList<HttpMessageConverter<?>>();
+			partConverters.addAll(formPartConverters);
+			
+			FormHttpMessageConverter formConverter = new FormHttpMessageConverter();
+			formConverter.setCharset(Charset.forName("UTF-8"));
+		    formConverter.setPartConverters(formPartConverters);
+		    
+		    partConverters.add(formConverter);
+		    partConverters.add(new GsonHttpMessageConverter());
+		    
+		    restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+		    restTemplate.setMessageConverters(partConverters);
+						
+			ResponseEntity<Map> response=restTemplate.exchange(Constant.WEB_SERVER_ADDRESS + "/users/"+userid+".json", HttpMethod.PUT, requestEntity, Map.class);
+			message=Constant.CALLBACKSUCCESS;
+			code=0;
 		}catch(Exception e){
+			message=Constant.CALLBACKFAIL;
 			e.printStackTrace();
-		}		
+		}
+		callback.onCallBack(code, message);	
+				
 	}
 	
 	/*creat topic  测试通过*/

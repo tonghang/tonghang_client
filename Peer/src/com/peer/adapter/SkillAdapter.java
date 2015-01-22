@@ -20,6 +20,7 @@ import android.R.bool;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.net.ConnectivityManager;
 import android.os.RemoteException;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SkillAdapter extends BaseAdapter {
 	private Context mContext;
@@ -82,7 +84,12 @@ public class SkillAdapter extends BaseAdapter {
 					@Override
 					public void onClick(View arg0) {
 						// TODO Auto-generated method stub
-						deleteSkill(position);
+						if(checkNetworkState()){
+							deleteSkill(position);
+						}else{
+							Toast.makeText(mContext, mContext.getResources().getString(R.string.Broken_network_prompt), 0).show();
+						}
+						
 					}
 				});
 				viewHolder.update.setOnClickListener(new View.OnClickListener() {
@@ -90,7 +97,12 @@ public class SkillAdapter extends BaseAdapter {
 					@Override
 					public void onClick(View arg0) {
 						// TODO Auto-generated method stub
-						updateSkill(position);
+						if(checkNetworkState()){
+							updateSkill(position);
+						}else{
+							Toast.makeText(mContext, mContext.getResources().getString(R.string.Broken_network_prompt), 0).show();
+						}
+						
 					}
 				});
 			}
@@ -131,13 +143,20 @@ public class SkillAdapter extends BaseAdapter {
                     			  }                    		   
                     	   }
                     	   if(!issamelabel){
-                    		   EventBus.getDefault().post(new SkillEvent(position,inputName,false));
-                  		  
+                    		   EventBus.getDefault().post(new SkillEvent(position,inputName,false));                  		  
                     	   }                   	
                        }      
                     }
                 });
         builder.show();			
+	}
+	public boolean checkNetworkState() {
+		boolean flag = false;		
+		ConnectivityManager manager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);		
+		if (manager.getActiveNetworkInfo() != null) {
+			flag = manager.getActiveNetworkInfo().isAvailable();
+		}
+		return flag;
 	}
 	private class ViewHolder{
 		TextView skillname,delete,update;

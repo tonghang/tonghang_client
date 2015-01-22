@@ -17,6 +17,7 @@ import de.greenrobot.event.EventBus;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.RemoteException;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -105,8 +106,6 @@ public class NewfriendsAdapter extends BaseAdapter {
 						}
 					}
 				}).start();
-//				 EventBus.getDefault().post(new NewFriensEvent(position));
-//				 Toast.makeText(mContext, "拒绝添加为好友", 0).show();
 			}
 		});
 		viewHolder.access.setOnClickListener(new View.OnClickListener() {
@@ -147,12 +146,25 @@ public class NewfriendsAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
-				Intent intent=new Intent(mContext,PersonalPageActivity.class);
-				mContext.startActivity(intent);
+				if(checkNetworkState()){
+					PersonpageUtil.getInstance().setPersonid(mlist.get(position).getUserid());	
+					PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
+					Intent intent=new Intent(mContext,PersonalPageActivity.class);
+					mContext.startActivity(intent);
+				}else{
+					Toast.makeText(mContext, mContext.getResources().getString(R.string.Broken_network_prompt), 0).show();
+				}
 			}
 		});
 		return convertView;
+	}
+	public boolean checkNetworkState() {
+		boolean flag = false;		
+		ConnectivityManager manager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);		
+		if (manager.getActiveNetworkInfo() != null) {
+			flag = manager.getActiveNetworkInfo().isAvailable();
+		}
+		return flag;
 	}
 	private class ViewHolder{
 		LinearLayout click;

@@ -13,6 +13,7 @@ import com.peer.util.PersonpageUtil;
 import com.peer.widgetutil.LoadImageUtil;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class HomepageAdapter extends BaseAdapter {
 	
@@ -89,19 +91,23 @@ public class HomepageAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.MULTICHAT);	
-				ChatRoomTypeUtil.getInstance().setHuanxingId(topic.getHuangxin_group_id());
-				ChatRoomTypeUtil.getInstance().setTitle(topic.getLabel_name());
-				ChatRoomTypeUtil.getInstance().setTheme(topic.getSubject());
-				ChatRoomTypeUtil.getInstance().setTopicId(topic.getTopicid());
-				
-				User user=(User)mList.get(position).get(Constant.USER);
-				ChatRoomTypeUtil.getInstance().setUser(user);	
-				Intent intent=new Intent(mContext,ChatRoomActivity.class);
-				mContext.startActivity(intent);		
+				if(!checkNetworkState()){
+					Toast.makeText(mContext, mContext.getResources().getString(R.string.Broken_network_prompt), 0).show();
+				}else{
+					ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.MULTICHAT);	
+					ChatRoomTypeUtil.getInstance().setHuanxingId(topic.getHuangxin_group_id());
+					ChatRoomTypeUtil.getInstance().setTitle(topic.getLabel_name());
+					ChatRoomTypeUtil.getInstance().setTheme(topic.getSubject());
+					ChatRoomTypeUtil.getInstance().setTopicId(topic.getTopicid());
+					
+					User user=(User)mList.get(position).get(Constant.USER);
+					ChatRoomTypeUtil.getInstance().setUser(user);	
+					Intent intent=new Intent(mContext,ChatRoomActivity.class);
+					mContext.startActivity(intent);	
+				}					
 			}
 		});		
-	}
+	}	
 
 	private void setUserView(ViewHolder viewHolder, final User user) {
 		// TODO Auto-generated method stub
@@ -121,20 +127,32 @@ public class HomepageAdapter extends BaseAdapter {
 			
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub						
-				PersonpageUtil.getInstance().setPersonid(user.getUserid());
-				PersonpageUtil.getInstance().setHuanxinId(user.getHuangxin_username());
-				PersonpageUtil.getInstance().setPersonname(user.getUsername());
-			
-				if(Boolean.getBoolean(user.getIs_friends())){
-					PersonpageUtil.getInstance().setPersonpagetype(Constant.FRIENDSPAGE);
+				// TODO Auto-generated method stub	
+				if(!checkNetworkState()){
+					Toast.makeText(mContext, mContext.getResources().getString(R.string.Broken_network_prompt), 0).show();
 				}else{
-					PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
-				}						
-				Intent intent=new Intent(mContext,PersonalPageActivity.class);
-				mContext.startActivity(intent);											
+					PersonpageUtil.getInstance().setPersonid(user.getUserid());
+					PersonpageUtil.getInstance().setHuanxinId(user.getHuangxin_username());
+					PersonpageUtil.getInstance().setPersonname(user.getUsername());
+				
+					if(Boolean.getBoolean(user.getIs_friends())){
+						PersonpageUtil.getInstance().setPersonpagetype(Constant.FRIENDSPAGE);
+					}else{
+						PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
+					}						
+					Intent intent=new Intent(mContext,PersonalPageActivity.class);
+					mContext.startActivity(intent);	
+				}
 			}
 		});
+	}
+	public boolean checkNetworkState() {
+		boolean flag = false;		
+		ConnectivityManager manager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);		
+		if (manager.getActiveNetworkInfo() != null) {
+			flag = manager.getActiveNetworkInfo().isAvailable();
+		}
+		return flag;
 	}
 	private class ViewHolder{
 		LinearLayout click;

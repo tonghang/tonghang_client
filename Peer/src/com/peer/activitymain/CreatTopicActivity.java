@@ -18,19 +18,14 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
-
 import com.peer.R;
 import com.peer.activity.BasicActivity;
 import com.peer.client.User;
-import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
-import com.peer.localDB.LocalStorage;
-import com.peer.util.AutoWrapLinearLayout;
 import com.peer.util.AutoWrapRadioGroup;
 import com.peer.util.ChatRoomTypeUtil;
 import com.peer.util.ManagerActivity;
-
 
 public class CreatTopicActivity extends BasicActivity {
 	private TextView title;

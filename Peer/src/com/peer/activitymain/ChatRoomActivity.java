@@ -207,6 +207,7 @@ public class ChatRoomActivity extends BasicActivity {
 			public void onItemClick(ActionItem item, int position) {
 				// TODO Auto-generated method stub
 				if(item.mTitle.equals(getResources().getString(R.string.exitroom))){
+					easemobchatImp.getInstance().exitgroup(toChatUsername);
 					finish();
 				}else if(item.mTitle.equals(getResources().getString(R.string.deletemes))){
 					easemobchatImp.getInstance().clearConversation(toChatUsername);
@@ -230,9 +231,14 @@ public class ChatRoomActivity extends BasicActivity {
 			break;
 		
 		case R.id.tv_seemember:
-			Intent intent=new Intent(ChatRoomActivity.this,ChatRoomListnikeActivity.class);
-			intent.putExtra("topicId", topicId);			
-			startActivity(intent);
+			if(checkNetworkState()){
+				Intent intent=new Intent(ChatRoomActivity.this,ChatRoomListnikeActivity.class);
+				intent.putExtra("topicId", topicId);			
+				startActivity(intent);
+			}else{
+				ShowMessage(getResources().getString(R.string.Broken_network_prompt));
+			}
+			
 			break;
 
 		case R.id.im_downview:
@@ -372,8 +378,6 @@ public class ChatRoomActivity extends BasicActivity {
 			//获取到消息
 			TextMessageBody txtBody = (TextMessageBody)message.getBody();
 			String msg=txtBody.getMessage();
-			
-			
 			
 			SimpleDateFormat   formatter   =   new   SimpleDateFormat   ("yyyy年MM月dd日   HH:mm:ss     ");     
 			 Date   curDate   =   new   Date(System.currentTimeMillis());//获取当前时间     

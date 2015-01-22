@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.Calendar;
 
 import com.peer.R;
+import com.peer.activitymain.PersonalPageActivity;
 import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
@@ -40,6 +41,7 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class PersonalMessageActivity extends BasicActivity implements OnClickListener{
 	private TextView birthday,address,sex,nikename,title;
@@ -65,6 +67,9 @@ public class PersonalMessageActivity extends BasicActivity implements OnClickLis
 	private int mDay; 
 	private static final int SHOW_DATAPICK = 0; 
 	private static final int DATE_DIALOG_ID = 1;
+	
+	private String email;
+	private UserDao userdao;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -106,8 +111,8 @@ public class PersonalMessageActivity extends BasicActivity implements OnClickLis
 		
 		update=(Button)findViewById(R.id.bt_update);
 		update.setOnClickListener(this);
-		String email=LocalStorage.getString(this,Constant.EMAIL);
-		UserDao userdao=new UserDao(this);
+		email=LocalStorage.getString(this,Constant.EMAIL);
+		userdao=new UserDao(this);
 		UserBean u=userdao.findOne(email);
 		sex.setText(u.getSex());
 		birthday.setText(u.getAge());
@@ -161,14 +166,29 @@ public class PersonalMessageActivity extends BasicActivity implements OnClickLis
 					// TODO Auto-generated method stub
 					SessionListener callback=new SessionListener();
 					try {
-						PeerUI.getInstance().getISessionManager().profileUpdate("",birthday.getText().toString(), address.getText().toString(), sex.getText().toString(),IMAGE_FILE_NAME, img, callback);										
+						PeerUI.getInstance().getISessionManager().profileUpdate(nikename.getText().toString(),birthday.getText().toString(), address.getText().toString(), sex.getText().toString(),IMAGE_FILE_NAME, img, callback);										
+						if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
+							pd.dismiss();
+							UserBean userbean=new UserBean();
+							userbean.setNikename(nikename.getText().toString());
+							userbean.setEmail(email);
+							userbean.setAge(birthday.getText().toString());
+							userbean.setCity(address.getText().toString());
+							userbean.setSex(sex.getText().toString());
+							userdao.updateUser(userbean);	
+							runOnUiThread(new Runnable() {
+								public void run() {
+									ShowMessage(getResources().getString(R.string.updatemsgsuccess));
+								}
+							});
+						}else{
+							ShowMessage(getResources().getString(R.string.updatemsgfail));
+						}
+					
 					} catch (RemoteException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}								
-					if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
-						pd.dismiss();						
-					}
 				}
 			};
 			t.start();				

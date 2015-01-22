@@ -129,8 +129,7 @@ public class AddFriendsActivity extends BasicActivity {
 			// TODO Auto-generated method stub
 			if(result.equals(Constant.CALLBACKSUCCESS)){
 				ShowMessage(getResources().getString(R.string.addfriendssuccess));
-				ManagerActivity.getAppManager().finishActivity(PersonalPageActivity.class);
-				ManagerActivity.getAppManager().finishActivity(AddFriendsActivity.class);		
+				finish();
 			}			
 		}
 	}

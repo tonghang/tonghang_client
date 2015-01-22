@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import com.easemob.chat.EMChatManager;
@@ -72,29 +74,26 @@ public class ChatHistoryAdapter extends BaseAdapter {
 				viewHolder.time.setText(topic.getCreate_time());
 				viewHolder.nikename.setText(topic.getLabel_name());
 				viewHolder.descripe.setText(topic.getSubject());
-				
-				final BadgeView bd=new BadgeView(mContext, viewHolder.click);
-				if (conversation.getUnreadMsgCount() > 0) {				
-					bd.setText(String.valueOf(conversation.getUnreadMsgCount()));
-					bd.show();
-				}else{
-					bd.hide();
-				}		
+						
 				viewHolder.click.setOnClickListener(new View.OnClickListener() {
 					
 					@Override
 					public void onClick(View arg0) {
 						// TODO Auto-generated method stub
-						ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.MULTICHAT);	
-						ChatRoomTypeUtil.getInstance().setHuanxingId(topic.getHuangxin_group_id());
-						ChatRoomTypeUtil.getInstance().setTitle(topic.getLabel_name());
-						ChatRoomTypeUtil.getInstance().setTheme(topic.getSubject());
-						ChatRoomTypeUtil.getInstance().setTopicId(topic.getTopicid());
-						
-						User user=(User) userlist.get(position).get(Constant.USER);
-						ChatRoomTypeUtil.getInstance().setUser(user);
-						Intent intent=new Intent(mContext,ChatRoomActivity.class);
-						mContext.startActivity(intent);
+						if(!checkNetworkState()){
+							Toast.makeText(mContext, mContext.getResources().getString(R.string.Broken_network_prompt), 0).show();
+						}else{							
+							ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.MULTICHAT);	
+							ChatRoomTypeUtil.getInstance().setHuanxingId(topic.getHuangxin_group_id());
+							ChatRoomTypeUtil.getInstance().setTitle(topic.getLabel_name());
+							ChatRoomTypeUtil.getInstance().setTheme(topic.getSubject());
+							ChatRoomTypeUtil.getInstance().setTopicId(topic.getTopicid());
+							
+							User user=(User) userlist.get(position).get(Constant.USER);
+							ChatRoomTypeUtil.getInstance().setUser(user);
+							Intent intent=new Intent(mContext,ChatRoomActivity.class);
+							mContext.startActivity(intent);
+						}
 					}
 				});
 				
@@ -123,23 +122,21 @@ public class ChatHistoryAdapter extends BaseAdapter {
 				}else{
 					bd.hide();
 				}
-	//			if (conversation.getMsgCount() != 0) {
-	//				// 把最后一条消息的内容作为item的message内容
-	//				EMMessage lastMessage = conversation.getLastMessage();
-	//				TextMessageBody txtBody = (TextMessageBody) lastMessage.getBody();
-	//				viewHolder.descripe.setText(txtBody.getMessage());
-	//			}
 				viewHolder.click.setOnClickListener(new View.OnClickListener() {
 					
 					@Override
 					public void onClick(View arg0) {
 						// TODO Auto-generated method stub
-						bd.hide();
-						ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.SINGLECHAT);
-						ChatRoomTypeUtil.getInstance().setTitle(user.getUsername());
-						ChatRoomTypeUtil.getInstance().setHuanxingId(user.getHuangxin_username());
-						Intent intent=new Intent(mContext,ChatRoomActivity.class);
-						mContext.startActivity(intent);							
+						if(!checkNetworkState()){
+							Toast.makeText(mContext, mContext.getResources().getString(R.string.Broken_network_prompt), 0).show();
+						}else{	
+							bd.hide();
+							ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.SINGLECHAT);
+							ChatRoomTypeUtil.getInstance().setTitle(user.getUsername());
+							ChatRoomTypeUtil.getInstance().setHuanxingId(user.getHuangxin_username());
+							Intent intent=new Intent(mContext,ChatRoomActivity.class);
+							mContext.startActivity(intent);
+						}
 					}
 				});
 				
@@ -148,10 +145,16 @@ public class ChatHistoryAdapter extends BaseAdapter {
 		
 	}else {
 		viewHolder = (ViewHolder) convertView.getTag();
-	}
-	
-	
+	}	
 	return convertView;
+	}
+	public boolean checkNetworkState() {
+		boolean flag = false;		
+		ConnectivityManager manager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);		
+		if (manager.getActiveNetworkInfo() != null) {
+			flag = manager.getActiveNetworkInfo().isAvailable();
+		}
+		return flag;
 	}
 	private class ViewHolder{
 		LinearLayout click;

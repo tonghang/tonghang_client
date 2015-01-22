@@ -1,20 +1,17 @@
 package com.peer.activity;
 
-
-import java.util.ArrayList;
 import java.util.List;
 import com.peer.R;
 import com.peer.adapter.SkillAdapter;
 import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
-import com.peer.event.NewFriensEvent;
 import com.peer.event.SkillEvent;
-import com.peer.localDB.LocalStorage;
-
 import de.greenrobot.event.EventBus;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
@@ -39,7 +36,6 @@ public class MySkillActivity extends BasicActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_myskill);
-//		initdata();
 		init();	
 		registEventBus();
 	}
@@ -54,7 +50,7 @@ public class MySkillActivity extends BasicActivity {
 		mytaglistview=(ListView)findViewById(R.id.lv_myskill);
 		try {
 			mlist=PeerUI.getInstance().getISessionManager().getLabels();
-		} catch (RemoteException e) {
+		}catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
@@ -87,23 +83,26 @@ public class MySkillActivity extends BasicActivity {
 	private void CreateTagDialog() {
 		// TODO Auto-generated method stub
 		final EditText inputServer = new EditText(MySkillActivity.this);
-        inputServer.setFocusable(true);
         AlertDialog.Builder builder = new AlertDialog.Builder(MySkillActivity.this);
-        builder.setTitle(getResources().getString(R.string.register_tag)).setView(inputServer).setNegativeButton(
-        		getResources().getString(R.string.cancel), null);
+        builder.setTitle(getResources().getString(R.string.register_tag)).setView(inputServer).
+        setNegativeButton(getResources().getString(R.string.cancel), null);
         builder.setPositiveButton(getResources().getString(R.string.sure),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         String inputName = inputServer.getText().toString().trim();
                        if(!TextUtils.isEmpty(inputName)){
-                    	   if(inputName.length()<7){
+                    	   if(inputName.length()<13){
+                    		   boolean issame=false;
 	                      		 for(int i=0;i<mlist.size();i++){ 
 	                      			 if(mlist.get(i).equals(inputName)){
+	                      				issame=true;
 	                      				 ShowMessage(getResources().getString(R.string.repetskill));
-	                      			 }else{
-	                      				createLable(inputName);
-	                      			 } 
+	                      				 break;	                      				
+	                      			 }
 	                      		 }
+	                      		 if(!issame){
+	                      			createLable(inputName);
+	                      		 }	                      		
 	                      	}else{
 	                      		ShowMessage(getResources().getString(R.string.skillname));
 	                      	}                       
@@ -112,35 +111,14 @@ public class MySkillActivity extends BasicActivity {
                        }                       
                     }
                 });
-        builder.show();			
+        builder.show();	
+        		
 	}
-	public void createLable(final String label){
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				SessionListener callback=new SessionListener();
-				try {
-					mlist.add(label);
-					PeerUI.getInstance().getISessionManager().registerLabel(mlist,callback);					
-					adapter.notifyDataSetChanged();
-				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}).start();
-		
-		
+	public void createLable(String label){
+		mlist.add(label);
+		changLabelsTask task=new changLabelsTask();
+		task.execute();				
 	}	
-	private void initdata() {
-		// TODO Auto-generated method stub
-		mlist=new ArrayList<String>();
-		for(int i=0;i<5;i++){
-			mlist.add("friends");
-		}
-	}
 	private void registEventBus() {
 		// TODO Auto-generated method stub
 		 mBus=EventBus.getDefault();
@@ -153,66 +131,40 @@ public class MySkillActivity extends BasicActivity {
 		event.getPosition();
 		event.getLabel();
 		if(event.isIsdelete()){
-			new Thread(new Runnable() {			
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub					
-					SessionListener callback=new SessionListener(); 
-					mlist.remove(event.getPosition());
-	            	 try {
-						PeerUI.getInstance().getISessionManager().registerLabel(mlist,callback);
-						PeerUI.getInstance().getISessionManager().setLabels(mlist);
-	            	 } catch (RemoteException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-	            	 }  
-	            	 if (callback.getMessage().equals(Constant.CALLBACKSUCCESS)) {
-	            		 MySkillActivity.this.runOnUiThread(new Runnable() {
-								
-								@Override
-								public void run() {
-									// TODO Auto-generated method stub
-									 adapter.notifyDataSetChanged();
-								}
-							});
-	            	 }            		 
-				}
-			}).start(); 
+			mlist.remove(event.getPosition());
+			changLabelsTask task=new changLabelsTask();
+			task.execute();	
 		}else{
-			 new Thread(new Runnable() {
-					
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub	
-						 mlist.get(event.getPosition()).replace(mlist.get(event.getPosition()), event.getLabel());
-             		   SessionListener callback=new SessionListener();           	 
-                     	 try {
-         					PeerUI.getInstance().getISessionManager().registerLabel(mlist,callback);
-         					PeerUI.getInstance().getISessionManager().setLabels(mlist);
-                     	 } catch (RemoteException e) {
-         					// TODO Auto-generated catch block
-         					e.printStackTrace();
-                     	 }  
-                     	 if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
-                     		 MySkillActivity.this.runOnUiThread(new Runnable() {
-								
-								@Override
-								public void run() {
-									// TODO Auto-generated method stub
-									adapter.notifyDataSetChanged();
-								}
-							});
-                     	 }
-					}
-				}).start();
-		}
-		
-		
-		
-		
-		
-		
+			mlist.remove(event.getPosition());
+			mlist.add(event.getLabel());		
+			changLabelsTask task=new changLabelsTask();
+			task.execute();	
+		}		
 	}
+	public class changLabelsTask extends  AsyncTask<String, String, String>{
+
+		@Override
+		protected String doInBackground(String... arg0) {
+			// TODO Auto-generated method stub
+			 SessionListener callback=new SessionListener();           	 
+         	 try {
+					PeerUI.getInstance().getISessionManager().registerLabel(mlist,callback);
+					PeerUI.getInstance().getISessionManager().setLabels(mlist);
+         	 } catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+         	 } 
+			return callback.getMessage();
+		}
+		@Override
+		protected void onPostExecute(String result) {
+			// TODO Auto-generated method stub
+			if(result.equals(Constant.CALLBACKSUCCESS)){
+				adapter=new SkillAdapter(MySkillActivity.this,mlist);
+				mytaglistview.setAdapter(adapter);
+			}
+		}		
+	}	
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub

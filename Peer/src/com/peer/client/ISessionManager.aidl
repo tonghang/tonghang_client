@@ -57,7 +57,7 @@ interface ISessionManager {
  	
  	void forgetPassword(String tagetId,ISessionListener callback);
  	
- 	void updatePassword(String newPassword);
+ 	void updatePassword(String newPassword, ISessionListener callback);
  	
  	String creatTopic(String label,String topic);
  	

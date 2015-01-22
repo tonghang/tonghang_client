@@ -52,7 +52,6 @@ public class PersonalPageActivity extends BasicActivity {
 		PersonalTask task=new PersonalTask();
 		task.execute(PersonpageUtil.getInstance().getPersonid());	
 	}
-	
 	private void init() {
 		// TODO Auto-generated method stub	
 		topic_whose=(TextView)findViewById(R.id.tv_topic);
@@ -111,7 +110,8 @@ public class PersonalPageActivity extends BasicActivity {
 					intent.putExtra("image", userpage.getImage());
 					intent.putExtra("nike", userpage.getUsername());
 					intent.putExtra("email", userpage.getEmail());
-					startActivity(intent);								
+					startActivity(intent);
+					ManagerActivity.getAppManager().finishActivity();
 				}
 			});
 			break;

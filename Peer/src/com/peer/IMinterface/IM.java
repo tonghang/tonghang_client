@@ -17,4 +17,6 @@ public interface IM {
 	public int getUnreadMesTotal();
 	
 	public void joingroup(String groupid);
+	
+	public void exitgroup(String groupid);
 }

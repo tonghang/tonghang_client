@@ -5,6 +5,7 @@ import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.peer.R;
 import com.peer.activitymain.PersonalPageActivity;
@@ -72,13 +74,26 @@ public class FriendsAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				PersonpageUtil.getInstance().setPersonpagetype(Constant.FRIENDSPAGE);
-				PersonpageUtil.getInstance().setPersonid(personid);			
-				Intent intent=new Intent(mContext,PersonalPageActivity.class);
-				mContext.startActivity(intent);
+				if(checkNetworkState()){
+					PersonpageUtil.getInstance().setPersonpagetype(Constant.FRIENDSPAGE);
+					PersonpageUtil.getInstance().setPersonid(personid);			
+					Intent intent=new Intent(mContext,PersonalPageActivity.class);
+					mContext.startActivity(intent);
+				}else{
+					Toast.makeText(mContext, mContext.getResources().getString(R.string.Broken_network_prompt), 0).show();
+				}
+				
 			}
 		});
 		return convertView;
+	}
+	public boolean checkNetworkState() {
+		boolean flag = false;		
+		ConnectivityManager manager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);		
+		if (manager.getActiveNetworkInfo() != null) {
+			flag = manager.getActiveNetworkInfo().isAvailable();
+		}
+		return flag;
 	}
 	private class ViewHolder{
 		LinearLayout click;

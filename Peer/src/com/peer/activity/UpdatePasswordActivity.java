@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.peer.R;
+import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
 import com.peer.localDB.LocalStorage;
@@ -58,7 +59,12 @@ public class UpdatePasswordActivity extends BasicActivity {
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.bt_changesubmite:
-			UpdatePassword();			
+			if(checkNetworkState()){
+				UpdatePassword();	
+			}else{
+				ShowMessage(getResources().getString(R.string.Broken_network_prompt));
+			}
+					
 			break;
 
 		default:
@@ -88,19 +94,22 @@ public class UpdatePasswordActivity extends BasicActivity {
 				@Override
 				public void run() {
 					// TODO Auto-generated method stub
+					SessionListener callback=new SessionListener();
 					try {
-						PeerUI.getInstance().getISessionManager().updatePassword(newpasws);
-						ShowMessage("密码更新成功");
+						PeerUI.getInstance().getISessionManager().updatePassword(newpasws,callback);						
 					} catch (RemoteException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-						ShowMessage("密码更新失败");
+					}
+					if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
+						ShowMessage(getResources().getString(R.string.updatemsgsuccess));
+					}else{
+						ShowMessage(getResources().getString(R.string.updatemsgfail));
 					}
 				}
 			}).start();
 		}
-	}
-	
+	}	
 	private void CreateTextwatcher() {
 		// TODO Auto-generated method stub
 		textwatcher=new TextWatcher() {

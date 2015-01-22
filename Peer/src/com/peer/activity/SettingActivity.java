@@ -71,7 +71,12 @@ public class SettingActivity extends BasicActivity{
 			startActivity(feedback);
 			break;
 		case R.id.ll_newversion_set:
-			UmengUpdateAgent.forceUpdate(SettingActivity.this);
+			if(checkNetworkState()){
+				UmengUpdateAgent.forceUpdate(SettingActivity.this);
+			}else{
+				ShowMessage(getResources().getString(R.string.Broken_network_prompt));
+			}
+			
 			break;
 		case R.id.ll_clearcash_set:
 			deleteFilesByDirectory(getCacheDir());

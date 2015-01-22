@@ -15,11 +15,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.net.ConnectivityManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SearchSkillAdapter extends BaseAdapter {
 	private Context mContext;
@@ -83,30 +85,34 @@ public class SearchSkillAdapter extends BaseAdapter {
 				@Override
 				public void onClick(View arg0) {
 					// TODO Auto-generated method stub
-					SearchUtil.getInstance().setSearchtype(Constant.SEARCHUSERBYLABEL);
-					Intent intent=new Intent(mContext,SearchResultActivity.class);
-					mContext.startActivity(intent);
-					((Activity) mContext).finish();
+					if(checkNetworkState()){
+						SearchUtil.getInstance().setSearchtype(Constant.SEARCHUSERBYLABEL);
+						Intent intent=new Intent(mContext,SearchResultActivity.class);
+						mContext.startActivity(intent);
+						((Activity) mContext).finish();
+					}else{
+						Toast.makeText(mContext, mContext.getResources().getString(R.string.Broken_network_prompt), 0).show();
+					}
+				
 				}
 			});			
-			int r2=random.nextInt(255);
-			int g2=random.nextInt(255);
-			int b2=random.nextInt(255);
 			if(weizhi+1<mlist.size()){
 				viewHolder.view2.setText(mlist.get(weizhi+1));		
 				viewHolder.view2.setBackgroundResource(R.drawable.searchskillborder);	
-				GradientDrawable myGrad2 = (GradientDrawable)viewHolder.view2.getBackground();
 				myGrad.setColor(mContext.getResources().getColor(R.color.testcolor));
 				viewHolder.view2.setOnClickListener(new View.OnClickListener() {
 					
 					@Override
 					public void onClick(View arg0) {
 						// TODO Auto-generated method stub
-						SearchUtil.getInstance().setSearchtype(Constant.SEARCHUSERBYLABEL);
-						Intent intent=new Intent(mContext,SearchResultActivity.class);
-						mContext.startActivity(intent);						
-						((Activity) mContext).finish();		
-						
+						if(checkNetworkState()){
+							SearchUtil.getInstance().setSearchtype(Constant.SEARCHUSERBYLABEL);
+							Intent intent=new Intent(mContext,SearchResultActivity.class);
+							mContext.startActivity(intent);						
+							((Activity) mContext).finish();		
+						}else{
+							Toast.makeText(mContext, mContext.getResources().getString(R.string.Broken_network_prompt), 0).show();
+						}
 					}
 				});
 			}else{
@@ -120,6 +126,14 @@ public class SearchSkillAdapter extends BaseAdapter {
 		
 		return convertView;
 		
+	}
+	public boolean checkNetworkState() {
+		boolean flag = false;		
+		ConnectivityManager manager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);		
+		if (manager.getActiveNetworkInfo() != null) {
+			flag = manager.getActiveNetworkInfo().isAvailable();
+		}
+		return flag;
 	}
 	private class ViewHolder{
 		TextView view1,view2;

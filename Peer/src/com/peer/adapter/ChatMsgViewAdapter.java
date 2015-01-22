@@ -80,6 +80,7 @@ public class ChatMsgViewAdapter extends BaseAdapter {
 		
 				viewHolder.tvContent = (TextView) convertView
 						.findViewById(R.id.tv_chatcontent);
+				viewHolder.tvContent.setTextColor(context.getResources().getColor(R.color.white));
 				viewHolder.heapic=(ImageView)convertView.findViewById(R.id.iv_ownerhead);
 				viewHolder.isComMsg = isComMsg;
 				convertView.setTag(viewHolder);
