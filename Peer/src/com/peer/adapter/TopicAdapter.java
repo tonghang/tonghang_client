@@ -5,6 +5,7 @@ import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.peer.R;
 import com.peer.activitymain.TopicHistoryActivity;
@@ -69,13 +71,26 @@ public class TopicAdapter extends BaseAdapter {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 //				ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.MULTICHAT);
-				Intent intent=new Intent(mContext,TopicHistoryActivity.class);
-				intent.putExtra("topicid",String.valueOf(topic.getTopicid()));
-				mContext.startActivity(intent);
+				if(checkNetworkState()){
+					Intent intent=new Intent(mContext,TopicHistoryActivity.class);
+					intent.putExtra("topicid",String.valueOf(topic.getTopicid()));
+					mContext.startActivity(intent);
+				}else{
+					Toast.makeText(mContext, mContext.getResources().getString(R.string.Broken_network_prompt), 0).show();
+				}
+				
 			}
 		});
 		
 		return convertView;
+	}
+	public boolean checkNetworkState() {
+		boolean flag = false;		
+		ConnectivityManager manager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);		
+		if (manager.getActiveNetworkInfo() != null) {
+			flag = manager.getActiveNetworkInfo().isAvailable();
+		}
+		return flag;
 	}
 	private class ViewHolder{
 		LinearLayout click;

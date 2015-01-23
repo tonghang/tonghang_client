@@ -1,27 +1,13 @@
 package com.peer.adapter;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import com.easemob.chat.core.c;
 import com.peer.R;
-import com.peer.activity.MySkillActivity;
-import com.peer.activity.SettingActivity;
-import com.peer.client.service.SessionListener;
-import com.peer.client.ui.PeerUI;
-import com.peer.constant.Constant;
-import com.peer.event.NewFriensEvent;
 import com.peer.event.SkillEvent;
-import com.peer.util.ManagerActivity;
-
 import de.greenrobot.event.EventBus;
-
-import android.R.bool;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.ConnectivityManager;
-import android.os.RemoteException;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,15 +19,9 @@ import android.widget.Toast;
 
 public class SkillAdapter extends BaseAdapter {
 	private Context mContext;
-	private String type="";
 	private List<String> mlist;
 	public SkillAdapter(Context mContext,List<String> mlist){
 		this.mContext=mContext;
-		this.mlist=mlist;
-	}
-	public SkillAdapter(Context mContext,String type,List<String> mlist){
-		this.mContext=mContext;
-		this.type=type;
 		this.mlist=mlist;
 	}
 
@@ -73,44 +53,38 @@ public class SkillAdapter extends BaseAdapter {
 			viewHolder.skillname=(TextView)convertView.findViewById(R.id.tv_skill);
 			viewHolder.delete=(TextView)convertView.findViewById(R.id.tv_delete);
 			viewHolder.update=(TextView)convertView.findViewById(R.id.tv_update);		
-			if(type.equals("page")){
-				viewHolder.delete.setVisibility(View.GONE);
-				viewHolder.update.setVisibility(View.GONE);
-			}else{
-				viewHolder.delete.setVisibility(View.VISIBLE);
-				viewHolder.update.setVisibility(View.VISIBLE);
-				viewHolder.delete.setOnClickListener(new View.OnClickListener() {
-					
-					@Override
-					public void onClick(View arg0) {
-						// TODO Auto-generated method stub
-						if(checkNetworkState()){
-							deleteSkill(position);
-						}else{
-							Toast.makeText(mContext, mContext.getResources().getString(R.string.Broken_network_prompt), 0).show();
-						}
-						
+			viewHolder.skillname.setText(mlist.get(position));
+			viewHolder.delete.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View arg0) {
+					// TODO Auto-generated method stub
+					if(checkNetworkState()){
+						deleteSkill(position);
+					}else{
+						Toast.makeText(mContext, mContext.getResources().getString(R.string.Broken_network_prompt), 0).show();
 					}
-				});
-				viewHolder.update.setOnClickListener(new View.OnClickListener() {
 					
-					@Override
-					public void onClick(View arg0) {
-						// TODO Auto-generated method stub
-						if(checkNetworkState()){
-							updateSkill(position);
-						}else{
-							Toast.makeText(mContext, mContext.getResources().getString(R.string.Broken_network_prompt), 0).show();
-						}
-						
+				}
+			});
+			viewHolder.update.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View arg0) {
+					// TODO Auto-generated method stub
+					if(checkNetworkState()){
+						updateSkill(position);
+					}else{
+						Toast.makeText(mContext, mContext.getResources().getString(R.string.Broken_network_prompt), 0).show();
 					}
-				});
-			}
+					
+				}
+			});							
 			convertView.setTag(viewHolder);
 		}else{
 			convertView.getTag();
 		}	
-		viewHolder.skillname.setText(mlist.get(position));
+		
 		return convertView;
 	}
 	private void deleteSkill(final int position){

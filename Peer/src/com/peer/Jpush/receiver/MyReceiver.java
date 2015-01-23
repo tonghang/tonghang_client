@@ -36,6 +36,9 @@ public class MyReceiver extends BroadcastReceiver {
             Log.d(TAG, "[MyReceiver] 接收到推送下来的通知");
             int notifactionId = bundle.getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
             Log.d(TAG, "[MyReceiver] 接收到推送下来的通知的ID: " + notifactionId);
+            String message= bundle.getString(JPushInterface.EXTRA_MESSAGE);
+            
+            Log.d(TAG, "[MyReceiver] 接收到推送下来的通知的ID: " + message);
         	
         } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
             Log.d(TAG, "[MyReceiver] 用户点击打开了通知");
@@ -74,26 +77,4 @@ public class MyReceiver extends BroadcastReceiver {
 		}
 		return sb.toString();
 	}
-	
-	//send msg to MainActivity
-//	private void processCustomMessage(Context context, Bundle bundle) {
-//		if (MainActivity.isForeground) {
-//			String message = bundle.getString(JPushInterface.EXTRA_MESSAGE);
-//			String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
-//			Intent msgIntent = new Intent(MainActivity.MESSAGE_RECEIVED_ACTION);
-//			msgIntent.putExtra(MainActivity.KEY_MESSAGE, message);
-//			if (!ExampleUtil.isEmpty(extras)) {
-//				try {
-//					JSONObject extraJson = new JSONObject(extras);
-//					if (null != extraJson && extraJson.length() > 0) {
-//						msgIntent.putExtra(MainActivity.KEY_EXTRAS, extras);
-//					}
-//				} catch (JSONException e) {
-//
-//				}
-//
-//			}
-//			context.sendBroadcast(msgIntent);
-//		}
-//	}
 }

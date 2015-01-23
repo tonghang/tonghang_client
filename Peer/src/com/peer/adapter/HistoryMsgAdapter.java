@@ -9,6 +9,7 @@ import com.peer.constant.Constant;
 import com.peer.widgetutil.LoadImageUtil;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,16 +54,17 @@ public class HistoryMsgAdapter extends BaseAdapter {
 			convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_chathistory,null,false);				
 			viewHolder.headpic=(ImageView)convertView.findViewById(R.id.im_headpic);
 			viewHolder.nikename=(TextView)convertView.findViewById(R.id.tv_nike);			
-			viewHolder.content=(TextView)convertView.findViewById(R.id.tv_descripe);
+			viewHolder.content=(TextView)convertView.findViewById(R.id.tv_content);		
 			convertView.setTag(viewHolder);
 		}else{
-			convertView.getTag();
+			viewHolder=(ViewHolder)convertView.getTag();
 		}
 		User user=(User) mlist.get(position).get(Constant.USER);
 		LoadImageUtil.imageLoader.displayImage(user.getImage(), viewHolder.headpic,LoadImageUtil.options);
 		viewHolder.nikename.setText(user.getUsername());
-		
-//		viewHolder.content.setText((String)mlist.get(position).get("replybody"));
+		if((String)mlist.get(position).get("replybody")!=null&&!TextUtils.isEmpty((String)mlist.get(position).get("replybody"))){
+			viewHolder.content.setText((String)mlist.get(position).get("replybody"));
+		}
 		return convertView;
 	}
 	private class ViewHolder{

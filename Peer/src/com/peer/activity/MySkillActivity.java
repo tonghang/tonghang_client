@@ -10,7 +10,6 @@ import com.peer.event.SkillEvent;
 import de.greenrobot.event.EventBus;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,6 +20,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MySkillActivity extends BasicActivity {
 	private int Hadtag;
@@ -41,22 +41,23 @@ public class MySkillActivity extends BasicActivity {
 	}
 	private void init() {
 		// TODO Auto-generated method stub
-		title=(TextView)findViewById(R.id.tv_title);
-		title.setText(getResources().getString(R.string.myskill));
-		back=(LinearLayout)findViewById(R.id.ll_back);
-		back.setOnClickListener(this);
-		creatTag=(LinearLayout)findViewById(R.id.ll_createTag_mytag);
-		creatTag.setOnClickListener(this);
 		mytaglistview=(ListView)findViewById(R.id.lv_myskill);
 		try {
 			mlist=PeerUI.getInstance().getISessionManager().getLabels();
 		}catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}		
+		}
+		Hadtag=mlist.size();		
 		adapter=new SkillAdapter(this,mlist);
 		mytaglistview.setAdapter(adapter);
-		
+				
+		title=(TextView)findViewById(R.id.tv_title);
+		title.setText(getResources().getString(R.string.myskill));
+		back=(LinearLayout)findViewById(R.id.ll_back);
+		back.setOnClickListener(this);
+		creatTag=(LinearLayout)findViewById(R.id.ll_createTag_mytag);
+		creatTag.setOnClickListener(this);		
 	}
 	@Override
 	public void onClick(View v) {
@@ -64,7 +65,7 @@ public class MySkillActivity extends BasicActivity {
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.ll_createTag_mytag:
-			if(Hadtag>4){
+			if(Hadtag>5){
 				ShowMessage("您已经有五个标签，不能再创建了");
 				break;
 			}else{
@@ -75,15 +76,13 @@ public class MySkillActivity extends BasicActivity {
 				}					
 			}				
 			break;
-
-		default:
-			break;
 		}
 	}
 	private void CreateTagDialog() {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub		
 		final EditText inputServer = new EditText(MySkillActivity.this);
-        AlertDialog.Builder builder = new AlertDialog.Builder(MySkillActivity.this);
+		 inputServer.setFocusable(true);
+		AlertDialog.Builder builder = new AlertDialog.Builder(MySkillActivity.this);
         builder.setTitle(getResources().getString(R.string.register_tag)).setView(inputServer).
         setNegativeButton(getResources().getString(R.string.cancel), null);
         builder.setPositiveButton(getResources().getString(R.string.sure),
@@ -91,7 +90,7 @@ public class MySkillActivity extends BasicActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         String inputName = inputServer.getText().toString().trim();
                        if(!TextUtils.isEmpty(inputName)){
-                    	   if(inputName.length()<13){
+                    	   if(inputName.length()<7){
                     		   boolean issame=false;
 	                      		 for(int i=0;i<mlist.size();i++){ 
 	                      			 if(mlist.get(i).equals(inputName)){
@@ -111,8 +110,7 @@ public class MySkillActivity extends BasicActivity {
                        }                       
                     }
                 });
-        builder.show();	
-        		
+        builder.show();	  		
 	}
 	public void createLable(String label){
 		mlist.add(label);
