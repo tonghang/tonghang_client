@@ -10,7 +10,7 @@ public interface Constant {
 	public String PENDING="pending";
 		
 	/*LocalStorage key*/
-	public String EMAIL="email";
+	public String EMAIL="email";	
 	
 	/*homepage recommend user or topic*/
 	public String USER="user";
@@ -44,7 +44,17 @@ public interface Constant {
 	 String DISCONNECTION="disconnection";
 	 /*imageurl*/
 	 String IMAGEURL="imageurl";
+	 String USERID="userid";
 	 /*callback status*/
 	 String CALLBACKSUCCESS="success";
-	 String CALLBACKFAIL="fail"; 	 
+	 String CALLBACKFAIL="fail"; 	
+	 
+	//用于进入聊天室intent.putExtras的键
+	    String IMAGE="image";
+	    String OWNERNIKE="ownernike";
+	    String THEME="theme";
+	    String TAGNAME="tagname";
+	    String ROOMID="roomid";
+	    String TOPICID="topicid";
+	    String FROMFLOAT="float";
 }

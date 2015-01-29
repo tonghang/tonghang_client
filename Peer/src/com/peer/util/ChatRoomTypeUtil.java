@@ -17,6 +17,7 @@ public class ChatRoomTypeUtil {
 	private String theme;
 	private String nike;
 	private User user;
+	private boolean isowner;
 	private static ChatRoomTypeUtil chatroomtypeutil;
 	private ChatRoomTypeUtil(){}
 	public static ChatRoomTypeUtil getInstance(){
@@ -79,6 +80,12 @@ public class ChatRoomTypeUtil {
 	}
 	public void setTopicId(String topicId) {
 		this.topicId = topicId;
+	}
+	public boolean isIsowner() {
+		return isowner;
+	}
+	public void setIsowner(boolean isowner) {
+		this.isowner = isowner;
 	}
 
 }

@@ -1,6 +1,5 @@
 package com.peer.client.service;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,10 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.converter.ByteArrayHttpMessageConverter;
-import org.springframework.http.converter.FormHttpMessageConverter;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
@@ -32,6 +27,7 @@ import com.peer.client.Topic;
 import com.peer.client.User;
 import com.peer.client.easemobchatUser;
 import com.peer.client.util.DataUtil;
+import com.peer.client.util.DataUtilHeader;
 import com.peer.constant.Constant;
 
 public class SessionManager extends ISessionManager.Stub {
@@ -58,8 +54,7 @@ public class SessionManager extends ISessionManager.Stub {
 			result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "/login.json"
 					,parts, Map.class);						
 			Map body = result.getBody();			
-			token=(String) body.get("token");
-												
+			token=(String) body.get("token");												
 			if (result.getStatusCode() == HttpStatus.OK) {
 				code=0;
 				user=new User();
@@ -69,6 +64,7 @@ public class SessionManager extends ISessionManager.Stub {
 				userid=id;
 				user.setUserid(id);
 				imageURL=Constant.WEB_SERVER_ADDRESS+(String)u.get("image");
+				user.setHuangxin_username(huanxin_user);
 				user.setEmail(imageURL);
 				user.setCity((String)u.get("city"));
 				user.setBirthday((String)u.get("email"));
@@ -109,16 +105,19 @@ public class SessionManager extends ISessionManager.Stub {
 					, parts, Map.class);							
 			Map body = result.getBody();
 			if (result.getStatusCode() == HttpStatus.OK) {
-				code=0;	
-				String id=String.valueOf(body.get("id"));
-				userid=id;
-				huanxin_user=(String) body.get("huanxin_username");
-				message = Constant.CALLBACKSUCCESS;
-			} else {
-				message = Constant.CALLBACKFAIL;
-			}
+				if(body.get("code").equals("error")){
+					message = (String) body.get("message");
+				}else{
+					code=0;	
+					String id=String.valueOf(body.get("id"));
+					userid=id;
+					huanxin_user=(String) body.get("huanxin_username");
+					message = Constant.CALLBACKSUCCESS;
+				}				
+			} 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			message = Constant.CALLBACKFAIL;
 			e.printStackTrace();
 		}
 		callback.onCallBack(code, message);
@@ -170,31 +169,8 @@ public class SessionManager extends ISessionManager.Stub {
 			HttpHeaders headers=new HttpHeaders();
 			headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 			HttpEntity<MultiValueMap<String, Object>> requestEntity=
-					new HttpEntity<MultiValueMap<String,Object>>(parts,headers);			
-			RestTemplate restTemplate=new RestTemplate(true);			
-			List<HttpMessageConverter<?>> formPartConverters = new ArrayList<HttpMessageConverter<?>>();
-			formPartConverters.add(new ByteArrayHttpMessageConverter());
-			StringHttpMessageConverter formStringHttpMessageConverter = new StringHttpMessageConverter(Charset.forName("UTF-8"));
-			formStringHttpMessageConverter.setWriteAcceptCharset(false);
-			formPartConverters.add(formStringHttpMessageConverter);
-			formPartConverters.add(new ResourceHttpMessageConverter());
-			
-			List<HttpMessageConverter<?>> partConverters = new ArrayList<HttpMessageConverter<?>>();
-			partConverters.addAll(formPartConverters);
-			
-			FormHttpMessageConverter formConverter = new FormHttpMessageConverter();
-			formConverter.setCharset(Charset.forName("UTF-8"));
-		    formConverter.setPartConverters(formPartConverters);
-		    
-		    partConverters.add(formConverter);
-		    partConverters.add(new GsonHttpMessageConverter());
-		    
-		    restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-		    restTemplate.setMessageConverters(partConverters);
-						
-			ResponseEntity<Map> response=restTemplate.exchange(Constant.WEB_SERVER_ADDRESS + "/users/"+userid+".json", HttpMethod.PUT, requestEntity, Map.class);
-			
-			
+					new HttpEntity<MultiValueMap<String,Object>>(parts,headers);					
+			ResponseEntity<Map> response=DataUtilHeader.putJson(Constant.WEB_SERVER_ADDRESS + "/users/"+userid+".json",requestEntity, Map.class);			
 			response.getBody();			
 			
 	//		DataUtil.putEntity(Constant.WEB_SERVER_ADDRESS + "users/"+userid+".json", parts, Map.class);
@@ -223,6 +199,7 @@ public class SessionManager extends ISessionManager.Stub {
 			
 			HttpEntity<MultiValueMap<String, Object>> requestEntity=
 					new HttpEntity<MultiValueMap<String,Object>>(parts,headers);			
+			
 			RestTemplate restTemplate=new RestTemplate(true);	
 			
 			restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
@@ -263,6 +240,7 @@ public class SessionManager extends ISessionManager.Stub {
 			}
 		} catch (Exception e) {
 			// TODO log exception
+			message = Constant.CALLBACKFAIL;
 			e.printStackTrace();
 		}
 		callback.onCallBack(code, message);
@@ -338,6 +316,7 @@ public class SessionManager extends ISessionManager.Stub {
 				message=Constant.CALLBACKFAIL;
 			}
 		}catch(Exception e){
+			message = Constant.CALLBACKFAIL;
 			e.printStackTrace();
 		}
 		callback.onCallBack(code, message);	
@@ -381,6 +360,7 @@ public class SessionManager extends ISessionManager.Stub {
 				message=Constant.CALLBACKFAIL;
 			}
 		}catch(Exception e){
+			message = Constant.CALLBACKFAIL;
 			e.printStackTrace();
 		}
 		callback.onCallBack(code, message);
@@ -391,8 +371,7 @@ public class SessionManager extends ISessionManager.Stub {
 	public List<User> myFriends() throws RemoteException {
 		// TODO Auto-generated method stub
 		List<User> list=new ArrayList<User>();			
-		List result=null;
-		
+		List result=null;		
 		try {
 			HttpHeaders headers=new HttpHeaders();			
 			headers.add("x-token", token);			
@@ -423,6 +402,7 @@ public class SessionManager extends ISessionManager.Stub {
 					
 		} catch (Exception e) {
 			// TODO log exception
+			
 			e.printStackTrace();
 		}
 		return list;
@@ -579,28 +559,7 @@ public class SessionManager extends ISessionManager.Stub {
 			headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 			HttpEntity<MultiValueMap<String, Object>> requestEntity=
 					new HttpEntity<MultiValueMap<String,Object>>(parts,headers);			
-			RestTemplate restTemplate=new RestTemplate(true);			
-			List<HttpMessageConverter<?>> formPartConverters = new ArrayList<HttpMessageConverter<?>>();
-			formPartConverters.add(new ByteArrayHttpMessageConverter());
-			StringHttpMessageConverter formStringHttpMessageConverter = new StringHttpMessageConverter(Charset.forName("UTF-8"));
-			formStringHttpMessageConverter.setWriteAcceptCharset(false);
-			formPartConverters.add(formStringHttpMessageConverter);
-			formPartConverters.add(new ResourceHttpMessageConverter());
-			
-			List<HttpMessageConverter<?>> partConverters = new ArrayList<HttpMessageConverter<?>>();
-			partConverters.addAll(formPartConverters);
-			
-			FormHttpMessageConverter formConverter = new FormHttpMessageConverter();
-			formConverter.setCharset(Charset.forName("UTF-8"));
-		    formConverter.setPartConverters(formPartConverters);
-		    
-		    partConverters.add(formConverter);
-		    partConverters.add(new GsonHttpMessageConverter());
-		    
-		    restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-		    restTemplate.setMessageConverters(partConverters);
-						
-			ResponseEntity<Map> response=restTemplate.exchange(Constant.WEB_SERVER_ADDRESS + "/users/"+userid+".json", HttpMethod.PUT, requestEntity, Map.class);
+			ResponseEntity<Map> response=DataUtilHeader.putJson(Constant.WEB_SERVER_ADDRESS + "/users/"+userid+".json", requestEntity, Map.class);
 			message=Constant.CALLBACKSUCCESS;
 			code=0;
 		}catch(Exception e){
@@ -615,11 +574,8 @@ public class SessionManager extends ISessionManager.Stub {
 	@Override
 	public String creatTopic(String label, String topic)
 			throws RemoteException {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 		MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();			
-		String message = null;
-		int code=1;
 		Map result=null;
 		String huanxing_group_id=null;
 		try {
@@ -693,9 +649,7 @@ public class SessionManager extends ISessionManager.Stub {
 						topic.setTopicid(String.valueOf(recomend.get(i).get("id")));
 						map.put(Constant.TOPIC, topic);
 						mlist.add(map);
-					}
-					
-					
+					}					
 				}	
 				message=Constant.CALLBACKSUCCESS;	
 				code=0;
@@ -723,7 +677,7 @@ public class SessionManager extends ISessionManager.Stub {
 				code=0;
 				list=new ArrayList<User>();
 				List resultlist=result.getBody();
-				for(int i=0;i<list.size();i++){
+				for(int i=0;i<resultlist.size();i++){
 					User u=new User();
 					Map m=(Map) resultlist.get(i);
 					u.setUserid(String.valueOf(m.get("id")));
@@ -816,8 +770,7 @@ public class SessionManager extends ISessionManager.Stub {
 		Map result=null;
 		String id=null;
 		try {	
-			parts.add("content", content);
-			
+			parts.add("content", content);			
 			HttpHeaders headers=new HttpHeaders();			
 			headers.add("x-token", token);			
 			
@@ -986,7 +939,5 @@ public class SessionManager extends ISessionManager.Stub {
 		// TODO Auto-generated method stub
 		this.page=page+1;
 		return recommend(page, callback);
-	}
-
-	
+	}	
 }

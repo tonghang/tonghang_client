@@ -92,6 +92,7 @@ public class PersonalPageActivity extends BasicActivity {
 				@Override
 				public void onClick(View arg0) {
 					// TODO Auto-generated method stub
+					ChatRoomTypeUtil.getInstance().setUserId(PersonpageUtil.getInstance().getPersonid());
 					ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.SINGLECHAT);
 					ChatRoomTypeUtil.getInstance().setHuanxingId(PersonpageUtil.getInstance().getHuanxinId());
 					ChatRoomTypeUtil.getInstance().setTitle(PersonpageUtil.getInstance().getPersonname());
@@ -136,6 +137,7 @@ public class PersonalPageActivity extends BasicActivity {
 				@Override
 				public void onClick(View arg0) {
 					// TODO Auto-generated method stub
+					ChatRoomTypeUtil.getInstance().setUserId(PersonpageUtil.getInstance().getPersonid());
 					ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.SINGLECHAT);
 					ChatRoomTypeUtil.getInstance().setHuanxingId(PersonpageUtil.getInstance().getHuanxinId());
 					ChatRoomTypeUtil.getInstance().setTitle(PersonpageUtil.getInstance().getPersonname());					

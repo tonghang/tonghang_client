@@ -159,7 +159,7 @@ public class PersonalMessageActivity extends BasicActivity implements OnClickLis
 	}
 	private void CommiteToServer() {
 		// TODO Auto-generated method stub
-			pd = ProgressDialog.show(PersonalMessageActivity.this,nikename.getText().toString().trim(), getResources().getString(R.string.committing));
+			pd = ProgressDialog.show(PersonalMessageActivity.this,"", getResources().getString(R.string.committing));
 			Thread t=new Thread(){
 				@Override
 				public void run() {

@@ -152,19 +152,7 @@ public class RegisterAcountActivity extends BasicActivity{
 				
 				PeerUI.getInstance().getISessionManager().register(paramer[0], paramer[1], paramer[2], callback);
 				if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
-					String huanxing_username=PeerUI.getInstance().getISessionManager().getHuanxingUser();
-					
-					JPushInterface.setAlias(getApplication(), huanxing_username, new TagAliasCallback() {
-						
-						@Override
-						public void gotResult(int code, String arg1, Set<String> arg2) {
-							// TODO Auto-generated method stub
-							System.out.println("code"+code);
-							Log.i("注册极光结果放回", String.valueOf(code));
-//							Toast.makeText(RegisterAcountActivity.this, code, 0).show();
-						}
-					});
-					
+					String huanxing_username=PeerUI.getInstance().getISessionManager().getHuanxingUser();					
 					LocalStorage.saveString(RegisterAcountActivity.this, Constant.EMAIL, paramer[0]);
 					UserBean u=new UserBean();
 					u.setEmail(paramer[0]);
@@ -183,11 +171,15 @@ public class RegisterAcountActivity extends BasicActivity{
 		@Override
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
-			if(result.equals(Constant.CALLBACKSUCCESS)){
-				pd.dismiss();
+			pd.dismiss();
+			if(result.equals(Constant.CALLBACKSUCCESS)){				
 				Intent intent=new Intent(RegisterAcountActivity.this,RegisterTagActivity.class);
 				startActivity(intent);
 				finish();
+			}else if(result.equals(getResources().getString(R.string.exit_eamil))){
+				registe_remind.setText(result);
+			}else{
+				registe_remind.setText(getResources().getString(R.string.regist_fail));
 			}
 		}
 	}

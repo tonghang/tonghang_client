@@ -4,6 +4,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Set;
+
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
+
 import com.peer.R;
 import com.peer.IMimplements.easemobchatImp;
 import com.peer.activitymain.MainActivity;
@@ -13,9 +18,7 @@ import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
 import com.peer.localDB.LocalStorage;
 import com.peer.localDB.UserDao;
-import com.peer.util.ManagerActivity;
 import com.peer.util.Tools;
-
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -31,6 +34,7 @@ import android.os.Message;
 import android.os.RemoteException;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -176,6 +180,16 @@ public class CompleteActivity extends BasicActivity{
 							User u=PeerUI.getInstance().getISessionManager().login(email, password, callback2);
 							if(callback2.getMessage().equals(Constant.CALLBACKSUCCESS)){
 								String huanxinid=PeerUI.getInstance().getISessionManager().getHuanxingUser();
+								JPushInterface.setAlias(getApplication(), u.getHuangxin_username(), new TagAliasCallback() {
+									
+									@Override
+									public void gotResult(int code, String arg1, Set<String> arg2) {
+										// TODO Auto-generated method stub
+										System.out.println("code"+code);
+										Log.i("注册极光结果放回", String.valueOf(code));
+//										Toast.makeText(RegisterAcountActivity.this, code, 0).show();
+									}
+								});
 								easemobchatImp.getInstance().login(huanxinid, password);
 								easemobchatImp.getInstance().loadConversationsandGroups();
 								

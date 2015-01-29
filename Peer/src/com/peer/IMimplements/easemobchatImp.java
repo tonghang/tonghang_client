@@ -1,7 +1,6 @@
 package com.peer.IMimplements;
 
 import com.easemob.EMCallBack;
-import com.easemob.EMError;
 import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMGroupManager;
@@ -11,8 +10,6 @@ import com.easemob.chat.EMMessage.ChatType;
 import com.easemob.exceptions.EaseMobException;
 import com.peer.IMinterface.IM;
 import com.peer.constant.Constant;
-import com.peer.util.ChatRoomTypeUtil;
-
 
 /**
  * Encapsulation ring letter implementation method
@@ -60,7 +57,7 @@ public class easemobchatImp implements IM{
 		});
 	}
 	@Override
-	public void sendMessage(String content, int chattype,String targetId,String imageUrl) {
+	public void sendMessage(String content, int chattype,String targetId,String imageUrl,String userid) {
 		// TODO Auto-generated method stub
 		EMMessage message = EMMessage.createSendMessage(EMMessage.Type.TXT);
 		// 如果是群聊，设置chattype,默认是单聊
@@ -71,6 +68,8 @@ public class easemobchatImp implements IM{
 		message.addBody(txtBody);
 		//自定义扩展消息，用于头像
 		message.setAttribute(Constant.IMAGEURL, imageUrl);
+		//自定义扩展消息，用于携带用户Id
+		message.setAttribute(Constant.USERID, userid);
 		
 		// 设置要发给谁,用户username或者群聊groupid
 		message.setReceipt(targetId);		

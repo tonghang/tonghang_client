@@ -66,12 +66,13 @@ public class ChatMsgEntity {
 		this.image = image;
 	}
 
-	public ChatMsgEntity(String name, String date, String text, int isComMsg) {
+	public ChatMsgEntity(String name, String date, String text, int isComMsg,String userId) {
 		super();
 		this.name = name;
 		this.date = date;
 		this.message = text;
 		this.isComMeg = isComMsg;
+		this.userId=userId;
 	}
 
 }

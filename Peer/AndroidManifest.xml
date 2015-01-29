@@ -105,6 +105,8 @@
                 <action android:name="com.peer.client.service.IRemoteService"/>
             </intent-filter>
         </service> 
+        <!-- 悬浮框service -->
+    	<service android:name="com.peer.widgetutil.FxService"></service>
         <receiver
 		    android:name="com.peer.client.service.BootReceiver"
 		    android:enabled="true" >

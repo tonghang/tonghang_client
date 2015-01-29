@@ -8,7 +8,7 @@ public interface IM {
 	
 	public void setAppInited();
 	
-	public void sendMessage(String content,int chattype,String targetId,String imageUrl);
+	public void sendMessage(String content,int chattype,String targetId,String imageUrl,String userid);
 	
 	public void clearConversation(String targetname);
 	

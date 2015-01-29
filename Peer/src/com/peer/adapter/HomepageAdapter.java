@@ -7,6 +7,7 @@ import com.peer.activitymain.ChatRoomActivity;
 import com.peer.activitymain.PersonalPageActivity;
 import com.peer.client.Topic;
 import com.peer.client.User;
+import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
 import com.peer.util.ChatRoomTypeUtil;
 import com.peer.util.PersonpageUtil;
@@ -14,6 +15,7 @@ import com.peer.widgetutil.LoadImageUtil;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.os.RemoteException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,6 +103,18 @@ public class HomepageAdapter extends BaseAdapter {
 					ChatRoomTypeUtil.getInstance().setTopicId(topic.getTopicid());
 					
 					User user=(User)mList.get(position).get(Constant.USER);
+					String ownerid=null;
+					try {
+						ownerid = PeerUI.getInstance().getISessionManager().getUserId();
+					} catch (RemoteException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}					
+					if(user.getUserid().equals(ownerid)){
+						ChatRoomTypeUtil.getInstance().setIsowner(true);
+					}else{
+						ChatRoomTypeUtil.getInstance().setIsowner(false);
+					}
 					ChatRoomTypeUtil.getInstance().setUser(user);	
 					Intent intent=new Intent(mContext,ChatRoomActivity.class);
 					mContext.startActivity(intent);	

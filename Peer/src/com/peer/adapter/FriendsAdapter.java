@@ -20,6 +20,7 @@ import com.peer.activitymain.PersonalPageActivity;
 import com.peer.client.User;
 import com.peer.constant.Constant;
 import com.peer.util.PersonpageUtil;
+import com.peer.widgetutil.LoadImageUtil;
 
 public class FriendsAdapter extends BaseAdapter {
 	private Context mContext;
@@ -27,6 +28,7 @@ public class FriendsAdapter extends BaseAdapter {
 	public FriendsAdapter(Context mContext,List<User> list){
 		this.mContext=mContext;		
 		this.mlist=list;
+		LoadImageUtil.initImageLoader(mContext);
 	}
 	@Override
 	public int getCount() {
@@ -58,6 +60,7 @@ public class FriendsAdapter extends BaseAdapter {
 		}else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
+		LoadImageUtil.imageLoader.displayImage(mlist.get(position).getImage(), viewHolder.headpic, LoadImageUtil.options);
 		viewHolder.nikename.setText(mlist.get(position).getUsername());
 		List<String>list=(List<String>)mlist.get(position).getLabels();
 		String labels="";
@@ -101,5 +104,4 @@ public class FriendsAdapter extends BaseAdapter {
 		TextView nikename;
 		TextView descripe;
 	}
-
 }

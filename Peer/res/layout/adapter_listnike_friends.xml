@@ -22,7 +22,7 @@
             android:layout_height="@dimen/widgeheight"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="8dp"
-            android:background="@drawable/mini_avatar_shadow"
+            
              />
 	<LinearLayout
 	    android:layout_marginLeft="8dp"
@@ -43,7 +43,7 @@
 	        android:lines="1"
 	        android:ellipsize="end"
 	        android:textSize="@dimen/textsize_middle"
-	        android:text="昵称"
+	        
 	        android:textColor="@color/black"
 	        android:layout_marginTop="4dp"
 	        />
@@ -57,7 +57,7 @@
 	        android:ellipsize="end"
 	         android:textSize="@dimen/textsize_small"
 	         android:textColor="@color/deepgray"
-	        android:text="内容" 
+	       
 	        android:layout_marginBottom="4dp"/>
 
 	    <TextView

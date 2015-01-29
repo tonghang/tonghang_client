@@ -5,18 +5,23 @@ import java.util.List;
 import org.springframework.http.ContentCodingType;
 
 import com.peer.R;
+import com.peer.activitymain.PersonalPageActivity;
+import com.peer.constant.Constant;
 import com.peer.entity.ChatMsgEntity;
+import com.peer.util.PersonpageUtil;
 import com.peer.widgetutil.LoadImageUtil;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class ChatMsgViewAdapter extends BaseAdapter {
@@ -100,10 +105,8 @@ public class ChatMsgViewAdapter extends BaseAdapter {
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
-		if(isComMsg!=2){
 			LoadImageUtil.imageLoader.displayImage(entity.getImage(), viewHolder.heapic, LoadImageUtil.options);
-			viewHolder.tvSendTime.setText(entity.getDate());
-			
+			viewHolder.tvSendTime.setText(entity.getDate());			
 			viewHolder.tvContent.setText(entity.getMessage());
 			final String userId=entity.getUserId();
 			viewHolder.heapic.setOnClickListener(new View.OnClickListener() {
@@ -111,18 +114,33 @@ public class ChatMsgViewAdapter extends BaseAdapter {
 				@Override
 				public void onClick(View arg0) {
 					// TODO Auto-generated method stub
-					if(isComMsg==0){
-//						Intent intent=new Intent(context,PersonPageOtherActivity.class);
-//						intent.putExtra(Constant.USERID, userId);
-//						context.startActivity(intent);
+					if(checkNetworkState()){
+						if(isComMsg==0){
+							PersonpageUtil.getInstance().setPersonpagetype(Constant.OWNPAGE);
+							PersonpageUtil.getInstance().setPersonid(userId);
+							Intent topersonalpage=new Intent(context,PersonalPageActivity.class);
+							context.startActivity(topersonalpage);
+						}else{
+							PersonpageUtil.getInstance().setPersonpagetype(Constant.OWNPAGE);
+							PersonpageUtil.getInstance().setPersonid(userId);
+							Intent topersonalpage=new Intent(context,PersonalPageActivity.class);
+							context.startActivity(topersonalpage);
+						}	
 					}else{
-//						Intent intent=new Intent(context,PersonPageOwnerActivity.class);
-//						context.startActivity(intent);
-					}		
+						Toast.makeText(context, context.getResources().getString(R.string.Broken_network_prompt), 0).show();
+					}
+						
 				}
-			});
-		}	
+			});			
 		return convertView;
+	}
+	public boolean checkNetworkState() {
+		boolean flag = false;		
+		ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);		
+		if (manager.getActiveNetworkInfo() != null) {
+			flag = manager.getActiveNetworkInfo().isAvailable();
+		}
+		return flag;
 	}
 	static class ViewHolder {
 		public ImageView heapic;

@@ -1,6 +1,7 @@
 package com.peer.activity;
 
 import java.util.List;
+import java.util.Set;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -10,11 +11,15 @@ import android.os.RemoteException;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
+
 import com.peer.R;
 import com.peer.IMimplements.easemobchatImp;
 import com.peer.activitymain.MainActivity;
@@ -97,7 +102,18 @@ public class LoginActivity extends BasicActivity{
 					User u=PeerUI.getInstance().getISessionManager().login(username, password, callback);
 					
 					if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){											
-	//本地存储操作。。。			
+	
+						JPushInterface.setAlias(getApplication(), u.getHuangxin_username(), new TagAliasCallback() {
+							
+							@Override
+							public void gotResult(int code, String arg1, Set<String> arg2) {
+								// TODO Auto-generated method stub
+								System.out.println("code"+code);
+								Log.i("注册极光结果放回", String.valueOf(code));
+//								Toast.makeText(RegisterAcountActivity.this, code, 0).show();
+							}
+						});
+						//本地存储操作。。。			
 						String userid=PeerUI.getInstance().getISessionManager().getUserId();
 						
 						 LocalStorage.saveString(LoginActivity.this, Constant.EMAIL, username);
