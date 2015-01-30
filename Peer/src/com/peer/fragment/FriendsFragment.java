@@ -2,19 +2,23 @@ package com.peer.fragment;
 
 import java.util.List;
 import com.peer.R;
+import com.peer.activitymain.NewFriendsActivity;
 import com.peer.adapter.FriendsAdapter;
 import com.peer.client.User;
 import com.peer.client.ui.PeerUI;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-public class FriendsFragment extends BasicFragment {
+public class FriendsFragment extends BasicFragment{
 	private ListView mlistview;
 	private RelativeLayout seenewfriends;
 	private List<User> list;
@@ -25,32 +29,45 @@ public class FriendsFragment extends BasicFragment {
 		// TODO Auto-generated method stub
 		return inflater.inflate(R.layout.fragment_friends, container, false);
 	}
+	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
 		init();
-		FriendsTask task=new FriendsTask();
-		task.execute();
+	}
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		// TODO Auto-generated method stub
+		super.onHiddenChanged(hidden);
+		if (!hidden) {
+			if(!hidden&&checkNetworkState()){
+				if(list!=null){
+					list.clear();
+				}
+				FriendsTask task=new FriendsTask();
+				task.execute();	
+			}
+		}
+	}
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		if(checkNetworkState()){
+			if(list!=null){
+				list.clear();
+			}
+			FriendsTask task=new FriendsTask();
+			task.execute();	
+		}				
 	}
 	private void init() {
 		// TODO Auto-generated method stub
 		mlistview=(ListView)getView().findViewById(R.id.lv_friends);				
 		seenewfriends=(RelativeLayout)getView().findViewById(R.id.rl_newfriends);
 		seenewfriends.setOnClickListener(this);
-	}
-	@Override
-	public void setUserVisibleHint(boolean isVisibleToUser) {
-		// TODO Auto-generated method stub
-		super.setUserVisibleHint(isVisibleToUser);
-		if(isVisibleToUser){
-			if(list!=null){
-				list.clear();
-			}
-			FriendsTask task=new FriendsTask();
-			task.execute();
-		}
-	}
+	}	
 	private class FriendsTask extends AsyncTask<Void, Void, List>{
 
 		@Override
@@ -74,5 +91,4 @@ public class FriendsFragment extends BasicFragment {
 			}
 		}
 	}
-
 }

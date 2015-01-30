@@ -77,6 +77,7 @@ public class MainActivity extends BasicActivity{
 		getSupportFragmentManager().beginTransaction()
 			.add(R.id.fragment_container, homefragment)
 			.add(R.id.fragment_container,comemsgfragment).hide(comemsgfragment)
+			.add(R.id.fragment_container,friendsfragment).hide(friendsfragment)
 			.show(homefragment).commit();
 		/*init bottom layout*/
 		find=(LinearLayout)findViewById(R.id.ll_find);		

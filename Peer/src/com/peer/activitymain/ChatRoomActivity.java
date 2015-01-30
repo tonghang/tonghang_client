@@ -242,8 +242,13 @@ public class ChatRoomActivity extends BasicActivity {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.ll_back:
-			// 把此会话的未读数置为0			
-			startfloatView();
+			// 把此会话的未读数置为0	
+			if(checkNetworkState()){
+				startfloatView();
+			}else{
+				finish();
+			}
+			
 			break;
 		
 		case R.id.tv_seemember:
@@ -401,7 +406,6 @@ public class ChatRoomActivity extends BasicActivity {
 		public void onReceive(Context context, Intent intent) {
 			// 记得把广播给终结掉
 			abortBroadcast();
-
 			String username = intent.getStringExtra("from");
 			String msgid = intent.getStringExtra("msgid");
 			// 收到这个广播的时候，message已经在db和内存里了，可以通过id获取mesage对象
@@ -436,7 +440,6 @@ public class ChatRoomActivity extends BasicActivity {
 			msgList.add(entity);
 			adapter.notifyDataSetChanged();
 			selflistview.setSelection(selflistview.getCount() - 1);
-
 		}
 	}
 	public String getToChatUsername() {

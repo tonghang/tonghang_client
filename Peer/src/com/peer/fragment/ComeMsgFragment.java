@@ -24,7 +24,6 @@ import com.peer.client.easemobchatUser;
 import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
 
-
 public class ComeMsgFragment extends BasicFragment {
 	private ListView ListView_come;
 	private boolean hidden;
@@ -48,7 +47,6 @@ public class ComeMsgFragment extends BasicFragment {
 	}
 	private void init() {
 		// TODO Auto-generated method stub	
-//		groups = EMGroupManager.getInstance().getAllGroups();
 		list=loadConversationsWithRecentChat();		
 		ListView_come=(ListView)getView().findViewById(R.id.lv_come);	
 		for(EMConversation em:loadConversationsWithRecentChat()){
@@ -59,9 +57,7 @@ public class ComeMsgFragment extends BasicFragment {
 			easemobchatusers.add(m);
 		}
 		easemobchatUser users=new easemobchatUser();
-		users.setEasemobchatusers(easemobchatusers);
-		comeMsgTask task=new comeMsgTask();
-		task.execute(users);		
+		users.setEasemobchatusers(easemobchatusers);		
 	}
 	public void refresh() {
 		if(list!=null){
@@ -130,15 +126,19 @@ public class ComeMsgFragment extends BasicFragment {
 		super.onHiddenChanged(hidden);
 		this.hidden = hidden;
 		if (!hidden) {
-			refresh();
+			if(checkNetworkState()){
+				if (!hidden) {
+					refresh();
+				}
+			}
 		}
 	}
 
 	@Override
 	public void onResume() {
-		super.onResume();
-		if (!hidden) {
-			refresh();
+		super.onResume();		
+		if(checkNetworkState()){
+				refresh();
 		}
 	}
 	private class comeMsgTask extends AsyncTask<easemobchatUser, easemobchatUser, List>{

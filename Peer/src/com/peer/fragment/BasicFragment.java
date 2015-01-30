@@ -12,7 +12,10 @@ import com.peer.activitymain.SearchActivity;
 import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
 import com.peer.util.PersonpageUtil;
+
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.RemoteException;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -20,7 +23,7 @@ import android.view.View.OnClickListener;
 import android.widget.Toast;
 
 public class BasicFragment extends Fragment implements OnClickListener{
-	public static final int UPDATESUCESS=9;
+	public static final int UPDATESUCESS=9;	
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -33,10 +36,7 @@ public class BasicFragment extends Fragment implements OnClickListener{
 			Intent creat=new Intent(getActivity(),CreatTopicActivity.class);
 			startActivity(creat);
 			break;
-		case R.id.rl_newfriends:
-			Intent intent=new Intent(getActivity(),NewFriendsActivity.class);
-			startActivity(intent);		
-			break;			
+					
 		case R.id.rl_myacount_my:
 			Intent myacount=new Intent(getActivity(),MyAcountActivity.class);
 			startActivity(myacount);
@@ -48,6 +48,10 @@ public class BasicFragment extends Fragment implements OnClickListener{
 		case R.id.ll_mytag_my:
 			Intent mytag=new Intent(getActivity(),MySkillActivity.class);
 			startActivity(mytag);
+			break;
+		case R.id.rl_newfriends:
+			Intent intent=new Intent(getActivity(),NewFriendsActivity.class);
+			startActivity(intent);		
 			break;
 		case R.id.ll_setting_my:
 			Intent setting=new Intent(getActivity(),SettingActivity.class);
@@ -84,5 +88,13 @@ public class BasicFragment extends Fragment implements OnClickListener{
 	}
 	public void ShowMessage(String message){
 		Toast.makeText(getActivity(), message, 0).show();
+	}
+	public boolean checkNetworkState() {
+		boolean flag = false;		
+		ConnectivityManager manager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);		
+		if (manager.getActiveNetworkInfo() != null) {
+			flag = manager.getActiveNetworkInfo().isAvailable();
+		}
+		return flag;
 	}
 }

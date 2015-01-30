@@ -392,6 +392,7 @@ public class SessionManager extends ISessionManager.Stub {
 					User u=new User();
 					Map m=(Map) result.get(i);
 					u.setImage(Constant.WEB_SERVER_ADDRESS+(String)m.get("image"));
+					u.setIs_friends("true");
 					u.setLabels((List)m.get("labels"));
 					u.setUsername((String)m.get("username"));
 					u.setEmail((String)m.get("email"));
@@ -401,8 +402,7 @@ public class SessionManager extends ISessionManager.Stub {
 			}
 					
 		} catch (Exception e) {
-			// TODO log exception
-			
+			// TODO log exception			
 			e.printStackTrace();
 		}
 		return list;
@@ -677,15 +677,24 @@ public class SessionManager extends ISessionManager.Stub {
 				code=0;
 				list=new ArrayList<User>();
 				List resultlist=result.getBody();
+				List<User> friendslist=myFriends();
 				for(int i=0;i<resultlist.size();i++){
-					User u=new User();
+					User user=new User();
 					Map m=(Map) resultlist.get(i);
-					u.setUserid(String.valueOf(m.get("id")));
-					u.setImage(Constant.WEB_SERVER_ADDRESS+(String)m.get("image"));
-					u.setLabels((List)m.get("labels"));
-					u.setUsername((String)m.get("username"));
-					u.setEmail((String)m.get("email"));
-					list.add(u);
+					user.setUserid(String.valueOf(m.get("id")));
+					for(User u:friendslist){
+						if(u.getUserid().equals(String.valueOf(m.get("id")))){
+							user.setIs_friends("true");
+							break;
+						}else{
+							user.setIs_friends("false");
+						}						
+					}
+					user.setImage(Constant.WEB_SERVER_ADDRESS+(String)m.get("image"));
+					user.setLabels((List)m.get("labels"));
+					user.setUsername((String)m.get("username"));
+					user.setEmail((String)m.get("email"));
+					list.add(user);
 				}							
 			}
 		}catch(Exception e){

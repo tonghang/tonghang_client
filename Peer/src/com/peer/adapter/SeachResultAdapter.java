@@ -79,7 +79,12 @@ public class SeachResultAdapter extends BaseAdapter {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				if(checkNetworkState()){
-					PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
+					if(Boolean.valueOf(mlist.get(position).getIs_friends())){
+						PersonpageUtil.getInstance().setPersonpagetype(Constant.FRIENDSPAGE);
+					}else{
+						PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
+					}
+					
 					PersonpageUtil.getInstance().setPersonid(mlist.get(position).getUserid());
 					Intent intent=new Intent(mContext,PersonalPageActivity.class);
 					mContext.startActivity(intent);

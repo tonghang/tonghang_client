@@ -46,7 +46,7 @@ public class FriendsAdapter extends BaseAdapter {
 		return arg0;
 	}
 	@Override
-	public View getView(int position, View convertView, ViewGroup parentgroup) {
+	public View getView(final int position, View convertView, ViewGroup parentgroup) {
 		// TODO Auto-generated method stub
 		ViewHolder viewHolder;
 		if(convertView==null){
@@ -78,7 +78,11 @@ public class FriendsAdapter extends BaseAdapter {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				if(checkNetworkState()){
-					PersonpageUtil.getInstance().setPersonpagetype(Constant.FRIENDSPAGE);
+					if(Boolean.valueOf(mlist.get(position).getIs_friends())){
+						PersonpageUtil.getInstance().setPersonpagetype(Constant.FRIENDSPAGE);
+					}else{
+						PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
+					}
 					PersonpageUtil.getInstance().setPersonid(personid);			
 					Intent intent=new Intent(mContext,PersonalPageActivity.class);
 					mContext.startActivity(intent);
