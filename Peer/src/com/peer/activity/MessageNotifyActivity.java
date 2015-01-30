@@ -1,6 +1,7 @@
 package com.peer.activity;
 
 import com.peer.R;
+import com.peer.localDB.LocalStorage;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -39,16 +40,16 @@ public class MessageNotifyActivity extends BasicActivity {
 		sound.setChecked(true);
 		vibrate=(CheckBox)findViewById(R.id.cb_vibrate);
 		vibrate.setChecked(true);
-//		if(LocalStorage.getBoolean(this, "sound")){
-//			sound.setChecked(true);
-//		}else{
-//			sound.setChecked(false);
-//		}
-//		if(LocalStorage.getBoolean(this, "vibrate")){
-//			vibrate.setChecked(true);
-//		}else{
-//			vibrate.setChecked(false);
-//		}			
+		if(LocalStorage.getBoolean(this, "sound")){
+			sound.setChecked(true);
+		}else{
+			sound.setChecked(false);
+		}
+		if(LocalStorage.getBoolean(this, "vibrate")){
+			vibrate.setChecked(true);
+		}else{
+			vibrate.setChecked(false);
+		}			
 		back=(LinearLayout)findViewById(R.id.ll_back);
 		back.setOnClickListener(this);
 		
@@ -57,11 +58,11 @@ public class MessageNotifyActivity extends BasicActivity {
 			@Override
 			public void onCheckedChanged(CompoundButton arg0, boolean isChecked) {
 				// TODO Auto-generated method stub
-//				if(isChecked){
-//					LocalStorage.saveBoolean(MessageNotifyActivity.this, "sound", true);
-//				}else{
-//					LocalStorage.saveBoolean(MessageNotifyActivity.this, "sound", false);
-//				}
+				if(isChecked){
+					LocalStorage.saveBoolean(MessageNotifyActivity.this, "sound", true);
+				}else{
+					LocalStorage.saveBoolean(MessageNotifyActivity.this, "sound", false);
+				}
 			}
 		});
 		vibrate.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -69,11 +70,11 @@ public class MessageNotifyActivity extends BasicActivity {
 			@Override
 			public void onCheckedChanged(CompoundButton arg0, boolean isChecked) {
 				// TODO Auto-generated method stub
-//				if(isChecked){
-//					LocalStorage.saveBoolean(MessageNotifyActivity.this, "vibrate", true);
-//				}else{
-//					LocalStorage.saveBoolean(MessageNotifyActivity.this, "vibrate", false);
-//				}				
+				if(isChecked){
+					LocalStorage.saveBoolean(MessageNotifyActivity.this, "vibrate", true);
+				}else{
+					LocalStorage.saveBoolean(MessageNotifyActivity.this, "vibrate", false);
+				}				
 			}
 		});		
 	}
@@ -115,8 +116,8 @@ public class MessageNotifyActivity extends BasicActivity {
 	            // TODO Auto-generated method stub  
 	            starth = hourOfDay;  
 	            startm = minute; 
-//	            LocalStorage.saveInt(MessageNotifyActivity.this, "starth", starth);
-//	            LocalStorage.saveInt(MessageNotifyActivity.this, "startm", startm);
+	            LocalStorage.saveInt(MessageNotifyActivity.this, "starth", starth);
+	            LocalStorage.saveInt(MessageNotifyActivity.this, "startm", startm);
 	            start.setText(new StringBuilder().append(starth).append(":").append(startm));
 //	            updateDisplay();  
 	        }    
@@ -128,8 +129,8 @@ public class MessageNotifyActivity extends BasicActivity {
 		            // TODO Auto-generated method stub  
 		            endh = hourOfDay;  
 		            endm = minute;  
-//		            LocalStorage.saveInt(MessageNotifyActivity.this, "endh", endh);
-//		            LocalStorage.saveInt(MessageNotifyActivity.this, "endm", endm);
+		            LocalStorage.saveInt(MessageNotifyActivity.this, "endh", endh);
+		            LocalStorage.saveInt(MessageNotifyActivity.this, "endm", endm);
 		            end.setText(new StringBuilder().append(endh).append(":").append(endm));
 //		            updateDisplay();  
 		        }    

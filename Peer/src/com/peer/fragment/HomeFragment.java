@@ -88,12 +88,12 @@ public class HomeFragment extends BasicFragment{
 			@Override
 			public void onPullDownToRefresh(
 					PullToRefreshBase<ListView> refreshView) {
-				// TODO Auto-generated method stub				
-				String label = DateUtils.formatDateTime(getActivity().getApplicationContext(), System.currentTimeMillis(),
-						DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
-				refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
-				RefreshTask task=new RefreshTask();
-				task.execute("DownToRefresh");				
+				// TODO Auto-generated method stub					
+					String label = DateUtils.formatDateTime(getActivity().getApplicationContext(), System.currentTimeMillis(),
+							DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+					refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+					RefreshTask task=new RefreshTask();
+					task.execute("DownToRefresh");								
 			}
 
 			@Override
@@ -120,33 +120,37 @@ public class HomeFragment extends BasicFragment{
 				e1.printStackTrace();
 			}
 			SessionListener callback=new SessionListener();
-			if(arg0[0].equals("UpToRefresh")){				
-            	try {
-				List uprefrsh=PeerUI.getInstance().getISessionManager().recommendByPage(callback);
-				list.addAll(uprefrsh);
-            	} catch (RemoteException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}else{
-				try {
-					List downrefrsh=PeerUI.getInstance().getISessionManager().recommend(1, callback);
-					list.clear();
-					list.addAll(downrefrsh);
-				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}		
+			if(checkNetworkState()){
+				if(arg0[0].equals("UpToRefresh")){				
+	            	try {
+					List uprefrsh=PeerUI.getInstance().getISessionManager().recommendByPage(callback);
+					list.addAll(uprefrsh);
+	            	} catch (RemoteException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}else{
+					try {
+						List downrefrsh=PeerUI.getInstance().getISessionManager().recommend(1, callback);
+						list.clear();
+						list.addAll(downrefrsh);
+					} catch (RemoteException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}	
+			}			
 			return callback.getMessage();
 		}
 		@Override
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
-			if(result.equals(Constant.CALLBACKSUCCESS)){
+			if(result!=null&&result.equals(Constant.CALLBACKSUCCESS)){
 				adapter.notifyDataSetChanged();
 				mPullrefreshlistview.onRefreshComplete();
-			}		
+			}else{
+				mPullrefreshlistview.onRefreshComplete();
+			}
 		}		
 	}
 	private class RecommendTask extends AsyncTask<Void, Void, List>{

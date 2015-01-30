@@ -19,11 +19,7 @@ import android.widget.Toast;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.TextMessageBody;
-import com.easemob.chat.EMMessage.Type;
-import com.easemob.chat.NotificationCompat;
-import com.easemob.util.EasyUtils;
 import com.peer.R;
-import com.peer.activitymain.ChatRoomActivity;
 import com.peer.activitymain.MainActivity;
 import com.peer.localDB.LocalStorage;
 import com.peer.util.ManagerActivity;
@@ -56,25 +52,10 @@ public class BasicActivity extends FragmentActivity implements OnClickListener{
      * 如果不需要，注释掉即可
      * @param message
      */
-    protected void notifyNewMessage(EMMessage message) {
-        //如果是设置了不提醒只显示数目的群组(这个是app里保存这个数据的，demo里不做判断)
-        //以及设置了setShowNotificationInbackgroup:false(设为false后，后台时sdk也发送广播)
-//        if(!EasyUtils.isAppRunningForeground(this)){
-//            return;
-//        }
-//    	notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-//                .setSmallIcon(getApplicationInfo().icon)
-//                .setWhen(System.currentTimeMillis()).setAutoCancel(true);       
+    protected void notifyNewMessage(EMMessage message) {    
         TextMessageBody txtBody = (TextMessageBody) message.getBody();
         String ticker = txtBody.getMessage();
-//        //设置状态栏提示
-//        mBuilder.setTicker(message.getFrom()+": " + ticker);
-//
-//        Notification notification = mBuilder.build();
-//        notificationManager.notify(notifiId, notification);
-//        notificationManager.cancel(notifiId);
-        
+      
         Calendar c = Calendar.getInstance(); 
 	    int hours=c.get(Calendar.HOUR_OF_DAY); 
 		int munite=c.get(Calendar.MINUTE);
@@ -121,10 +102,7 @@ public class BasicActivity extends FragmentActivity implements OnClickListener{
 	     }
 	     if(LocalStorage.getBoolean(this, "vibrate")){
 	    	 notification.defaults = Notification.DEFAULT_VIBRATE;
-	     }
-//	     if(LocalStorage.getBoolean(this, "sound")&&LocalStorage.getBoolean(this, "vibrate")){
-//	    	 notification.defaults = Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND; 
-//	     }		
+	     }	
 	}
 	/**
 	 *  Prompt information to user

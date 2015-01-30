@@ -170,9 +170,7 @@ public class ChatRoomActivity extends BasicActivity {
 				nikename.setText(intent.getStringExtra(Constant.OWNERNIKE));
 				LoadImageUtil.imageLoader.displayImage(intent.getStringExtra(Constant.IMAGE), ownerimg,LoadImageUtil.options);	
 				tv_theme.setText(intent.getStringExtra(Constant.THEME));
-				topicId=intent.getStringExtra(Constant.TOPICID);
-				Intent serviceintent = new Intent(ChatRoomActivity.this, FxService.class);
-				stopService(serviceintent);
+				topicId=intent.getStringExtra(Constant.TOPICID);				
 			}else{
 				tv_tagname.setText(ChatRoomTypeUtil.getInstance().getTitle());
 				User u=ChatRoomTypeUtil.getInstance().getUser();
@@ -180,7 +178,9 @@ public class ChatRoomActivity extends BasicActivity {
 				LoadImageUtil.imageLoader.displayImage(u.getImage(), ownerimg,LoadImageUtil.options);	
 				tv_theme.setText(ChatRoomTypeUtil.getInstance().getTheme());
 				topicId=ChatRoomTypeUtil.getInstance().getTopicId();
-			}			
+			}
+			Intent serviceintent = new Intent(ChatRoomActivity.this, FxService.class);
+			stopService(serviceintent);
 			//加入公开群聊
 			easemobchatImp.getInstance().joingroup(toChatUsername);		
 		
