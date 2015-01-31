@@ -30,6 +30,7 @@ import com.peer.fragment.ComeMsgFragment;
 import com.peer.fragment.FriendsFragment;
 import com.peer.fragment.HomeFragment;
 import com.peer.fragment.MyFragment;
+import com.peer.widgetutil.FxService;
 import com.readystatesoftware.viewbadger.BadgeView;
 import com.umeng.update.UmengUpdateAgent;
 
@@ -161,6 +162,8 @@ public class MainActivity extends BasicActivity{
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// TODO Auto-generated method stub
 		  if (keyCode == KeyEvent.KEYCODE_BACK) {
+			  Intent intent1 = new Intent(MainActivity.this, FxService.class);
+				stopService(intent1);
 		        Intent intent = new Intent(Intent.ACTION_MAIN);
 		        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		        intent.addCategory(Intent.CATEGORY_HOME);

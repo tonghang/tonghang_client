@@ -11,6 +11,7 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -22,7 +23,10 @@ import com.easemob.chat.TextMessageBody;
 import com.peer.R;
 import com.peer.activitymain.MainActivity;
 import com.peer.localDB.LocalStorage;
+import com.peer.util.HomeWatcher;
 import com.peer.util.ManagerActivity;
+import com.peer.util.OnHomePressedListener;
+import com.peer.widgetutil.FxService;
 /**
  * all activity extends this activity
  * @author Concoon-break
@@ -38,7 +42,7 @@ public class BasicActivity extends FragmentActivity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 	     
 	    ManagerActivity.getAppManager().addActivity(this);
-						
+	    HomeKeyWatcher();				
 	}
 	@Override
 	protected void onResume() {
@@ -46,6 +50,25 @@ public class BasicActivity extends FragmentActivity implements OnClickListener{
 		super.onResume();
 		EMChatManager.getInstance().activityResumed();
 	       
+	}
+	private void HomeKeyWatcher() {
+		// TODO Auto-generated method stub
+		HomeWatcher mHomeWatcher = new HomeWatcher(this);		
+		mHomeWatcher.setOnHomePressedListener(new OnHomePressedListener() {
+			
+			@Override
+			public void onHomePressed() {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(BasicActivity.this, FxService.class);
+				stopService(intent);
+			}			
+			@Override
+			public void onHomeLongPressed() {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		mHomeWatcher.startWatch();
 	}
 	  /**
      * 当应用在前台时，如果当前消息不是属于当前会话，在状态栏提示一下
