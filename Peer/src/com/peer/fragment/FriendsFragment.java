@@ -6,6 +6,8 @@ import com.peer.activitymain.NewFriendsActivity;
 import com.peer.adapter.FriendsAdapter;
 import com.peer.client.User;
 import com.peer.client.ui.PeerUI;
+import com.readystatesoftware.viewbadger.BadgeView;
+
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,12 +19,16 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class FriendsFragment extends BasicFragment{
 	private ListView mlistview;
 	private RelativeLayout seenewfriends;
 	private List<User> list;
 	private FriendsAdapter adapter;
+	private BadgeView newnum;
+	private TextView tv_newfriends;
+	private int newfriendsnum;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -66,8 +72,19 @@ public class FriendsFragment extends BasicFragment{
 		// TODO Auto-generated method stub
 		mlistview=(ListView)getView().findViewById(R.id.lv_friends);				
 		seenewfriends=(RelativeLayout)getView().findViewById(R.id.rl_newfriends);
+		tv_newfriends=(TextView)getView().findViewById(R.id.tv_newfriends);
+		newnum=new BadgeView(getActivity(),tv_newfriends);
 		seenewfriends.setOnClickListener(this);
-	}	
+	}
+	public void setNewfriendsNum(int number){
+		this.newfriendsnum=number;
+		if(newfriendsnum>0){
+			newnum.setText(String.valueOf(newfriendsnum));
+			newnum.show();
+		}else{
+			newnum.hide();
+		}	
+	}
 	private class FriendsTask extends AsyncTask<Void, Void, List>{
 
 		@Override

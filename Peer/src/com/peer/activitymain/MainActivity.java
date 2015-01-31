@@ -1,10 +1,13 @@
 package com.peer.activitymain;
 
+import java.util.List;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
@@ -20,6 +23,9 @@ import com.easemob.chat.EMMessage.ChatType;
 import com.peer.R;
 import com.peer.IMimplements.easemobchatImp;
 import com.peer.activity.BasicActivity;
+import com.peer.client.User;
+import com.peer.client.service.SessionListener;
+import com.peer.client.ui.PeerUI;
 import com.peer.fragment.ComeMsgFragment;
 import com.peer.fragment.FriendsFragment;
 import com.peer.fragment.HomeFragment;
@@ -38,11 +44,12 @@ public class MainActivity extends BasicActivity{
 	private int currentTabIndex;
 	/* bottom layout*/
 	private LinearLayout find,come,my,friends;
-	private TextView tv_find,tv_come,tv_my,tv_friends,unreadmsgnum;
+	private TextView tv_find,tv_come,tv_my,tv_friends,unreadmsgnum,tv_newfriendsnum;
 	private ImageView findback,comeback,friendsback,myback;
 	
 	private NewMessageBroadcastReceiver msgReceiver;
-	private BadgeView unredmsg;
+	private BadgeView unredmsg,bdnewfriendsnum;
+	public int intnewfriendsnum;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -90,7 +97,9 @@ public class MainActivity extends BasicActivity{
 		tv_friends=(TextView)findViewById(R.id.tv_friends);
 		tv_my=(TextView)findViewById(R.id.tv_my);
 		unreadmsgnum=(TextView)findViewById(R.id.showmessgenum);
+		tv_newfriendsnum=(TextView)findViewById(R.id.tv_newfriendsnum);
 		unredmsg=new BadgeView(this,unreadmsgnum);
+		bdnewfriendsnum=new BadgeView(this,tv_newfriendsnum);
 		
 		findback=(ImageView)findViewById(R.id.iv_backfind);
 		comeback=(ImageView)findViewById(R.id.iv_backcome);
@@ -171,6 +180,37 @@ public class MainActivity extends BasicActivity{
 		// TODO Auto-generated method stub
 		super.onResume();
 		updateUnreadLabel();
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				SessionListener callback=new SessionListener();
+				try {
+					List<User> mlist=PeerUI.getInstance().getISessionManager().Invitations(callback);			
+					intnewfriendsnum=mlist.size();
+					friendsfragment.setNewfriendsNum(intnewfriendsnum);
+					runOnUiThread(new Runnable() {
+						public void run() {
+							updatenewfriends();	
+						}
+					});
+					
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}		
+			}
+		}).start();
+		
+	}
+	public void updatenewfriends(){
+		if(intnewfriendsnum>0){
+			bdnewfriendsnum.setText(String.valueOf(intnewfriendsnum));
+			bdnewfriendsnum.show();
+		}else{
+			bdnewfriendsnum.hide();
+		}
 	}
 	/**
 	 * 刷新未读消息数
