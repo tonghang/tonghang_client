@@ -28,10 +28,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class NewfriendsAdapter extends BaseAdapter {
+public class NewfriendsAdapter extends FatherAdater {
 	private Context mContext;	
 	private List<User> mlist;
 	public NewfriendsAdapter(Context mContext,List<User> mlist){
+		super(mContext);
 		this.mContext=mContext;
 		this.mlist=mlist;
 		LoadImageUtil.initImageLoader(mContext);
@@ -157,14 +158,6 @@ public class NewfriendsAdapter extends BaseAdapter {
 			}
 		});
 		return convertView;
-	}
-	public boolean checkNetworkState() {
-		boolean flag = false;		
-		ConnectivityManager manager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);		
-		if (manager.getActiveNetworkInfo() != null) {
-			flag = manager.getActiveNetworkInfo().isAvailable();
-		}
-		return flag;
 	}
 	private class ViewHolder{
 		LinearLayout click;

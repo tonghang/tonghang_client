@@ -25,11 +25,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class HomepageAdapter extends BaseAdapter {
+public class HomepageAdapter extends FatherAdater {
 	
 	private Context mContext;
 	private List<Map> mList;
 	public HomepageAdapter( Context mContext,List<Map> mList){
+		super(mContext);
 		this.mContext=mContext;
 		this.mList=mList;
 		LoadImageUtil.initImageLoader(mContext);
@@ -159,14 +160,6 @@ public class HomepageAdapter extends BaseAdapter {
 				}
 			}
 		});
-	}
-	public boolean checkNetworkState() {
-		boolean flag = false;		
-		ConnectivityManager manager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);		
-		if (manager.getActiveNetworkInfo() != null) {
-			flag = manager.getActiveNetworkInfo().isAvailable();
-		}
-		return flag;
 	}
 	private class ViewHolder{
 		LinearLayout click;

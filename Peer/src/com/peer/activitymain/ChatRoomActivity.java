@@ -4,10 +4,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.text.Editable;
@@ -36,6 +39,7 @@ import com.peer.R;
 import com.peer.IMimplements.easemobchatImp;
 import com.peer.activity.BasicActivity;
 import com.peer.adapter.ChatMsgViewAdapter;
+import com.peer.adapter.HistoryMsgAdapter;
 import com.peer.client.User;
 import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
@@ -66,6 +70,7 @@ public class ChatRoomActivity extends BasicActivity {
 	private EMConversation conversation;
 	private NewMessageBroadcastReceiver receiver;
 	private InputMethodManager manager;
+	private List<Map> Mulmlist;
 	
 	private String imagurl=null;
 	private String userid=null;
@@ -134,8 +139,7 @@ public class ChatRoomActivity extends BasicActivity {
 					int arg3) {
 				// TODO Auto-generated method stub
 				
-			}
-			
+			}			
 			@Override
 			public void afterTextChanged(Editable arg0) {
 				// TODO Auto-generated method stub
@@ -145,8 +149,7 @@ public class ChatRoomActivity extends BasicActivity {
 					sendmessage.setEnabled(true);
 				}
 			}
-		});
-							
+		});							
 	}
 	private void initChatListener() {
 		// TODO Auto-generated method stub
@@ -155,14 +158,16 @@ public class ChatRoomActivity extends BasicActivity {
 		IntentFilter intentFilter = new IntentFilter(EMChatManager.getInstance().getNewMessageBroadcastAction());
 		// 设置广播的优先级别大于Mainacitivity,这样如果消息来的时候正好在chat页面，直接显示消息，而不是提示消息未读
 		intentFilter.setPriority(5);
-		registerReceiver(receiver, intentFilter);
-		
+		registerReceiver(receiver, intentFilter);		
 	}
 	private void roomType() {
 		// TODO Auto-generated method stub
 		if(ChatRoomTypeUtil.getInstance().getChatroomtype()==Constant.MULTICHAT){
 			titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.exitroom), R.color.white));
 			rl_owner.setVisibility(View.VISIBLE);
+			if(!ChatRoomTypeUtil.getInstance().isIsowner()){
+				downwindow.setVisibility(View.GONE);
+			}
 			Intent intent=getIntent();
 			if(intent.getStringExtra(Constant.FROMFLOAT)!=null&&intent.getStringExtra(Constant.FROMFLOAT).equals(Constant.FROMFLOAT)){
 				tv_tagname.setText(intent.getStringExtra(Constant.TAGNAME));
@@ -182,37 +187,47 @@ public class ChatRoomActivity extends BasicActivity {
 			Intent serviceintent = new Intent(ChatRoomActivity.this, FxService.class);
 			stopService(serviceintent);
 			//加入公开群聊
-			easemobchatImp.getInstance().joingroup(toChatUsername);		
-		
+			easemobchatImp.getInstance().joingroup(toChatUsername);
+			
+			ReplieTask task=new ReplieTask();
+			task.execute(ChatRoomTypeUtil.getInstance().getTopicId());
+			
 		}else if(ChatRoomTypeUtil.getInstance().getChatroomtype()==Constant.SINGLECHAT){
 			rl_owner.setVisibility(View.GONE);
 			tv_tagname.setText(ChatRoomTypeUtil.getInstance().getTitle());
 			titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.deletemes), R.color.white));
-		}
-		conversation = EMChatManager.getInstance().getConversation(ChatRoomTypeUtil.getInstance().getHuanxingId());
-		for(int i=0;i<conversation.getMsgCount();i++){
-			EMMessage message =conversation.getMessage(i);
-			TextMessageBody body=(TextMessageBody) message.getBody();
-			String content=body.getMessage();			
-			String   time =DateUtils.getTimestampString(new Date(message.getMsgTime())) ; 
+			conversation = EMChatManager.getInstance().getConversation(ChatRoomTypeUtil.getInstance().getHuanxingId());
+			for(int i=0;i<conversation.getMsgCount();i++){
+				EMMessage message =conversation.getMessage(i);				
 				
-			ChatMsgEntity entity=new ChatMsgEntity();
-			entity.setMessage(content);
-			entity.setDate(time);
-			
-			if(message.direct==EMMessage.Direct.SEND){
-				entity.setUserId(userid);
-				entity.setMsgType(Constant.SELF);
-			}else{
-				entity.setMsgType(Constant.OTHER);
-			}			
-			msgList.add(entity);
-		}	
-		adapter=new ChatMsgViewAdapter(this, msgList);
-		selflistview.setAdapter(adapter);
-		selflistview.setSelection(selflistview.getCount() - 1);	
-		// 把此会话的未读数置为0
-		conversation.resetUnreadMsgCount();	
+				TextMessageBody body=(TextMessageBody) message.getBody();
+				String content=body.getMessage();			
+				String   time =DateUtils.getTimestampString(new Date(message.getMsgTime())) ; 
+					
+				ChatMsgEntity entity=new ChatMsgEntity();
+				entity.setMessage(content);
+				entity.setDate(time);
+				try {
+					entity.setImage(message.getStringAttribute(Constant.IMAGEURL));
+					entity.setUserId(message.getStringAttribute(Constant.USERID));
+				} catch (EaseMobException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if(message.direct==EMMessage.Direct.SEND){
+					entity.setMsgType(Constant.SELF);
+				}else{
+					entity.setMsgType(Constant.OTHER);
+				}			
+				msgList.add(entity);
+			}	
+			adapter=new ChatMsgViewAdapter(this, msgList);
+			selflistview.setAdapter(adapter);
+			selflistview.setSelection(selflistview.getCount() - 1);	
+			// 把此会话的未读数置为0
+			conversation.resetUnreadMsgCount();				
+		}
+		
 	}
 	private void popupwindow() {
 		// TODO Auto-generated method stub		
@@ -247,8 +262,7 @@ public class ChatRoomActivity extends BasicActivity {
 				startfloatView();
 			}else{
 				finish();
-			}
-			
+			}			
 			break;
 		
 		case R.id.tv_seemember:
@@ -349,8 +363,6 @@ public class ChatRoomActivity extends BasicActivity {
 		manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		
-		
-//		InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 		if (getWindow().getAttributes().softInputMode != WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {
 			if (getCurrentFocus() != null)
 				manager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
@@ -367,7 +379,7 @@ public class ChatRoomActivity extends BasicActivity {
 		    return super.onKeyDown(keyCode, event);
 	}
 	public void startfloatView(){
-		if(ChatRoomTypeUtil.getInstance().isIsowner()){
+		if(ChatRoomTypeUtil.getInstance().isIsowner()&&ChatRoomTypeUtil.getInstance().getChatroomtype()==Constant.MULTICHAT){
 			Intent intentfloat = new Intent(ChatRoomActivity.this, FxService.class);				
 			User u=ChatRoomTypeUtil.getInstance().getUser();			
 			intentfloat.putExtra(Constant.IMAGE, u.getImage());
@@ -380,11 +392,54 @@ public class ChatRoomActivity extends BasicActivity {
 			intentfloat.putExtra(Constant.FROMFLOAT, "float");
 			startService(intentfloat);
 			finish();
+		}else if(ChatRoomTypeUtil.getInstance().getChatroomtype()==Constant.SINGLECHAT){
+			// 把此会话的未读数置为0
+			conversation.resetUnreadMsgCount();
+			finish();			
 		}else{
 			easemobchatImp.getInstance().exitgroup(toChatUsername);
+			finish();
 		}
-		conversation.resetUnreadMsgCount();				
-		finish();
+	}
+	private class ReplieTask extends AsyncTask<String, String, String>{
+
+		@Override
+		protected String doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			SessionListener callback=new SessionListener();
+			try {
+				Mulmlist=PeerUI.getInstance().getISessionManager().TopicReplies(params[0], callback);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return callback.getMessage();
+		}
+		@Override
+		protected void onPostExecute(String result) {
+			// TODO Auto-generated method stub
+			if(result.equals(Constant.CALLBACKSUCCESS)){
+				for(int i=0;i<Mulmlist.size();i++){
+					ChatMsgEntity entity=new ChatMsgEntity();
+					entity.setMessage((String)Mulmlist.get(i).get("replybody"));
+					entity.setDate((String)Mulmlist.get(i).get(Constant.TIME));
+					User user=(User) Mulmlist.get(i).get(Constant.USER);
+					entity.setUserId(user.getUserid());
+					if(user.getUserid().equals(userid)){
+						entity.setMsgType(Constant.SELF);
+					}else{
+						entity.setMsgType(Constant.OTHER);
+					}	
+					entity.setImage(user.getImage());
+					msgList.add(entity);					
+				}
+				adapter=new ChatMsgViewAdapter(ChatRoomActivity.this, msgList);
+				selflistview.setAdapter(adapter);
+				selflistview.setSelection(selflistview.getCount() - 1);	
+				
+			}
+						
+		}
 	}
 	
 	@Override

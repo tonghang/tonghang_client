@@ -78,12 +78,17 @@ public class FriendsFragment extends BasicFragment{
 	}
 	public void setNewfriendsNum(int number){
 		this.newfriendsnum=number;
-		if(newfriendsnum>0){
-			newnum.setText(String.valueOf(newfriendsnum));
-			newnum.show();
-		}else{
-			newnum.hide();
-		}	
+		getActivity().runOnUiThread(new Runnable() {
+			public void run() {
+				if(newfriendsnum>0){
+					newnum.setText(String.valueOf(newfriendsnum));
+					newnum.show();
+				}else{
+					newnum.hide();
+				}	
+			}
+		});
+		
 	}
 	private class FriendsTask extends AsyncTask<Void, Void, List>{
 
@@ -95,8 +100,7 @@ public class FriendsFragment extends BasicFragment{
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-           
+			}           
 			return list;
 		}
 		@Override

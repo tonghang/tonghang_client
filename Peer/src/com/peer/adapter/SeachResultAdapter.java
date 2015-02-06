@@ -21,10 +21,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class SeachResultAdapter extends BaseAdapter {
+public class SeachResultAdapter extends FatherAdater {
 	private List<User> mlist;
 	private Context mContext;
 	public SeachResultAdapter(Context mContext,List<User> list){
+		super(mContext);
 		this.mContext=mContext;
 		this.mlist=list;
 		LoadImageUtil.initImageLoader(mContext);
@@ -94,14 +95,6 @@ public class SeachResultAdapter extends BaseAdapter {
 			}
 		});
 		return convertView;
-	}
-	public boolean checkNetworkState() {
-		boolean flag = false;		
-		ConnectivityManager manager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);		
-		if (manager.getActiveNetworkInfo() != null) {
-			flag = manager.getActiveNetworkInfo().isAvailable();
-		}
-		return flag;
 	}
 	private class ViewHolder{
 		LinearLayout click;

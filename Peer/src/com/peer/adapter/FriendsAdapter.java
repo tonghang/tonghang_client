@@ -22,10 +22,11 @@ import com.peer.constant.Constant;
 import com.peer.util.PersonpageUtil;
 import com.peer.widgetutil.LoadImageUtil;
 
-public class FriendsAdapter extends BaseAdapter {
+public class FriendsAdapter extends FatherAdater {
 	private Context mContext;
 	private List<User> mlist;
 	public FriendsAdapter(Context mContext,List<User> list){
+		super(mContext);
 		this.mContext=mContext;		
 		this.mlist=list;
 		LoadImageUtil.initImageLoader(mContext);
@@ -93,14 +94,6 @@ public class FriendsAdapter extends BaseAdapter {
 			}
 		});
 		return convertView;
-	}
-	public boolean checkNetworkState() {
-		boolean flag = false;		
-		ConnectivityManager manager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);		
-		if (manager.getActiveNetworkInfo() != null) {
-			flag = manager.getActiveNetworkInfo().isAvailable();
-		}
-		return flag;
 	}
 	private class ViewHolder{
 		LinearLayout click;

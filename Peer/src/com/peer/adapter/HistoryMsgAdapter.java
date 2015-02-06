@@ -18,10 +18,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class HistoryMsgAdapter extends BaseAdapter {
+public class HistoryMsgAdapter extends FatherAdater {
 	private Context mContext;
 	private List<Map> mlist;
 	public HistoryMsgAdapter(Context mContext, List<Map> mlist){
+		super(mContext);
 		this.mContext=mContext;	
 		this.mlist=mlist;
 		LoadImageUtil.initImageLoader(mContext);

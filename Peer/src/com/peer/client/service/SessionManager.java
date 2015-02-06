@@ -457,7 +457,6 @@ public class SessionManager extends ISessionManager.Stub {
 			if (result.getStatusCode() == HttpStatus.OK &&result.getBody()!=null) {	
 				user=new User();
 				String id=String.valueOf(u.get("id"));
-				userid=id;
 				user.setUserid(id);
 				user.setEmail((String)u.get("email"));
 				user.setBirthday((String)u.get("birth"));
@@ -488,10 +487,21 @@ public class SessionManager extends ISessionManager.Stub {
 				List<Map>	body = result.getBody();
 				for(int i=0;i<body.size();i++){
 					Topic topic=new Topic();
+					
+					Map usermap=(Map) body.get(i).get("user");
+					
+					User user=new User();
+					user.setImage(Constant.WEB_SERVER_ADDRESS+(String)usermap.get("image"));
+					user.setUsername((String)usermap.get("username"));
+					user.setUserid(String.valueOf(usermap.get("id")));
+					user.setHuangxin_username((String)usermap.get("huanxin_username"));
+					topic.setUser(user);
+					
 					topic.setCreate_time((String)body.get(i).get("created_at"));
 					topic.setLabel_name((String)body.get(i).get("label_name"));
 					topic.setSubject((String)body.get(i).get("subject"));
 					topic.setTopicid(String.valueOf(body.get(i).get("id")));
+					topic.setHuangxin_group_id(String.valueOf(body.get(i).get("huanxin_group_id")));
 					topiclist.add(topic);
 				}			
 				message=Constant.CALLBACKSUCCESS;
@@ -812,14 +822,6 @@ public class SessionManager extends ISessionManager.Stub {
 		int code=1;	
 		Map map=null;
 		try{
-			HttpHeaders headers=new HttpHeaders();			
-			headers.add("x-token", token);	
-			RestTemplate restTemplate=new RestTemplate(true);		
-			restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());			
-			restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter());
-			restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
-//			ResponseEntity<Map> result =restTemplate.exchange(Constant.WEB_SERVER_ADDRESS+"/topics/"+topicId+".json", HttpMethod.POST, 
-//					new HttpEntity(headers), Map.class);
 			ResponseEntity<Map> result=DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/topics/"+topicId+".json", Map.class);
 			if(result.getStatusCode()==HttpStatus.OK){
 				list=new ArrayList();
@@ -832,9 +834,11 @@ public class SessionManager extends ISessionManager.Stub {
 					
 					Map usermap=(Map) mlist.get(i).get("user");
 					User user=new User();
+					user.setUserid(String.valueOf(usermap.get("id")));
 					user.setUsername((String)usermap.get("username"));
 					user.setImage(Constant.WEB_SERVER_ADDRESS+(String)usermap.get("image"));
 					replies.put(Constant.USER, user);
+					replies.put(Constant.TIME, (String)mlist.get(i).get("created_at"));
 					replies.put("replybody", (String)mlist.get(i).get("body"));
 					list.add(replies);
 				}

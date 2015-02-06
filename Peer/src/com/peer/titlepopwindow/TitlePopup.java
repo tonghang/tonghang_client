@@ -113,6 +113,33 @@ public class TitlePopup extends PopupWindow {
 	
 		showAtLocation(view, popupGravity, mScreenWidth - LIST_PADDING - (getWidth()/2), mRect.bottom);
 	}
+	public void showonserchtag(View view){
+		view.getLocationOnScreen(mLocation);
+		
+		
+		mRect.set(mLocation[0], mLocation[1], mLocation[0] + view.getWidth(),mLocation[1] + view.getHeight());
+		
+		
+		if(mIsDirty){
+			populateActions();
+		}
+		
+	
+		showAtLocation(view, popupGravity, 100, mRect.bottom);
+	}
+	public void showonserchuser(View view){
+		view.getLocationOnScreen(mLocation);
+		
+		
+		mRect.set(mLocation[0], mLocation[1], mLocation[0] + view.getWidth(),mLocation[1] + view.getHeight());
+		
+		
+		if(mIsDirty){
+			populateActions();
+		}
+		
+		showAtLocation(view, popupGravity, 200, mRect.bottom);
+	}
 	
 	
 	private void populateActions(){
@@ -140,11 +167,11 @@ public class TitlePopup extends PopupWindow {
 				
 				ActionItem item = mActionItems.get(position);
 				
-				//锟斤拷锟斤拷锟侥憋拷锟斤拷锟斤拷
+				
 				textView.setText(item.mTitle);
-				//锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷图锟斤拷募锟斤拷
+				
 				textView.setCompoundDrawablePadding(10);
-				//锟斤拷锟斤拷锟斤拷锟斤拷锟街碉拷锟斤拷叻锟揭伙拷锟酵硷拷锟�
+			
                 textView.setCompoundDrawablesWithIntrinsicBounds(item.mDrawable, null , null, null);
 				
                 return textView;

@@ -26,7 +26,8 @@
             android:layout_centerVertical="true"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="@dimen/textsize_large" />
+            android:textSize="@dimen/textsize_large" 
+            />
 
         <ImageView
         android:clickable="true"

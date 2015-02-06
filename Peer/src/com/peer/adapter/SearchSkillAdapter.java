@@ -23,11 +23,12 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class SearchSkillAdapter extends BaseAdapter {
+public class SearchSkillAdapter extends FatherAdater {
 	private Context mContext;
 	private List<String> mlist;
 	
 	public SearchSkillAdapter(Context mContext,List<String> list){
+		super(mContext);
 		this.mContext=mContext;
 		this.mlist=list;
 	}
@@ -86,7 +87,7 @@ public class SearchSkillAdapter extends BaseAdapter {
 				public void onClick(View arg0) {
 					// TODO Auto-generated method stub
 					if(checkNetworkState()){
-						SearchUtil.getInstance().setSearchtype(Constant.SEARCHUSERBYLABEL);
+		//				SearchUtil.getInstance().setSearchtype(Constant.SEARCHUSERBYLABEL);
 						Intent intent=new Intent(mContext,SearchResultActivity.class);
 						mContext.startActivity(intent);
 						((Activity) mContext).finish();
@@ -106,7 +107,7 @@ public class SearchSkillAdapter extends BaseAdapter {
 					public void onClick(View arg0) {
 						// TODO Auto-generated method stub
 						if(checkNetworkState()){
-							SearchUtil.getInstance().setSearchtype(Constant.SEARCHUSERBYLABEL);
+		//					SearchUtil.getInstance().setSearchtype(Constant.SEARCHUSERBYLABEL);
 							Intent intent=new Intent(mContext,SearchResultActivity.class);
 							mContext.startActivity(intent);						
 							((Activity) mContext).finish();		
@@ -126,14 +127,6 @@ public class SearchSkillAdapter extends BaseAdapter {
 		
 		return convertView;
 		
-	}
-	public boolean checkNetworkState() {
-		boolean flag = false;		
-		ConnectivityManager manager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);		
-		if (manager.getActiveNetworkInfo() != null) {
-			flag = manager.getActiveNetworkInfo().isAvailable();
-		}
-		return flag;
 	}
 	private class ViewHolder{
 		TextView view1,view2;

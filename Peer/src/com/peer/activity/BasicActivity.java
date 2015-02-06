@@ -35,6 +35,7 @@ import com.peer.widgetutil.FxService;
 public class BasicActivity extends FragmentActivity implements OnClickListener{	
 	private static final int notifiId = 11;
     protected NotificationManager notificationManager;
+    private HomeWatcher mHomeWatcher ;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -51,9 +52,15 @@ public class BasicActivity extends FragmentActivity implements OnClickListener{
 		EMChatManager.getInstance().activityResumed();
 	       
 	}
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		mHomeWatcher.stopWatch();
+	}
 	private void HomeKeyWatcher() {
 		// TODO Auto-generated method stub
-		HomeWatcher mHomeWatcher = new HomeWatcher(this);		
+		mHomeWatcher = new HomeWatcher(this);		
 		mHomeWatcher.setOnHomePressedListener(new OnHomePressedListener() {
 			
 			@Override

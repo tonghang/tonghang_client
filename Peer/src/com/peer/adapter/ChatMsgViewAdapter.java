@@ -24,7 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class ChatMsgViewAdapter extends BaseAdapter {
+public class ChatMsgViewAdapter extends FatherAdater {
 
 	public static interface IMsgViewType {
 		int IMVT_COM_MSG = 1;
@@ -37,6 +37,7 @@ public class ChatMsgViewAdapter extends BaseAdapter {
 	private LayoutInflater mInflater;
 	
 	public ChatMsgViewAdapter(Context context, List<ChatMsgEntity> coll) {
+		super(context);
 		this.coll = coll;
 		this.context=context;
 		mInflater = LayoutInflater.from(context);
@@ -133,14 +134,6 @@ public class ChatMsgViewAdapter extends BaseAdapter {
 				}
 			});			
 		return convertView;
-	}
-	public boolean checkNetworkState() {
-		boolean flag = false;		
-		ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);		
-		if (manager.getActiveNetworkInfo() != null) {
-			flag = manager.getActiveNetworkInfo().isAvailable();
-		}
-		return flag;
 	}
 	static class ViewHolder {
 		public ImageView heapic;

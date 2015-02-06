@@ -15,6 +15,7 @@ public interface Constant {
 	/*homepage recommend user or topic*/
 	public String USER="user";
 	public String TOPIC="topic";
+	public String TIME="time";
 	
 	/*personalpage type*/
 	public int OWNPAGE=1;
@@ -30,9 +31,11 @@ public interface Constant {
 	public String LOGINSUCCESS="success";
 	public String LOGINFAIL="fail";
 	/*search type*/
-	public int SEARCHSKILL=1;
-	public int SEARCHUSER=2;
-	public int SEARCHUSERBYLABEL=3;
+	public String TOPICBYTAG="topicbytag";
+	public String TOPICBYTOPIC="topicbytopic";
+	public String USERBYTAG="userbytag";
+	public String USERBYNIKE="userbynike";
+	
 	/*web server*/
 	//	 String SERVER_ADDRESS = "10.0.2.2:3000";
 	String SERVER_ADDRESS = "114.215.143.83:3000";

@@ -1,7 +1,5 @@
 package com.peer.client;
 
-import com.easemob.chat.core.b;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -13,6 +11,7 @@ public class Topic implements Parcelable{
 	private String body;
 	private String topicid;
 	private String subject;
+	private User user;
 	
 	public Topic(){}
 	
@@ -113,5 +112,14 @@ public class Topic implements Parcelable{
 
 	public void setSubject(String subject) {
 		this.subject = subject;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}  	
+	
 }

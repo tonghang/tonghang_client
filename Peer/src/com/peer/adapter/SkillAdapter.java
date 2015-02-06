@@ -17,10 +17,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class SkillAdapter extends BaseAdapter {
+public class SkillAdapter extends FatherAdater {
 	private Context mContext;
 	private List<String> mlist;
 	public SkillAdapter(Context mContext,List<String> mlist){
+		super(mContext);
 		this.mContext=mContext;
 		this.mlist=mlist;
 	}
@@ -123,14 +124,6 @@ public class SkillAdapter extends BaseAdapter {
                     }
                 });
         builder.show();			
-	}
-	public boolean checkNetworkState() {
-		boolean flag = false;		
-		ConnectivityManager manager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);		
-		if (manager.getActiveNetworkInfo() != null) {
-			flag = manager.getActiveNetworkInfo().isAvailable();
-		}
-		return flag;
 	}
 	private class ViewHolder{
 		TextView skillname,delete,update;

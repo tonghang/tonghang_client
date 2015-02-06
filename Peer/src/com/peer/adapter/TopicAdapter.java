@@ -6,6 +6,7 @@ import java.util.Map;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.os.RemoteException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +17,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.peer.R;
+import com.peer.activitymain.ChatRoomActivity;
 import com.peer.activitymain.TopicHistoryActivity;
 import com.peer.client.Topic;
+import com.peer.client.ui.PeerUI;
+import com.peer.constant.Constant;
+import com.peer.util.ChatRoomTypeUtil;
 
-public class TopicAdapter extends BaseAdapter {
+public class TopicAdapter extends FatherAdater {
 	private Context mContext;
 	private List<Topic> mlist;
 	public TopicAdapter(Context mContext,List<Topic> list){
+		super(mContext);
 		this.mContext=mContext;
 		this.mlist=list;
 	}
@@ -69,10 +75,27 @@ public class TopicAdapter extends BaseAdapter {
 			
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-//				ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.MULTICHAT);
+				// TODO Auto-generated method stub				
 				if(checkNetworkState()){
-					Intent intent=new Intent(mContext,TopicHistoryActivity.class);
+					ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.MULTICHAT);
+					ChatRoomTypeUtil.getInstance().setTitle(topic.getLabel_name());
+					ChatRoomTypeUtil.getInstance().setTheme(topic.getSubject());
+					ChatRoomTypeUtil.getInstance().setTopicId(topic.getTopicid());
+					ChatRoomTypeUtil.getInstance().setUser(topic.getUser());
+					ChatRoomTypeUtil.getInstance().setHuanxingId(topic.getHuangxin_group_id());
+					String ownerid=null;
+					try {
+						ownerid = PeerUI.getInstance().getISessionManager().getUserId();
+					} catch (RemoteException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}	
+					if(topic.getUser().getUserid().equals(ownerid)){
+						ChatRoomTypeUtil.getInstance().setIsowner(true);
+					}else{
+						ChatRoomTypeUtil.getInstance().setIsowner(false);
+					}					
+					Intent intent=new Intent(mContext,ChatRoomActivity.class);
 					intent.putExtra("topicid",String.valueOf(topic.getTopicid()));
 					mContext.startActivity(intent);
 				}else{
@@ -83,14 +106,6 @@ public class TopicAdapter extends BaseAdapter {
 		});
 		
 		return convertView;
-	}
-	public boolean checkNetworkState() {
-		boolean flag = false;		
-		ConnectivityManager manager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);		
-		if (manager.getActiveNetworkInfo() != null) {
-			flag = manager.getActiveNetworkInfo().isAvailable();
-		}
-		return flag;
 	}
 	private class ViewHolder{
 		LinearLayout click;

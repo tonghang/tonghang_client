@@ -3,23 +3,21 @@ package com.peer.activitymain;
 import com.peer.R;
 import com.peer.activity.BasicActivity;
 import com.peer.constant.Constant;
-import com.peer.localDB.LocalStorage;
-import com.peer.util.ManagerActivity;
+import com.peer.titlepopwindow.ActionItem;
+import com.peer.titlepopwindow.TitlePopup;
+import com.peer.titlepopwindow.TitlePopup.OnItemOnClickListener;
 import com.peer.util.SearchUtil;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
 public class SearchActivity extends BasicActivity {
@@ -30,30 +28,18 @@ public class SearchActivity extends BasicActivity {
 	private EditText contentsearch;
 	private LinearLayout back,mLayoutClearSearchText;
 	private InputMethodManager imm;
-	
+	private TitlePopup tagPopup,userPopup;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);
 		init();
-		
-	}
-	@Override
-	protected void onRestart() {
-		// TODO Auto-generated method stub
-		super .onRestart();
-		if(isSearchSkill){
-			SearchUtil.getInstance().setSearchtype(Constant.SEARCHSKILL);
-		}else{
-			SearchUtil.getInstance().setSearchtype(Constant.SEARCHUSER);
-		}
+		popupwindow();
 	}
 	private void init() {
 		// TODO Auto-generated method stub
-		SearchUtil.getInstance().setSearchtype(Constant.SEARCHSKILL);
-		
-		
+		SearchUtil.getInstance().setSearchtype(Constant.TOPICBYTOPIC);		
 		searchtag=(TextView)findViewById(R.id.searchtag);
 		searchtag.setOnClickListener(this);
 		searchtag.setTextColor(getResources().getColor(R.color.black));
@@ -82,22 +68,32 @@ public class SearchActivity extends BasicActivity {
 		imm.showSoftInput(contentsearch, InputMethodManager.RESULT_SHOWN); 
 		imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY); 
 		
-		search_search=(Button)findViewById(R.id.tv_search_search);		
+		search_search=(Button)findViewById(R.id.bt_search_search);		
 		search_search.setOnClickListener(this);
+		
+		tagPopup = new TitlePopup(this, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);	
+		tagPopup.addAction(new ActionItem(this, getResources().getString(R.string.bytopic), R.color.white));
+		tagPopup.addAction(new ActionItem(this, getResources().getString(R.string.bytag), R.color.white));		
+		
+		userPopup = new TitlePopup(this, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);	
+		userPopup.addAction(new ActionItem(this, getResources().getString(R.string.bytag), R.color.white));
+		userPopup.addAction(new ActionItem(this, getResources().getString(R.string.bynike), R.color.white));
 	}
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.searchtag:
 			SearchSkill();
+			tagPopup.showonserchtag(v);			
 			break;
 		case R.id.search_user:
 			SearchUser();
+			userPopup.showonserchuser(v);			
 			break;
 		case R.id.btn_clear_search_text:
 			contentsearch.setText("");
 			mLayoutClearSearchText.setVisibility(View.GONE);
 			break;
-		case R.id.tv_search_search:
+		case R.id.bt_search_search:
 			if(checkNetworkState()){
 				String searchtaget=contentsearch.getText().toString().trim();
 				if(TextUtils.isEmpty(searchtaget)){
@@ -107,8 +103,7 @@ public class SearchActivity extends BasicActivity {
 				}	
 			}else{
 				ShowMessage(getResources().getString(R.string.Broken_network_prompt));
-			}
-												
+			}											
 			break;
 		case R.id.ll_back:
 			imm.hideSoftInputFromWindow(contentsearch.getWindowToken(), 0);
@@ -122,9 +117,7 @@ public class SearchActivity extends BasicActivity {
 	 
 	private void SearchSkill() {
 			// TODO Auto-generated method stub
-		SearchUtil.getInstance().setSearchtype(Constant.SEARCHSKILL);
-		isSearchSkill=true;
-		
+		  isSearchSkill=true;		
 		  searchtag.setTextColor(getResources().getColor(R.color.black));
 		  searchtag.setBackgroundDrawable(getResources().getDrawable(R.drawable.searchborder));
 		  searchuser.setTextColor(getResources().getColor(R.color.seachbluetext));
@@ -132,8 +125,7 @@ public class SearchActivity extends BasicActivity {
 	  }
 	private void SearchUser() {
 			// TODO Auto-generated method stub
-		SearchUtil.getInstance().setSearchtype(Constant.SEARCHUSER);
-				isSearchSkill=false;
+		  isSearchSkill=false;
 		  searchuser.setTextColor(getResources().getColor(R.color.black));
 		  searchuser.setBackgroundDrawable(getResources().getDrawable(R.drawable.searchborder));
 		  searchtag.setTextColor(getResources().getColor(R.color.seachbluetext));
@@ -147,6 +139,37 @@ public class SearchActivity extends BasicActivity {
 		 Intent intent=new Intent(SearchActivity.this, SearchResultActivity.class);
 		 startActivity(intent);
 		}
+	 private void popupwindow() {
+		 tagPopup.setItemOnClickListener(new OnItemOnClickListener() {			
+				@Override
+				public void onItemClick(ActionItem item, int position) {
+					// TODO Auto-generated method stub
+					if(item.mTitle.equals(getResources().getString(R.string.bytag))){
+						contentsearch.setHint(item.mTitle);
+						SearchUtil.getInstance().setSearchtype(Constant.TOPICBYTAG);
+					}else if(item.mTitle.equals(getResources().getString(R.string.bytopic))){
+						contentsearch.setHint(item.mTitle);
+						SearchUtil.getInstance().setSearchtype(Constant.TOPICBYTOPIC);
+					}					
+				}
+		 });
+		 userPopup.setItemOnClickListener(new OnItemOnClickListener() {
+			
+			@Override
+			public void onItemClick(ActionItem item, int position) {
+				// TODO Auto-generated method stub
+				if(item.mTitle.equals(getResources().getString(R.string.bytag))){
+					contentsearch.setHint(item.mTitle);
+					SearchUtil.getInstance().setSearchtype(Constant.USERBYTAG);
+				}else if(item.mTitle.equals(getResources().getString(R.string.bynike))){
+					contentsearch.setHint(item.mTitle);
+					SearchUtil.getInstance().setSearchtype(Constant.USERBYNIKE);
+				}
+				
+			}
+		});
+	 }
+ 
 	 TextWatcher watcher=new TextWatcher() {
 		
 		@Override
@@ -159,8 +182,7 @@ public class SearchActivity extends BasicActivity {
 				int arg3) {
 			// TODO Auto-generated method stub
 			
-		}
-		
+		}		
 		@Override
 		public void afterTextChanged(Editable arg0) {
 			// TODO Auto-generated method stub

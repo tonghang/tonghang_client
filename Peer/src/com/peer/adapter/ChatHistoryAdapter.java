@@ -28,10 +28,11 @@ import com.peer.util.ChatRoomTypeUtil;
 import com.peer.widgetutil.LoadImageUtil;
 import com.readystatesoftware.viewbadger.BadgeView;
 
-public class ChatHistoryAdapter extends BaseAdapter {
+public class ChatHistoryAdapter extends FatherAdater {
 	private Context mContext;
 	private List<Map> userlist;
 	public ChatHistoryAdapter(Context mContext,List<Map> mlist){
+		super(mContext);
 		this.mContext=mContext;
 		this.userlist=mlist;
 	}
@@ -164,15 +165,6 @@ public class ChatHistoryAdapter extends BaseAdapter {
 				}
 			}
 		});
-	}
-
-	public boolean checkNetworkState() {
-		boolean flag = false;		
-		ConnectivityManager manager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);		
-		if (manager.getActiveNetworkInfo() != null) {
-			flag = manager.getActiveNetworkInfo().isAvailable();
-		}
-		return flag;
 	}
 	private class ViewHolder{
 		LinearLayout click;
