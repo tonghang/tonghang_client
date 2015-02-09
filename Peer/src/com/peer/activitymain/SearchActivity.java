@@ -146,7 +146,7 @@ public class SearchActivity extends BasicActivity {
 					// TODO Auto-generated method stub
 					if(item.mTitle.equals(getResources().getString(R.string.bytag))){
 						contentsearch.setHint(item.mTitle);
-						SearchUtil.getInstance().setSearchtype(Constant.TOPICBYTAG);
+						SearchUtil.getInstance().setSearchtype(Constant.LABELTOPIC);
 					}else if(item.mTitle.equals(getResources().getString(R.string.bytopic))){
 						contentsearch.setHint(item.mTitle);
 						SearchUtil.getInstance().setSearchtype(Constant.TOPICBYTOPIC);
@@ -160,7 +160,7 @@ public class SearchActivity extends BasicActivity {
 				// TODO Auto-generated method stub
 				if(item.mTitle.equals(getResources().getString(R.string.bytag))){
 					contentsearch.setHint(item.mTitle);
-					SearchUtil.getInstance().setSearchtype(Constant.USERBYTAG);
+					SearchUtil.getInstance().setSearchtype(Constant.LABELUSER);
 				}else if(item.mTitle.equals(getResources().getString(R.string.bynike))){
 					contentsearch.setHint(item.mTitle);
 					SearchUtil.getInstance().setSearchtype(Constant.USERBYNIKE);

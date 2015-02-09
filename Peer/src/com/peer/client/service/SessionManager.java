@@ -280,36 +280,36 @@ public class SessionManager extends ISessionManager.Stub {
 		}	
 		callback.onCallBack(code, message);
 	}
-	/*search user by label 通过测试*/
+	/*search topic by label 通过测试*/
 	@Override
-	public List<User> searchUserByLabel(String label,ISessionListener callback) throws RemoteException {
+	public List<Topic> searchTopicByLabel(String label,ISessionListener callback) throws RemoteException {
 		// TODO Auto-generated method stub
-		List<User> mlist=new ArrayList<User>();
+		List<Topic> mlist=new ArrayList<Topic>();
 		String message = null;
 		int code=1;
 		try {
-			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/users.json?q="+label,List.class);
+			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/topics.json?label_name="+label+"&page=1",List.class);
 			List<Map> list= result.getBody();
-			List<User> friendslist=myFriends();
 			if(result.getStatusCode()==HttpStatus.OK){
-				for(Map m:list){
+				for(int i=0;i<list.size();i++){
+					Topic topic=new Topic();
+					Map usermap=(Map) list.get(i).get("user");
 					User user=new User();
-					user.setEmail((String)m.get("email"));
-					user.setUsername((String)m.get("username"));
-					user.setImage(Constant.WEB_SERVER_ADDRESS+(String)m.get("image"));
-					user.setUserid(String.valueOf(m.get("id")));
-					user.setBirthday((String)m.get("birth"));
-					user.setLabels((List)m.get("labels"));
-					for(User u:friendslist){
-						if(u.getUserid().equals(String.valueOf(m.get("id")))){
-							user.setIs_friends("true");
-							break;
-						}else{
-							user.setIs_friends("false");
-						}						
-					}					
-					mlist.add(user);
+					user.setImage(Constant.WEB_SERVER_ADDRESS+(String)usermap.get("image"));
+					user.setUserid(String.valueOf(usermap.get("id")));
+					user.setUsername((String)usermap.get("username"));
+					user.setLabels((List<String>)usermap.get("labels"));
+					user.setHuangxin_username((String)usermap.get("huanxin_username"));
+					topic.setUser(user);
+					topic.setLabel_name((String)list.get(i).get("label_name"));
+					topic.setSubject((String)list.get(i).get("subject"));
+					topic.setTopicid(String.valueOf(list.get(i).get("id")));
+					topic.setHuangxin_group_id(String.valueOf(list.get(i).get("huanxin_group_id")));
+					topic.setCreate_time((String)list.get(i).get("created_at"));
+					topic.setBody((String)list.get(i).get("body"));
+					mlist.add(topic);
 				}
+				
 				code=0;
 				message=Constant.CALLBACKSUCCESS;
 			}else{
@@ -322,6 +322,48 @@ public class SessionManager extends ISessionManager.Stub {
 		callback.onCallBack(code, message);	
 		return mlist;
 	}
+	@Override
+	public List<Topic> searchTopicBykey(String key, ISessionListener callback)
+			throws RemoteException {
+		// TODO Auto-generated method stub
+		List<Topic> mlist=new ArrayList<Topic>();
+		String message = null;
+		int code=1;
+		try {
+			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/topics.json?q="+key+"&page=1",List.class);
+			List<Map> list= result.getBody();
+			if(result.getStatusCode()==HttpStatus.OK){
+				for(int i=0;i<list.size();i++){
+					Topic topic=new Topic();
+					Map usermap=(Map) list.get(i).get("user");
+					User user=new User();
+					user.setImage(Constant.WEB_SERVER_ADDRESS+(String)usermap.get("image"));
+					user.setUserid(String.valueOf(usermap.get("id")));
+					user.setUsername((String)usermap.get("username"));
+					user.setLabels((List<String>)usermap.get("labels"));
+					user.setHuangxin_username((String)usermap.get("huanxin_username"));
+					topic.setUser(user);
+					topic.setLabel_name((String)list.get(i).get("label_name"));
+					topic.setSubject((String)list.get(i).get("subject"));
+					topic.setTopicid(String.valueOf(list.get(i).get("id")));
+					topic.setHuangxin_group_id(String.valueOf(list.get(i).get("huanxin_group_id")));
+					topic.setCreate_time((String)list.get(i).get("created_at"));
+					topic.setBody((String)list.get(i).get("body"));
+					mlist.add(topic);
+				}
+				
+				code=0;
+				message=Constant.CALLBACKSUCCESS;
+			}else{
+				message=Constant.CALLBACKFAIL;
+			}
+		}catch(Exception e){
+			message = Constant.CALLBACKFAIL;
+			e.printStackTrace();
+		}
+		callback.onCallBack(code, message);	
+		return mlist;
+	}	
 	/*search user by nike 通过测试*/
 	@Override
 	public List<User> searchUsersByNickName(String username,ISessionListener callback)
@@ -952,5 +994,6 @@ public class SessionManager extends ISessionManager.Stub {
 		// TODO Auto-generated method stub
 		this.page=page+1;
 		return recommend(page, callback);
-	}	
+	}
+	
 }

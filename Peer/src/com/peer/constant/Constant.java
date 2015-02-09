@@ -31,10 +31,11 @@ public interface Constant {
 	public String LOGINSUCCESS="success";
 	public String LOGINFAIL="fail";
 	/*search type*/
-	public String TOPICBYTAG="topicbytag";
+	public String LABELTOPIC="topicuser";
 	public String TOPICBYTOPIC="topicbytopic";
-	public String USERBYTAG="userbytag";
+	public String LABELUSER="labeluser";
 	public String USERBYNIKE="userbynike";
+	public String TOPICLIST="topiclist";
 	
 	/*web server*/
 	//	 String SERVER_ADDRESS = "10.0.2.2:3000";

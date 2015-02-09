@@ -3,6 +3,7 @@ package com.peer.util;
 public class SearchUtil {
 	private String searchtype;
 	private String searchname;
+	private String callbacklabel;
 	private static SearchUtil searchutil=null;
 	private SearchUtil(){}
 	public static SearchUtil getInstance(){
@@ -23,6 +24,12 @@ public class SearchUtil {
 	}
 	public void setSearchname(String searchname) {
 		this.searchname = searchname;
+	}
+	public String getCallbacklabel() {
+		return callbacklabel;
+	}
+	public void setCallbacklabel(String callbacklabel) {
+		this.callbacklabel = callbacklabel;
 	}
 
 }

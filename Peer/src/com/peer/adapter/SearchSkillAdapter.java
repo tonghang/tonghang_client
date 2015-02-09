@@ -26,11 +26,12 @@ import android.widget.Toast;
 public class SearchSkillAdapter extends FatherAdater {
 	private Context mContext;
 	private List<String> mlist;
-	
-	public SearchSkillAdapter(Context mContext,List<String> list){
+	private String serchtype;
+	public SearchSkillAdapter(Context mContext,List<String> list,String serchtype){
 		super(mContext);
 		this.mContext=mContext;
 		this.mlist=list;
+		this.serchtype=serchtype;
 	}
 
 	@Override
@@ -81,13 +82,16 @@ public class SearchSkillAdapter extends FatherAdater {
 			viewHolder.view1.setBackgroundResource(R.drawable.searchskillborder);		
 			GradientDrawable myGrad = (GradientDrawable)viewHolder.view1.getBackground();
 			myGrad.setColor(mContext.getResources().getColor(R.color.testcolor));
+			final String label1=viewHolder.view1.getText().toString();
+			
 			viewHolder.view1.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
 				public void onClick(View arg0) {
 					// TODO Auto-generated method stub
 					if(checkNetworkState()){
-		//				SearchUtil.getInstance().setSearchtype(Constant.SEARCHUSERBYLABEL);
+						SearchUtil.getInstance().setSearchtype(serchtype);
+						SearchUtil.getInstance().setCallbacklabel(label1);
 						Intent intent=new Intent(mContext,SearchResultActivity.class);
 						mContext.startActivity(intent);
 						((Activity) mContext).finish();
@@ -101,13 +105,15 @@ public class SearchSkillAdapter extends FatherAdater {
 				viewHolder.view2.setText(mlist.get(weizhi+1));		
 				viewHolder.view2.setBackgroundResource(R.drawable.searchskillborder);	
 				myGrad.setColor(mContext.getResources().getColor(R.color.testcolor));
+				final String label2=viewHolder.view2.getText().toString();
 				viewHolder.view2.setOnClickListener(new View.OnClickListener() {
 					
 					@Override
 					public void onClick(View arg0) {
 						// TODO Auto-generated method stub
 						if(checkNetworkState()){
-		//					SearchUtil.getInstance().setSearchtype(Constant.SEARCHUSERBYLABEL);
+							SearchUtil.getInstance().setSearchtype(serchtype);
+							SearchUtil.getInstance().setCallbacklabel(label2);
 							Intent intent=new Intent(mContext,SearchResultActivity.class);
 							mContext.startActivity(intent);						
 							((Activity) mContext).finish();		

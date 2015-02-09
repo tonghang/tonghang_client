@@ -35,7 +35,9 @@ interface ISessionManager {
  	
     List<String> search(String label,ISessionListener callback);
     
-    List<com.peer.client.User> searchUserByLabel(String label,ISessionListener callback);
+    List<com.peer.client.Topic> searchTopicByLabel(String label,ISessionListener callback);
+    
+    List<com.peer.client.Topic> searchTopicBykey(String key,ISessionListener callback);
     
     List<com.peer.client.User> searchUsersByNickName(String username,ISessionListener callback);
  	
