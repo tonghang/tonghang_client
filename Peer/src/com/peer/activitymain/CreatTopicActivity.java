@@ -3,6 +3,8 @@ package com.peer.activitymain;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,8 +20,16 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.onekeyshare.OnekeyShare;
+import cn.sharesdk.sina.weibo.SinaWeibo;
+import cn.sharesdk.sina.weibo.SinaWeibo.ShareParams;
+
 import com.peer.R;
+import com.peer.IMimplements.easemobchatImp;
 import com.peer.activity.BasicActivity;
+import com.peer.activity.SettingActivity;
 import com.peer.client.User;
 import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
@@ -122,8 +132,7 @@ public class CreatTopicActivity extends BasicActivity {
 		switch (v.getId()) {
 		case R.id.bt_creattopic:
 			if(checkNetworkState()){
-				CreatTopicTask task=new CreatTopicTask();
-				task.execute(selectlabel,topic.getText().toString().trim());
+				ShareDialog();				
 			}else{
 				ShowMessage(getResources().getString(R.string.Broken_network_prompt));
 			}
@@ -132,6 +141,33 @@ public class CreatTopicActivity extends BasicActivity {
 		default:
 			break;
 		}
+	}
+	public void ShareDialog(){
+		new AlertDialog.Builder(this).setTitle(getResources().getString(R.string.exitlogin))  
+		.setMessage(getResources().getString(R.string.sharecancle)) .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialoginterface, int i) {
+				// TODO Auto-generated method stub
+				CreatTopicTask task=new CreatTopicTask();
+				task.execute(selectlabel,topic.getText().toString().trim());
+			}
+		}) 
+		 .setPositiveButton(getResources().getString(R.string.sharesure), new DialogInterface.OnClickListener(){
+             public void onClick(DialogInterface dialoginterface, int i){            	 
+              ShareSDK.initSDK(CreatTopicActivity.this);
+       		  OnekeyShare oks = new OnekeyShare();
+       		  oks.setSilent(true); 
+       		  ShareParams sp = new ShareParams();
+       		  sp.setText("测试分享的文本");
+//       		  sp.setImagePath("/mnt/sdcard/测试分享的图片.jpg");
+
+       		  Platform weibo = ShareSDK.getPlatform(SinaWeibo.NAME);		 
+       		  // 执行图文分享
+       		  weibo.share(sp);
+             }
+		 })
+		 .show();  
 	}
 	private class CreatTopicTask extends AsyncTask<String, String, List>{
 

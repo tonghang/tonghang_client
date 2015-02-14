@@ -29,6 +29,9 @@ import android.widget.ScrollView;
 import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.onekeyshare.OnekeyShare;
+
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMMessage;
@@ -58,8 +61,8 @@ public class ChatRoomActivity extends BasicActivity {
 	private RelativeLayout rl_owner;
 	private Button sendmessage;
 	private EditText messagebody;
-	private ImageView downwindow,ownerimg;
-	private TextView tv_tagname,nikename,tv_theme,tv_seemember;
+	private ImageView downwindow,ownerimg,sharelogo;
+	private TextView tv_tagname,nikename,tv_theme;
 	boolean isFirst=true;
 	private ListView selflistview;
 	private ChatMsgViewAdapter adapter;	
@@ -109,8 +112,8 @@ public class ChatRoomActivity extends BasicActivity {
 		tv_tagname=(TextView)findViewById(R.id.tv_tagname);		
 		nikename=(TextView)findViewById(R.id.tv_nikename);
 		tv_theme=(TextView)findViewById(R.id.theme_chat);
-		tv_seemember=(TextView)findViewById(R.id.tv_seemember);
-		tv_seemember.setOnClickListener(this);
+		sharelogo=(ImageView)findViewById(R.id.im_share);
+		sharelogo.setOnClickListener(this);
 		
 		selflistview=(ListView)findViewById(R.id.lv_chat);
 		back=(LinearLayout)findViewById(R.id.ll_back);
@@ -162,11 +165,14 @@ public class ChatRoomActivity extends BasicActivity {
 	}
 	private void roomType() {
 		// TODO Auto-generated method stub
-		if(ChatRoomTypeUtil.getInstance().getChatroomtype()==Constant.MULTICHAT){
-			titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.exitroom), R.color.white));
+		if(ChatRoomTypeUtil.getInstance().getChatroomtype()==Constant.MULTICHAT){			
 			rl_owner.setVisibility(View.VISIBLE);
 			if(!ChatRoomTypeUtil.getInstance().isIsowner()){
-				downwindow.setVisibility(View.GONE);
+				titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.lookformember), R.color.white));			
+			}else{
+				titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.exitroom), R.color.white));
+				titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.lookformember), R.color.white));
+				
 			}
 			Intent intent=getIntent();
 			if(intent.getStringExtra(Constant.FROMFLOAT)!=null&&intent.getStringExtra(Constant.FROMFLOAT).equals(Constant.FROMFLOAT)){
@@ -246,6 +252,14 @@ public class ChatRoomActivity extends BasicActivity {
 						easemobchatImp.getInstance().clearConversation(toChatUsername);
 						msgList.clear();
 						adapter.notifyDataSetChanged();
+					}else if(item.mTitle.equals(getResources().getString(R.string.lookformember))){
+						if(checkNetworkState()){
+							Intent intent=new Intent(ChatRoomActivity.this,ChatRoomListnikeActivity.class);
+							intent.putExtra("topicId", topicId);			
+							startActivity(intent);
+						}else{
+							ShowMessage(getResources().getString(R.string.Broken_network_prompt));
+						}
 					}
 				}				
 					
@@ -265,15 +279,8 @@ public class ChatRoomActivity extends BasicActivity {
 			}			
 			break;
 		
-		case R.id.tv_seemember:
-			if(checkNetworkState()){
-				Intent intent=new Intent(ChatRoomActivity.this,ChatRoomListnikeActivity.class);
-				intent.putExtra("topicId", topicId);			
-				startActivity(intent);
-			}else{
-				ShowMessage(getResources().getString(R.string.Broken_network_prompt));
-			}
-			
+		case R.id.im_share:
+			showShare();			
 			break;
 
 		case R.id.im_downview:
@@ -294,6 +301,34 @@ public class ChatRoomActivity extends BasicActivity {
 			break;
 		}
 	}
+	 private void showShare() {
+		  ShareSDK.initSDK(this);
+		  OnekeyShare oks = new OnekeyShare();
+		  //关闭sso授权
+//		  oks.disableSSOWhenAuthorize(); 
+
+		 // 分享时Notification的图标和文字
+		  oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
+		  // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
+		  oks.setTitle(getString(R.string.share));
+		  // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
+		  oks.setTitleUrl("http://sharesdk.cn");
+		  // text是分享文本，所有平台都需要这个字段
+		  oks.setText("我是分享文本");
+		  // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+		  oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
+		  // url仅在微信（包括好友和朋友圈）中使用
+		  oks.setUrl("http://sharesdk.cn");
+		  // comment是我对这条分享的评论，仅在人人网和QQ空间使用
+		  oks.setComment("我是测试评论文本");
+		  // site是分享此内容的网站名称，仅在QQ空间使用
+		  oks.setSite(getString(R.string.app_name));
+		  // siteUrl是分享此内容的网站地址，仅在QQ空间使用
+		  oks.setSiteUrl("http://sharesdk.cn");
+
+		 // 启动分享GUI
+		  oks.show(this);
+		  }
 	private void reply() {
 		// TODO Auto-generated method stub
 		new Thread(new Runnable() {			

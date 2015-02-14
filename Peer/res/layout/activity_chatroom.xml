@@ -150,8 +150,8 @@
        
         />
 
-    <TextView
-        android:id="@+id/tv_seemember"
+    <ImageView
+        android:id="@+id/im_share"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -160,7 +160,7 @@
         android:clickable="true"
         android:textSize="@dimen/textsize_large"
         android:textColor="@color/white"
-        android:text="查看" />
+        android:background="@drawable/icon_enter" />
 
 </RelativeLayout>
 </RelativeLayout>

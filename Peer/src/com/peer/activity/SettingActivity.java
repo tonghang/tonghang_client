@@ -19,7 +19,7 @@ import android.widget.TextView;
 public class SettingActivity extends BasicActivity{
 	private LinearLayout back,setting_set,newfunction_set,feedback_set,newversion_set,clearcash_set;
 	private Button relogin,todesk;
-	private TextView title;
+	private TextView title,xieyi;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -51,6 +51,9 @@ public class SettingActivity extends BasicActivity{
 		feedback_set.setOnClickListener(this);
 		back=(LinearLayout)findViewById(R.id.ll_back);
 		back.setOnClickListener(this);
+		
+		xieyi=(TextView)findViewById(R.id.xieyi);
+		xieyi.setOnClickListener(this);
 	
 	}
 	@Override
@@ -88,6 +91,10 @@ public class SettingActivity extends BasicActivity{
 			break;		
 		case R.id.bt_todesk:
 			Todesk();
+			break;
+		case R.id.xieyi:
+			Intent intent=new Intent(SettingActivity.this,xieyiActivity.class);
+			startActivity(intent);
 			break;
 		default:
 			break;

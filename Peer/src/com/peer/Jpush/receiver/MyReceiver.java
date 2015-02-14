@@ -1,13 +1,17 @@
 package com.peer.Jpush.receiver;
 
 import com.peer.R;
+import com.peer.activity.LoginActivity;
+import com.peer.activitymain.MainActivity;
 import com.peer.activitymain.NewFriendsActivity;
+import com.peer.client.ui.PeerUI;
 
 import android.app.Notification;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.util.Log;
 import cn.jpush.android.api.BasicPushNotificationBuilder;
 import cn.jpush.android.api.JPushInterface;
@@ -43,13 +47,35 @@ public class MyReceiver extends BroadcastReceiver {
         	
         } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
             Log.d(TAG, "[MyReceiver] 用户点击打开了通知");
-            
-        	//打开自定义的Activity
-        	Intent i = new Intent(context, NewFriendsActivity.class);
-        	i.putExtras(bundle);
-        	//i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        	i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
-        	context.startActivity(i);
+            String islogin=null;
+			try {
+				islogin = PeerUI.getInstance().getISessionManager().getUserId();
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            if(islogin==null){
+            	Intent i = new Intent(context, LoginActivity.class);
+            	i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
+            	context.startActivity(i);
+            }else{
+            	String content=bundle.getString(JPushInterface.EXTRA_ALERT);
+            	if(content.contains("好友")){
+            		//打开自定义的Activity
+                	Intent i = new Intent(context, NewFriendsActivity.class);
+                	i.putExtras(bundle);
+                	//i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                	i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
+                	context.startActivity(i);
+            	}else{
+            		Intent i = new Intent(context, MainActivity.class);
+                	i.putExtras(bundle);
+                	//i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                	i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
+                	context.startActivity(i);
+            	}
+            }
+        	
         	
         } else if (JPushInterface.ACTION_RICHPUSH_CALLBACK.equals(intent.getAction())) {
             Log.d(TAG, "[MyReceiver] 用户收到到RICH PUSH CALLBACK: " + bundle.getString(JPushInterface.EXTRA_EXTRA));

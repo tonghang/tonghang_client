@@ -36,7 +36,7 @@ import com.peer.localDBbean.UserBean;
 
 public class RegisterAcountActivity extends BasicActivity{
 	private EditText email_registe,password_registe,repasword_registe,nike_registe;
-	private TextView registe_remind,title;
+	private TextView registe_remind,title,xieyi;
 	private Button complete_registe;
 	private LinearLayout back;
 	private ProgressDialog pd;
@@ -65,7 +65,9 @@ public class RegisterAcountActivity extends BasicActivity{
 		password_registe.addTextChangedListener(textwatcher);
 		repasword_registe.addTextChangedListener(textwatcher);
 		nike_registe.addTextChangedListener(textwatcher);
-		complete_registe.setEnabled(false);		
+		complete_registe.setEnabled(false);	
+		xieyi=(TextView)findViewById(R.id.xieyi);
+		xieyi.setOnClickListener(this);
 	}
 	
 	@Override
@@ -79,6 +81,10 @@ public class RegisterAcountActivity extends BasicActivity{
 			}else{
 				ShowMessage(getResources().getString(R.string.Broken_network_prompt));
 			}		
+			break;
+		case R.id.xieyi:
+			Intent intent=new Intent(RegisterAcountActivity.this,xieyiActivity.class);
+			startActivity(intent);
 			break;
 		default:
 			break;

@@ -190,6 +190,22 @@
                     android:textSize="@dimen/textsize_middle" />
             </RelativeLayout>
         </LinearLayout>
+        <LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal"
+	   android:layout_margin="8dp"
+	    >
+	<TextView
+	    android:id="@+id/xieyi"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:text="《同行科技许可协议和服务条款》"
+	    android:textColor="@color/backcolornol" 
+	    android:layout_gravity="center_horizontal"
+	    android:clickable="true"/>
+
+	</LinearLayout>
         <View 
              android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp" 
