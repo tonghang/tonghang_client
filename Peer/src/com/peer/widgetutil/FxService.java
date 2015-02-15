@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import com.peer.R;
 import com.peer.activitymain.ChatRoomActivity;
 import com.peer.constant.Constant;
+import com.peer.util.ChatRoomTypeUtil;
 
 public class FxService extends Service 
 {	
@@ -125,6 +126,7 @@ public class FxService extends Service
 	            	yup=(int) event.getRawY();
 	            	if(-mFloatView.getMeasuredWidth()/2<xdown-xup&&xdown-xup<mFloatView.getMeasuredWidth()/2
 	            			&&-(mFloatView.getMeasuredHeight()/2-25)<ydown-yup&&ydown-yup<(mFloatView.getMeasuredHeight()/2-25)){
+	            		ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.MULTICHAT);
 	            		Intent intent=new Intent(FxService.this,ChatRoomActivity.class);
 	            		intent.putExtra(Constant.IMAGE, image);
 	            		intent.putExtra(Constant.OWNERNIKE, ownernike);

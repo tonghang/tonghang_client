@@ -61,8 +61,8 @@ public class ChatRoomActivity extends BasicActivity {
 	private RelativeLayout rl_owner;
 	private Button sendmessage;
 	private EditText messagebody;
-	private ImageView downwindow,ownerimg,sharelogo;
-	private TextView tv_tagname,nikename,tv_theme;
+	private ImageView downwindow,ownerimg;
+	private TextView tv_tagname,nikename,tv_theme,sharelogo;
 	boolean isFirst=true;
 	private ListView selflistview;
 	private ChatMsgViewAdapter adapter;	
@@ -112,7 +112,7 @@ public class ChatRoomActivity extends BasicActivity {
 		tv_tagname=(TextView)findViewById(R.id.tv_tagname);		
 		nikename=(TextView)findViewById(R.id.tv_nikename);
 		tv_theme=(TextView)findViewById(R.id.theme_chat);
-		sharelogo=(ImageView)findViewById(R.id.im_share);
+		sharelogo=(TextView)findViewById(R.id.tv_share);
 		sharelogo.setOnClickListener(this);
 		
 		selflistview=(ListView)findViewById(R.id.lv_chat);
@@ -279,7 +279,7 @@ public class ChatRoomActivity extends BasicActivity {
 			}			
 			break;
 		
-		case R.id.im_share:
+		case R.id.tv_share:
 			showShare();			
 			break;
 
@@ -314,7 +314,7 @@ public class ChatRoomActivity extends BasicActivity {
 		  // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
 		  oks.setTitleUrl("http://sharesdk.cn");
 		  // text是分享文本，所有平台都需要这个字段
-		  oks.setText("我是分享文本");
+		  oks.setText("我在同行APP中参与了关于"+tv_tagname.getText().toString()+"的话题群聊");
 		  // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
 		  oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
 		  // url仅在微信（包括好友和朋友圈）中使用

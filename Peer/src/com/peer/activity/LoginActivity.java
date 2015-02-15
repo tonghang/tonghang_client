@@ -41,7 +41,15 @@ public class LoginActivity extends BasicActivity{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		init();		
+		init();
+		String email=LocalStorage.getString(this, Constant.EMAIL);
+		if(email!=null){
+			email_login.setText(email);			
+			 UserDao userdao=new UserDao(LoginActivity.this);
+			 String password=userdao.getPassord(email);
+			 password_login.setText(password);			 
+			 autologin(email, password);
+		}
 	}	
 	private void init() {
 		// TODO Auto-generated method stub		
@@ -68,14 +76,9 @@ public class LoginActivity extends BasicActivity{
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.bt_login_login:
-			if(checkNetworkState()){
-				String email=email_login.getText().toString().trim();
-				String password=password_login.getText().toString().trim();
-				pd = ProgressDialog.show(LoginActivity.this,"", "正在登陆请稍候。。。");
-				Login(email,password);
-			}else{
-				ShowMessage(getResources().getString(R.string.Broken_network_prompt));
-			}				
+			String email=email_login.getText().toString().trim();
+			String password=password_login.getText().toString().trim();
+			autologin(email,password);		
 			break;
 		case R.id.tv_register_login:
 			Intent regist=new Intent(LoginActivity.this,RegisterAcountActivity.class);
@@ -88,6 +91,14 @@ public class LoginActivity extends BasicActivity{
 		default:
 			break;
 		}
+	}
+	public void autologin(String email,String password){
+		if(checkNetworkState()){			
+			pd = ProgressDialog.show(LoginActivity.this,"", "正在登陆请稍候。。。");
+			Login(email,password);
+		}else{
+			ShowMessage(getResources().getString(R.string.Broken_network_prompt));
+		}	
 	}
 	public void Login(final String username,final String password){
 		Thread t=new Thread(new Runnable() {
