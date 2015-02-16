@@ -5,7 +5,6 @@ import java.util.Set;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.text.Editable;
@@ -43,7 +42,7 @@ public class LoginActivity extends BasicActivity{
 		setContentView(R.layout.activity_login);
 		init();
 		String email=LocalStorage.getString(this, Constant.EMAIL);
-		if(email!=null){
+		if(email!=null&&!email.equals("")){
 			email_login.setText(email);			
 			 UserDao userdao=new UserDao(LoginActivity.this);
 			 String password=userdao.getPassord(email);

@@ -1,6 +1,7 @@
 package com.peer.activitymain;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import android.app.AlertDialog;
@@ -21,10 +22,13 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
-import cn.sharesdk.sina.weibo.SinaWeibo;
-import cn.sharesdk.sina.weibo.SinaWeibo.ShareParams;
+import cn.sharesdk.onekeyshare.ShareContentCustomizeCallback;
+import cn.sharesdk.wechat.friends.Wechat;
+import cn.sharesdk.wechat.moments.WechatMoments;
+import cn.sharesdk.wechat.moments.WechatMoments.ShareParams;
 
 import com.peer.R;
 import com.peer.IMimplements.easemobchatImp;
@@ -143,8 +147,8 @@ public class CreatTopicActivity extends BasicActivity {
 		}
 	}
 	public void ShareDialog(){
-		new AlertDialog.Builder(this).setTitle(getResources().getString(R.string.exitlogin))  
-		.setMessage(getResources().getString(R.string.sharecancle)) .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+		new AlertDialog.Builder(this).setTitle(getResources().getString(R.string.sharedailog))  
+		.setMessage(getResources().getString(R.string.isshare)) .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialoginterface, int i) {
@@ -155,16 +159,38 @@ public class CreatTopicActivity extends BasicActivity {
 		}) 
 		 .setPositiveButton(getResources().getString(R.string.sharesure), new DialogInterface.OnClickListener(){
              public void onClick(DialogInterface dialoginterface, int i){            	 
-              ShareSDK.initSDK(CreatTopicActivity.this);
-       		  OnekeyShare oks = new OnekeyShare();
-       		  oks.setSilent(true); 
-       		  ShareParams sp = new ShareParams();
-       		  sp.setText("测试分享的文本");
-//       		  sp.setImagePath("/mnt/sdcard/测试分享的图片.jpg");
-
-       		  Platform weibo = ShareSDK.getPlatform(SinaWeibo.NAME);		 
-       		  // 执行图文分享
-       		  weibo.share(sp);
+              
+              OnekeyShare oks = new OnekeyShare();
+      		oks.setNotification(R.drawable.logo, CreatTopicActivity.this.getString(R.string.app_name));
+      		//不同平台的分享参数，请看文档		
+      		oks.setText("我在同行中创建了关于"+topic.getText().toString()+"的话题");
+      		oks.setSilent(true);
+      		oks.setDialogMode();
+      		oks.disableSSOWhenAuthorize();
+      	
+      		oks.setPlatform(WechatMoments.NAME);
+      		oks.setCallback(new PlatformActionListener() {
+				
+				@Override
+				public void onError(Platform arg0, int arg1, Throwable arg2) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void onComplete(Platform arg0, int arg1, HashMap<String, Object> arg2) {
+					// TODO Auto-generated method stub
+					CreatTopicTask task=new CreatTopicTask();
+					task.execute(selectlabel,topic.getText().toString().trim());
+				}
+				
+				@Override
+				public void onCancel(Platform arg0, int arg1) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
+      		oks.show(CreatTopicActivity.this);
              }
 		 })
 		 .show();  

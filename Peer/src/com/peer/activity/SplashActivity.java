@@ -4,11 +4,7 @@ package com.peer.activity;
 import cn.jpush.android.api.JPushInterface;
 
 import com.peer.R;
-
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
@@ -31,7 +27,6 @@ public class SplashActivity extends BasicActivity {
 		rootLayout = (LinearLayout) findViewById(R.id.splash_root);
 		versionText = (TextView) findViewById(R.id.tv_version);
 
-		versionText.setText(getVersion());
 		AlphaAnimation animation = new AlphaAnimation(0.3f, 1.0f);
 		animation.setDuration(2000);
 		rootLayout.startAnimation(animation);
@@ -40,7 +35,13 @@ public class SplashActivity extends BasicActivity {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-//		JPushInterface.onResume();
+		JPushInterface.onResume(this);
+	}
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		JPushInterface.onPause(this);
 	}
 	@Override
 	protected void onStart() {
@@ -60,21 +61,5 @@ public class SplashActivity extends BasicActivity {
 				startActivity(intent);
 			}
 		}).start();
-	}
-	
-	/**
-	 * 获取当前应用程序的版本号
-	 */
-	private String getVersion() {
-		PackageManager pm = getPackageManager();
-		try {
-	         PackageManager manager = this.getPackageManager();
-			 PackageInfo info = manager.getPackageInfo(this.getPackageName(), 0);
-			 String version = info.versionName;			       
-			return version;
-		} catch (NameNotFoundException e) {
-			e.printStackTrace();
-			return "版本号错误";
-		}
 	}
 }

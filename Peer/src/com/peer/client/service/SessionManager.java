@@ -70,7 +70,8 @@ public class SessionManager extends ISessionManager.Stub {
 				user.setBirthday((String)u.get("email"));
 				user.setImage(Constant.WEB_SERVER_ADDRESS+(String)u.get("image"));
 				user.setSex((String)u.get("sex"));
-				user.setUsername((String)u.get("username"));
+				username=(String)u.get("username");
+				user.setUsername(username);
 				labels=(List) u.get("labels");
 				user.setLabels(labels);				
 				message = Constant.CALLBACKSUCCESS;

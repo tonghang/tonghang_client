@@ -66,7 +66,9 @@
     <string name="cancel">取消</string>
     <string name="sure">确定</string>
     <string name="sharecancle">确定</string>
-    <string name="sharesure">确定并分享到微博</string>
+    <string name="sharesure">确定并分享到朋友圈</string>
+   <string name="isshare">是否分享</string>
+    <string name="sharedailog">创建或创建并分享</string>
     <string name="sdcard">未找到存储卡，无法存储照片！</string>
     
     <string name="commit">提交成功</string>

@@ -242,7 +242,7 @@ public class ChatRoomActivity extends BasicActivity {
 			@Override
 			public void onItemClick(ActionItem item, int position) {
 				// TODO Auto-generated method stub
-				if(checkNetworkState()){
+				if(!checkNetworkState()){
 					ShowMessage(getResources().getString(R.string.Broken_network_prompt));
 				}else{
 					if(item.mTitle.equals(getResources().getString(R.string.exitroom))){
@@ -253,13 +253,9 @@ public class ChatRoomActivity extends BasicActivity {
 						msgList.clear();
 						adapter.notifyDataSetChanged();
 					}else if(item.mTitle.equals(getResources().getString(R.string.lookformember))){
-						if(checkNetworkState()){
-							Intent intent=new Intent(ChatRoomActivity.this,ChatRoomListnikeActivity.class);
-							intent.putExtra("topicId", topicId);			
-							startActivity(intent);
-						}else{
-							ShowMessage(getResources().getString(R.string.Broken_network_prompt));
-						}
+						Intent intent=new Intent(ChatRoomActivity.this,ChatRoomListnikeActivity.class);
+						intent.putExtra("topicId", topicId);			
+						startActivity(intent);			
 					}
 				}				
 					
@@ -302,7 +298,6 @@ public class ChatRoomActivity extends BasicActivity {
 		}
 	}
 	 private void showShare() {
-		  ShareSDK.initSDK(this);
 		  OnekeyShare oks = new OnekeyShare();
 		  //关闭sso授权
 //		  oks.disableSSOWhenAuthorize(); 

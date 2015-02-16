@@ -7,8 +7,11 @@ import android.app.Application;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import cn.jpush.android.api.JPushInterface;
+import cn.sharesdk.framework.ShareSDK;
+
 import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatManager;
+import com.peer.activitymain.CreatTopicActivity;
 import com.peer.client.ServiceAction;
 import com.peer.client.ui.PeerUI;
 
@@ -20,8 +23,9 @@ public class Peerapplication extends Application {
 		instance=this;	
 		initwebsevice();
 		initEMChat();
-		JPushInterface.setDebugMode(true);
-		JPushInterface.init(this);
+		JPushInterface.setDebugMode(false);
+		JPushInterface.init(this);		
+		ShareSDK.initSDK(this);
 	}	
 	private void initwebsevice() {
 		// TODO Auto-generated method stub
