@@ -51,7 +51,9 @@ public interface Constant {
 	 String USERID="userid";
 	 /*callback status*/
 	 String CALLBACKSUCCESS="success";
-	 String CALLBACKFAIL="fail"; 	
+	 String CALLBACKFAIL="fail"; 
+	 /*restart app*/
+	 String RELOGIN="relogin";
 	 
 	//用于进入聊天室intent.putExtras的键
 	    String IMAGE="image";

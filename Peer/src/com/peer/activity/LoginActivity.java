@@ -42,13 +42,20 @@ public class LoginActivity extends BasicActivity{
 		setContentView(R.layout.activity_login);
 		init();
 		String email=LocalStorage.getString(this, Constant.EMAIL);
-		if(email!=null&&!email.equals("")){
-			email_login.setText(email);			
-			 UserDao userdao=new UserDao(LoginActivity.this);
-			 String password=userdao.getPassord(email);
+		Intent intent=getIntent();
+		intent.getStringExtra(Constant.RELOGIN);
+		UserDao userdao=new UserDao(LoginActivity.this);
+		String password=userdao.getPassord(email);
+		
+		if(intent.getStringExtra(Constant.RELOGIN)!=null&&intent.getStringExtra(Constant.RELOGIN).equals(Constant.RELOGIN)){
+			 email_login.setText(email);			
+			 password_login.setText(password);
+		}else if(email!=null&&!email.equals("")){
+			 email_login.setText(email);					 
 			 password_login.setText(password);			 
 			 autologin(email, password);
 		}
+		
 	}	
 	private void init() {
 		// TODO Auto-generated method stub		

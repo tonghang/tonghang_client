@@ -110,8 +110,7 @@ public class RegisterAcountActivity extends BasicActivity{
 		}else if(nike_registe.length()>10){
 			registe_remind.setText(getResources().getString(R.string.errornike));
 			return ;
-		}else{	
-			pd = ProgressDialog.show(RegisterAcountActivity.this, "", "正在注册。。。");
+		}else{				
 			RegisterTask task=new RegisterTask();
 			task.execute(email,password,nikename);
 		}		
@@ -155,7 +154,7 @@ public class RegisterAcountActivity extends BasicActivity{
 			// TODO Auto-generated method stub				
 			SessionListener callback=new SessionListener();
 			try {
-				
+				pd = ProgressDialog.show(RegisterAcountActivity.this, "", "正在注册。。。");
 				PeerUI.getInstance().getISessionManager().register(paramer[0], paramer[1], paramer[2], callback);
 				if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
 					String huanxing_username=PeerUI.getInstance().getISessionManager().getHuanxingUser();					

@@ -105,8 +105,8 @@ public class SessionManager extends ISessionManager.Stub {
 			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "/users.json"
 					, parts, Map.class);							
 			Map body = result.getBody();
-			if (result.getStatusCode() == HttpStatus.OK) {
-				if(body.get("code").equals("error")){
+			if (result.getStatusCode() == HttpStatus.OK) {				
+				if(body.get("code")!=null&&body.get("code").equals("error")){
 					message = (String) body.get("message");
 				}else{
 					code=0;	

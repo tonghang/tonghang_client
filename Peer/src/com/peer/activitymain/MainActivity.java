@@ -191,8 +191,10 @@ public class MainActivity extends BasicActivity{
 				SessionListener callback=new SessionListener();
 				try {
 					List<User> mlist=PeerUI.getInstance().getISessionManager().Invitations(callback);			
-					intnewfriendsnum=mlist.size();
-					friendsfragment.setNewfriendsNum(intnewfriendsnum);
+					if(mlist!=null){
+						intnewfriendsnum=mlist.size();
+						friendsfragment.setNewfriendsNum(intnewfriendsnum);
+					}					
 					runOnUiThread(new Runnable() {
 						public void run() {
 							updatenewfriends();	
