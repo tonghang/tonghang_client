@@ -77,6 +77,7 @@ public class RegisterAcountActivity extends BasicActivity{
 		switch (v.getId()) {
 		case R.id.bt_complete_registe:
 			if(checkNetworkState()){
+				pd = ProgressDialog.show(RegisterAcountActivity.this, "", "正在注册。。。");
 				Register();					
 			}else{
 				ShowMessage(getResources().getString(R.string.Broken_network_prompt));
@@ -154,7 +155,7 @@ public class RegisterAcountActivity extends BasicActivity{
 			// TODO Auto-generated method stub				
 			SessionListener callback=new SessionListener();
 			try {
-				pd = ProgressDialog.show(RegisterAcountActivity.this, "", "正在注册。。。");
+				
 				PeerUI.getInstance().getISessionManager().register(paramer[0], paramer[1], paramer[2], callback);
 				if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
 					String huanxing_username=PeerUI.getInstance().getISessionManager().getHuanxingUser();					
