@@ -46,9 +46,9 @@
             android:drawableLeft="@drawable/icon_username"
             android:drawablePadding="8dp"
             android:layout_marginLeft="8dp"
-            android:lines="1"
+            android:singleLine="true"
             android:id="@+id/et_email_login"
-            android:hint="用户名"
+            android:hint="邮箱"
             android:textColor="@color/black"
             android:textSize="@dimen/textsize_middle"
             android:layout_weight="1"
@@ -83,7 +83,7 @@
             android:textSize="@dimen/textsize_middle"
             android:textColor="@color/black"
             android:layout_marginRight="8dp"
-            android:lines="1"
+            android:singleLine="true"
             android:background="@null"/>
     </LinearLayout>
    </LinearLayout>

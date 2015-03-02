@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
@@ -45,7 +46,6 @@ public class CreatTopicActivity extends BasicActivity {
 	private TextView title;
 	private Button creattopic;
 	private LinearLayout back;
-	private RadioGroup rg_lables;
 	private EditText topic;
 	private List<String> list;
 	private AutoWrapRadioGroup tagContainer;	
@@ -70,7 +70,7 @@ public class CreatTopicActivity extends BasicActivity {
 		
 	}
 	private void init() {
-		// TODO Auto-generated method stub				
+		// TODO Auto-generated method stub	
 		creattopic=(Button)findViewById(R.id.bt_creattopic);
 		creattopic.setEnabled(false);
 		creattopic.setOnClickListener(this);
@@ -120,12 +120,11 @@ public class CreatTopicActivity extends BasicActivity {
 			@Override
 			public void afterTextChanged(Editable arg0) {
 				// TODO Auto-generated method stub
-				if(isselect&&TextUtils.isEmpty(topic.getText().toString().trim())){
-					creattopic.setEnabled(false);
-				}else{
+				if(isselect&&!TextUtils.isEmpty(topic.getText().toString().trim())){
 					creattopic.setEnabled(true);
-				}
-				
+				}else{
+					creattopic.setEnabled(false);
+				}				
 			}
 		});
 	}
@@ -148,7 +147,7 @@ public class CreatTopicActivity extends BasicActivity {
 	}
 	public void ShareDialog(){
 		new AlertDialog.Builder(this).setTitle(getResources().getString(R.string.sharedailog))  
-		.setMessage(getResources().getString(R.string.isshare)) .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+		.setMessage(getResources().getString(R.string.isshare)) .setNegativeButton(getResources().getString(R.string.sure), new DialogInterface.OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialoginterface, int i) {

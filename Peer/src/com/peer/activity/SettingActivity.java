@@ -4,6 +4,7 @@ import java.io.File;
 
 import com.peer.R;
 import com.peer.IMimplements.easemobchatImp;
+import com.peer.constant.Constant;
 import com.peer.util.ManagerActivity;
 import com.umeng.update.UmengUpdateAgent;
 
@@ -81,10 +82,8 @@ public class SettingActivity extends BasicActivity{
 			}
 			
 			break;
-		case R.id.ll_clearcash_set:
-			deleteFilesByDirectory(getCacheDir());
-			Clean();
-			
+		case R.id.ll_clearcash_set:			
+			Clean();			
 			break;
 		case R.id.bt_relogin:
 			Relogin();
@@ -104,7 +103,8 @@ public class SettingActivity extends BasicActivity{
 		new AlertDialog.Builder(this).setTitle(getResources().getString(R.string.clean))  
 		.setMessage(getResources().getString(R.string.clearcash)) .setNegativeButton(getResources().getString(R.string.cancel), null) 
 		 .setPositiveButton(getResources().getString(R.string.sure), new DialogInterface.OnClickListener(){
-             public void onClick(DialogInterface dialoginterface, int i){            	 
+             public void onClick(DialogInterface dialoginterface, int i){ 
+            	 deleteFilesByDirectory(getCacheDir());
             	 ShowMessage(getResources().getString(R.string.cleancash));
              }
 		 })
@@ -116,9 +116,14 @@ public class SettingActivity extends BasicActivity{
 		.setMessage(getResources().getString(R.string.relogin)) .setNegativeButton(getResources().getString(R.string.cancel), null) 
 		 .setPositiveButton(getResources().getString(R.string.sure), new DialogInterface.OnClickListener(){
              public void onClick(DialogInterface dialoginterface, int i){            	 
-            	 ManagerActivity.getAppManager().restart(SettingActivity.this);
-            	//退出环信账号
+            	 ManagerActivity.getAppManager().finishAllActivity();
+            	 //退出环信账号
             	 easemobchatImp.getInstance().logout();
+            	 Intent intent=new Intent(SettingActivity.this,LoginActivity.class);
+            	 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+         				| Intent.FLAG_ACTIVITY_NEW_TASK);
+            	 intent.putExtra(Constant.RELOGIN, Constant.RELOGIN);
+            	 startActivity(intent);
              }
 		 })
 		 .show();  
@@ -128,7 +133,7 @@ public class SettingActivity extends BasicActivity{
 		.setMessage(getResources().getString(R.string.todesk)) .setNegativeButton(getResources().getString(R.string.cancel), null) 
 		 .setPositiveButton(getResources().getString(R.string.sure), new DialogInterface.OnClickListener(){
              public void onClick(DialogInterface dialoginterface, int i){
- 		       ManagerActivity.getAppManager().finishAllActivity();
+            	ManagerActivity.getAppManager().finishAllActivity();
              }
 		 })
 		 .show(); 

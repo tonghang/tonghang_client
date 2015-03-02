@@ -67,7 +67,7 @@ public class SessionManager extends ISessionManager.Stub {
 				user.setHuangxin_username(huanxin_user);
 				user.setEmail(imageURL);
 				user.setCity((String)u.get("city"));
-				user.setBirthday((String)u.get("email"));
+				user.setBirthday((String)u.get("birth"));
 				user.setImage(Constant.WEB_SERVER_ADDRESS+(String)u.get("image"));
 				user.setSex((String)u.get("sex"));
 				username=(String)u.get("username");
@@ -145,10 +145,11 @@ public class SessionManager extends ISessionManager.Stub {
 	}
 	/*commite personal message 通过测试*/
 	@Override
-	public void profileUpdate(String nickName, String birthday, String city,
+	public User profileUpdate(String nickName, String birthday, String city,
 			String sex, final String filename, byte[] image, ISessionListener callback)
 			throws RemoteException {
 		// TODO Auto-generated method stub
+		User user=null;
 		ByteArrayResource imageFile = new ByteArrayResource(image){
 			public String getFilename() throws IllegalStateException {
 				return "sign.jpg";
@@ -171,10 +172,19 @@ public class SessionManager extends ISessionManager.Stub {
 			headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 			HttpEntity<MultiValueMap<String, Object>> requestEntity=
 					new HttpEntity<MultiValueMap<String,Object>>(parts,headers);					
-			ResponseEntity<Map> response=DataUtilHeader.putJson(Constant.WEB_SERVER_ADDRESS + "/users/"+userid+".json",requestEntity, Map.class);			
-			response.getBody();			
-			
-	//		DataUtil.putEntity(Constant.WEB_SERVER_ADDRESS + "users/"+userid+".json", parts, Map.class);
+			ResponseEntity<Map> result=DataUtilHeader.putJson(Constant.WEB_SERVER_ADDRESS + "/users/"+userid+".json",requestEntity, Map.class);			
+			Map u= result.getBody();
+			if (result.getStatusCode() == HttpStatus.OK){
+				user=new User();
+				String id=String.valueOf(u.get("id"));
+				user.setUserid(id);
+				user.setEmail((String)u.get("email"));
+				user.setBirthday((String)u.get("birth"));
+				user.setImage(Constant.WEB_SERVER_ADDRESS+(String)u.get("image"));
+				user.setSex((String)u.get("sex"));
+				user.setCity((String)u.get("city"));
+				user.setUsername((String)u.get("username"));
+			}
 			code=0;
 			message=Constant.CALLBACKSUCCESS;
 		}catch(Exception e){
@@ -182,6 +192,7 @@ public class SessionManager extends ISessionManager.Stub {
 			e.printStackTrace();
 		}
 		callback.onCallBack(code, message);
+		return user;
 	}
 	/*To add someone as a friend 通过测试*/
 	@Override
@@ -619,8 +630,7 @@ public class SessionManager extends ISessionManager.Stub {
 			message=Constant.CALLBACKFAIL;
 			e.printStackTrace();
 		}
-		callback.onCallBack(code, message);	
-				
+		callback.onCallBack(code, message);					
 	}
 	
 	/*creat topic  测试通过*/

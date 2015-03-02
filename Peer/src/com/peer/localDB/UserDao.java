@@ -61,11 +61,21 @@ public class UserDao {
 		SQLiteDatabase db=sqlhelper.getWritableDatabase();
 		
 		ContentValues values = new ContentValues();
-		values.put(COLUMN_NAME_SEX, sex);
-		values.put(COLUMN_NAME_BIRTHDAY, birthday);
-		values.put(COLUMN_NAME_CITY, city);
-		values.put(COLUMN_NAME_EMAIL, email);
-		values.put(COLUMN_NAME_IMAGE, image);
+		if(!(sex==null)){
+			values.put(COLUMN_NAME_SEX, sex);
+		}
+		if(!(birthday==null)){
+			values.put(COLUMN_NAME_BIRTHDAY, birthday);
+		}
+		if(!(city==null)){
+			values.put(COLUMN_NAME_CITY, city);
+		}
+		if(!(email==null)){
+			values.put(COLUMN_NAME_EMAIL, email);
+		}				
+		if(!(image==null)){
+			values.put(COLUMN_NAME_IMAGE, image);
+		}
 		if(!(password==null)){
 			values.put(COLUMN_NAME_PASSWORD, password);
 		}

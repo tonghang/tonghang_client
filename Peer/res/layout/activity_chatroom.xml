@@ -134,8 +134,8 @@
             android:ellipsize="end"
             android:lines="1"
             android:text="怎样快速创业凤凰山看见和富士康"
-            android:textColor="@color/white"
-            android:textSize="@dimen/textsize_middle" />
+            android:textSize="@dimen/textsize_smallmiddle"
+            android:textColor="@color/deepgray" />
 
     </LinearLayout>
 

@@ -36,7 +36,7 @@
 	            android:textSize="@dimen/textsize_middle"
 	            android:background="@null"
 	            android:layout_marginRight="16dp"
-	            android:lines="1"
+	            android:singleLine="true"
 	            />	    
 	</LinearLayout>
 	<View 
@@ -68,7 +68,7 @@
 	            android:textSize="@dimen/textsize_middle"
 	            android:background="@null"
 	            android:layout_marginRight="16dp"
-	             android:lines="1"
+	             android:singleLine="true"
 	            />
 	    
 	</LinearLayout>
@@ -100,7 +100,7 @@
 	            android:textSize="@dimen/textsize_middle"
 	            android:background="@null"
 	            android:layout_marginRight="16dp"
-	             android:lines="1"
+	            android:singleLine="true"
 	            />
 	</LinearLayout>
 	<View 
@@ -130,7 +130,8 @@
 	            android:textSize="@dimen/textsize_middle"
 	            android:background="@null"
 	            android:layout_marginRight="16dp"
-	             android:lines="1"
+	            android:singleLine="true"
+	            android:hint="不超过10个字"
 	            />
 	</LinearLayout>
 	<View

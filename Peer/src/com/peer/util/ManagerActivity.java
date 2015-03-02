@@ -17,21 +17,25 @@ import android.content.Intent;
 public class ManagerActivity {
 
 	private static Stack<Activity> activityStack;
-
+   
+	private static ManagerActivity instance;
+	
 	private ManagerActivity() {
 		
 	}
-
 	/**
 	 * single instance
 	 */
 	public static ManagerActivity getAppManager() {
-
-		return SingletonCreator.instance;
-	}
-
-	private static class SingletonCreator {
-		private final static ManagerActivity instance = new ManagerActivity();
+		if(instance==null){
+			 synchronized (ManagerActivity.class){
+				 if(instance==null){
+					 instance=new ManagerActivity(); 
+				 }					 
+			 }
+			
+		}
+		return instance;
 	}
 
 	/**
@@ -39,7 +43,11 @@ public class ManagerActivity {
 	 */
 	public void addActivity(Activity activity) {
 		if (activityStack == null) {
-			activityStack = new Stack<Activity>();
+			 synchronized (ManagerActivity.class){
+				 if(activityStack == null){
+					 activityStack = new Stack<Activity>();
+				 }
+			 }			
 		}
 		activityStack.add(activity);
 	}

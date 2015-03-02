@@ -8,6 +8,7 @@ import java.util.Calendar;
 
 import com.peer.R;
 import com.peer.activitymain.PersonalPageActivity;
+import com.peer.client.User;
 import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
@@ -111,6 +112,7 @@ public class PersonalMessageActivity extends BasicActivity implements OnClickLis
 		
 		update=(Button)findViewById(R.id.bt_update);
 		update.setOnClickListener(this);
+		
 		email=LocalStorage.getString(this,Constant.EMAIL);
 		userdao=new UserDao(this);
 		UserBean u=userdao.findOne(email);
@@ -166,15 +168,16 @@ public class PersonalMessageActivity extends BasicActivity implements OnClickLis
 					// TODO Auto-generated method stub
 					SessionListener callback=new SessionListener();
 					try {
-						PeerUI.getInstance().getISessionManager().profileUpdate(nikename.getText().toString(),birthday.getText().toString(), address.getText().toString(), sex.getText().toString(),IMAGE_FILE_NAME, img, callback);										
+						User u=PeerUI.getInstance().getISessionManager().profileUpdate(nikename.getText().toString(),birthday.getText().toString(), address.getText().toString(), sex.getText().toString(),IMAGE_FILE_NAME, img, callback);										
 						if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
 							pd.dismiss();
 							UserBean userbean=new UserBean();
-							userbean.setNikename(nikename.getText().toString());
-							userbean.setEmail(email);
-							userbean.setAge(birthday.getText().toString());
-							userbean.setCity(address.getText().toString());
-							userbean.setSex(sex.getText().toString());
+							userbean.setNikename(u.getUsername());
+							userbean.setEmail(u.getEmail());
+							userbean.setAge(u.getBirthday());
+							userbean.setCity(u.getCity());
+							userbean.setSex(u.getSex());
+							userbean.setImage(u.getImage());
 							userdao.updateUser(userbean);	
 							runOnUiThread(new Runnable() {
 								public void run() {
@@ -192,8 +195,7 @@ public class PersonalMessageActivity extends BasicActivity implements OnClickLis
 				}
 			};
 			t.start();				
-	}
-	
+	}	
 	private void SexSelect() {
 		// TODO Auto-generated method stub
 		 final String[] items = getResources().getStringArray(  

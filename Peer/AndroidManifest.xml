@@ -13,6 +13,7 @@
         android:protectionLevel="signature" />
     <uses-permission android:name="com.peer.permission.JPUSH_MESSAGE" />
     
+    
      <!-- Required  一些系统要求的权限，如访问网络等-->
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -57,12 +58,16 @@
         </activity>
         <!-- 登陆注册activity -->
         
-        <activity android:name="com.peer.activity.LoginActivity"></activity>
+        <activity android:name="com.peer.activity.LoginActivity"
+             android:windowSoftInputMode="adjustPan"></activity>
         <activity android:name="com.peer.activity.GetAddressInfoActivity"></activity>
-        <activity android:name="com.peer.activity.RegisterAcountActivity"></activity>
-    	<activity android:name="com.peer.activity.RegisterTagActivity"></activity>
+        <activity android:name="com.peer.activity.RegisterAcountActivity"
+            android:windowSoftInputMode="adjustPan"></activity>
+    	<activity android:name="com.peer.activity.RegisterTagActivity"
+    	    android:windowSoftInputMode="adjustPan"></activity>
     	<activity android:name="com.peer.activity.CompleteActivity"></activity>
-    	<activity android:name="com.peer.activity.FindPasswordActivity"></activity>
+    	<activity android:name="com.peer.activity.FindPasswordActivity"
+    	     android:windowSoftInputMode="adjustPan"></activity>
     	<activity android:name="com.peer.activity.FindPasswordResult"></activity>
     	<activity android:name="com.peer.activity.xieyiActivity"></activity>
     	<activity android:name="com.peer.activity.UpdatePasswordActivity"></activity>
@@ -89,6 +94,7 @@
     	<activity android:name="com.peer.activitymain.SearchResultActivity"></activity>
     	<activity 
     	    android:launchMode="singleTask"
+    	    android:windowSoftInputMode="adjustPan"
     	     android:configChanges="orientation|keyboardHidden" 
     	    android:name="com.peer.activitymain.CreatTopicActivity"></activity>
     	<activity android:name="com.peer.activitymain.TopicActivity"></activity>

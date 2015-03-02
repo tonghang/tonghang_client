@@ -55,12 +55,20 @@ public class MyFragment extends BasicFragment {
 		tv_nikename=(TextView)getView().findViewById(R.id.tv_nikename);
 		tv_email=(TextView)getView().findViewById(R.id.tv_email);	
 		
+		getlocalMsg();
+	}
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		getlocalMsg();
+	}
+	public void getlocalMsg(){
 		String email=LocalStorage.getString(getActivity(),Constant.EMAIL);
 		UserDao u=new UserDao(getActivity());
 		UserBean user=u.findOne(email);
 		tv_nikename.setText(user.getNikename());
 		tv_email.setText(user.getEmail());
-		LoadImageUtil.imageLoader.displayImage(user.getImage(), headpic, LoadImageUtil.options);
-		
+		LoadImageUtil.imageLoader.displayImage(user.getImage(), headpic, LoadImageUtil.options);		
 	}
 }

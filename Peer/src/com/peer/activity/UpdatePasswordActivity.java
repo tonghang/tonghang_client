@@ -76,8 +76,8 @@ public class UpdatePasswordActivity extends BasicActivity {
 		String old=oldpasw.getText().toString().trim();
 		final String newpasws=newpasw.getText().toString().trim();
 		String testnew=reputpasw.getText().toString().trim();
-		String email=LocalStorage.getString(UpdatePasswordActivity.this, Constant.EMAIL);
-		UserDao udao=new UserDao(UpdatePasswordActivity.this);		
+		final String email=LocalStorage.getString(UpdatePasswordActivity.this, Constant.EMAIL);
+		final UserDao udao=new UserDao(UpdatePasswordActivity.this);		
 		String password=udao.getPassord(email);
 		if(!old.equals(password)){
 			remind.setText(getResources().getString(R.string.erroroldpsw));
@@ -102,9 +102,21 @@ public class UpdatePasswordActivity extends BasicActivity {
 						e.printStackTrace();
 					}
 					if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
-						ShowMessage(getResources().getString(R.string.updatemsgsuccess));
+						udao.UpdatePassword(newpasws, email);
+						runOnUiThread(new Runnable() {
+							public void run() {
+								ShowMessage(getResources().getString(R.string.updatemsgsuccess));
+								finish();
+							}
+						});
+						
 					}else{
-						ShowMessage(getResources().getString(R.string.updatemsgfail));
+						runOnUiThread(new Runnable() {
+							public void run() {
+								ShowMessage(getResources().getString(R.string.updatemsgfail));
+							}
+						});
+						
 					}
 				}
 			}).start();

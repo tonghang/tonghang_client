@@ -76,8 +76,7 @@ public class RegisterAcountActivity extends BasicActivity{
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.bt_complete_registe:
-			if(checkNetworkState()){
-				pd = ProgressDialog.show(RegisterAcountActivity.this, "", "正在注册。。。");
+			if(checkNetworkState()){				
 				Register();					
 			}else{
 				ShowMessage(getResources().getString(R.string.Broken_network_prompt));
@@ -111,7 +110,8 @@ public class RegisterAcountActivity extends BasicActivity{
 		}else if(nike_registe.length()>10){
 			registe_remind.setText(getResources().getString(R.string.errornike));
 			return ;
-		}else{				
+		}else{	
+			pd = ProgressDialog.show(RegisterAcountActivity.this, "", "正在注册。。。");
 			RegisterTask task=new RegisterTask();
 			task.execute(email,password,nikename);
 		}		
