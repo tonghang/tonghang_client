@@ -9,6 +9,9 @@ import com.peer.client.User;
 import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
+import com.peer.localDB.LocalStorage;
+import com.peer.localDB.UserDao;
+import com.peer.localDBbean.UserBean;
 import com.peer.titlepopwindow.ActionItem;
 import com.peer.titlepopwindow.TitlePopup;
 import com.peer.titlepopwindow.TitlePopup.OnItemOnClickListener;
@@ -51,6 +54,7 @@ public class PersonalPageActivity extends BasicActivity {
 		LoadImageUtil.initImageLoader(this);
 		PersonalTask task=new PersonalTask();
 		task.execute(PersonpageUtil.getInstance().getPersonid());	
+		ViewType();
 	}
 	private void init() {
 		// TODO Auto-generated method stub	
@@ -74,8 +78,7 @@ public class PersonalPageActivity extends BasicActivity {
 		content=(LinearLayout)findViewById(R.id.contentauto);
 		tagContainer = (AutoWrapLinearLayout) findViewById(R.id.tag_container);
 		send=(Button)findViewById(R.id.send);
-		addfriend=(Button)findViewById(R.id.addfriends);
-		ViewType();			
+		addfriend=(Button)findViewById(R.id.addfriends);					
 	}
 	
 	private void ViewType() {
@@ -84,9 +87,14 @@ public class PersonalPageActivity extends BasicActivity {
 		params.weight=1;
 		params.gravity=Gravity.CENTER_VERTICAL;
 		switch (PersonpageUtil.getInstance().getPersonpagetype()) {
-		case Constant.UNFRIENDSPAGE:
-			topic_whose.setText(getResources().getString(R.string.topic_other));
-			title.setText(getResources().getString(R.string.personalpage_other));
+		case Constant.UNFRIENDSPAGE:			
+			if(sex.getText().toString().equals("男")){
+				topic_whose.setText(getResources().getString(R.string.topic_other));
+				title.setText(getResources().getString(R.string.personalpage_other));
+			}else{
+				topic_whose.setText(getResources().getString(R.string.topic_nvother));
+				title.setText(getResources().getString(R.string.personalpage_nvother));
+			}			
 			send.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
@@ -123,9 +131,13 @@ public class PersonalPageActivity extends BasicActivity {
 			
 			titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.deletefriends), R.color.white));
 			popupwindow();
-			
-			topic_whose.setText(getResources().getString(R.string.topic_other));
-			title.setText(getResources().getString(R.string.personalpage_other));
+			if(sex.getText().toString().equals("男")){
+				topic_whose.setText(getResources().getString(R.string.topic_other));
+				title.setText(getResources().getString(R.string.personalpage_other));
+			}else{
+				topic_whose.setText(getResources().getString(R.string.topic_nvother));
+				title.setText(getResources().getString(R.string.personalpage_nvother));
+			}	
 			Button bt3=new Button(this);
 			bt3.setText(getResources().getString(R.string.sendmsg));
 			bt3.setTextColor(getResources().getColor(R.color.white));
@@ -150,6 +162,34 @@ public class PersonalPageActivity extends BasicActivity {
 			topic_whose.setText(getResources().getString(R.string.topic_owen));
 			title.setText(getResources().getString(R.string.personalpage_own));
 			bottomline.setVisibility(View.INVISIBLE);
+			if(!checkNetworkState()){
+				String email=LocalStorage.getString(PersonalPageActivity.this, Constant.EMAIL);
+				UserDao userdao=new UserDao(PersonalPageActivity.this);
+				UserBean user=userdao.findOne(email);
+				LoadImageUtil.imageLoader.displayImage(user.getImage(), personhead, LoadImageUtil.options);				
+				nikename.setText(user.getNikename());
+				acount.setText(user.getEmail());
+				city.setText(user.getCity());
+				sex.setText(user.getSex());
+				List<String> lables=null;
+				try {
+					lables = PeerUI.getInstance().getISessionManager().getLabels();
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				for(int i=0;i<lables.size();i++){
+					String tag=lables.get(i);		
+					skill=(TextView) getLayoutInflater().inflate(R.layout.skill, tagContainer, false);
+					skill.setHeight((int)getResources().getDimension(R.dimen.hight));
+					skill.setTextSize(20);
+					skill.setTextColor(getResources().getColor(R.color.white));
+					int pading=(int)getResources().getDimension(R.dimen.pading);
+					skill.setText(tag);
+					skill.setTag(""+i);
+					tagContainer.addView(skill);
+				}
+			}		
 			break;
 		default:
 			break;
@@ -162,12 +202,16 @@ public class PersonalPageActivity extends BasicActivity {
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.rl_topic:
-			Intent intent=new Intent(PersonalPageActivity.this,TopicActivity.class);
-			intent.putExtra("userId", userpage.getUserid());
-			intent.putExtra("image", userpage.getImage());
-			intent.putExtra("nike", userpage.getUsername());
-			intent.putExtra("email", userpage.getEmail());			
-			startActivity(intent);			
+			if(checkNetworkState()){
+				Intent intent=new Intent(PersonalPageActivity.this,TopicActivity.class);
+				intent.putExtra("userId", userpage.getUserid());
+				intent.putExtra("image", userpage.getImage());
+				intent.putExtra("nike", userpage.getUsername());
+				intent.putExtra("email", userpage.getEmail());			
+				startActivity(intent);
+			}else{
+				ShowMessage(getResources().getString(R.string.Broken_network_prompt));
+			}						
 			break;
 		case R.id.im_downview:
 			titlePopup.show(v);

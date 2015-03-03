@@ -33,6 +33,14 @@ public class TopicActivity extends BasicActivity {
 		Intent intent=getIntent();
 		TopicTask task=new TopicTask();
 		task.execute(intent.getStringExtra("userId"));
+		try {
+			if(PeerUI.getInstance().getISessionManager().getUserId().equals(intent.getStringExtra("userId"))){
+				title.setText(getResources().getString(R.string.topic_owen));
+			}
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 		LoadImageUtil.initImageLoader(this);		
 		LoadImageUtil.imageLoader.displayImage(intent.getStringExtra("image"), headpic, LoadImageUtil.options);
 		nike.setText(intent.getStringExtra("nike"));
@@ -43,7 +51,7 @@ public class TopicActivity extends BasicActivity {
 		// TODO Auto-generated method stub
 		headpic=(ImageView)findViewById(R.id.personhead);
 		nike=(TextView)findViewById(R.id.personnike);
-		email=(TextView)findViewById(R.id.personnike);
+		email=(TextView)findViewById(R.id.email);
 		back=(LinearLayout)findViewById(R.id.ll_back);
 		back.setOnClickListener(this);
 		title=(TextView)findViewById(R.id.tv_title);

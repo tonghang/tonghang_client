@@ -65,7 +65,7 @@ public class MySkillActivity extends BasicActivity {
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.ll_createTag_mytag:
-			if(Hadtag>5){
+			if(Hadtag>4){
 				ShowMessage("您已经有五个标签，不能再创建了");
 				break;
 			}else{
@@ -90,21 +90,41 @@ public class MySkillActivity extends BasicActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         String inputName = inputServer.getText().toString().trim();
                        if(!TextUtils.isEmpty(inputName)){
-                    	   if(inputName.length()<7){
-                    		   boolean issame=false;
-	                      		 for(int i=0;i<mlist.size();i++){ 
-	                      			 if(mlist.get(i).equals(inputName)){
-	                      				issame=true;
-	                      				 ShowMessage(getResources().getString(R.string.repetskill));
-	                      				 break;	                      				
-	                      			 }
-	                      		 }
-	                      		 if(!issame){
-	                      			createLable(inputName);
-	                      		 }	                      		
-	                      	}else{
-	                      		ShowMessage(getResources().getString(R.string.skillname));
-	                      	}                       
+                    	   String fomate="^[A-Za-z]+$";
+                    	   if(inputName.matches(fomate)){
+                    		   if(inputName.length()<13){
+                        		   boolean issame=false;
+    	                      		 for(int i=0;i<mlist.size();i++){ 
+    	                      			 if(mlist.get(i).equals(inputName)){
+    	                      				issame=true;
+    	                      				 ShowMessage(getResources().getString(R.string.repetskill));
+    	                      				 break;	                      				
+    	                      			 }
+    	                      		 }
+    	                      		 if(!issame){
+    	                      			createLable(inputName);
+    	                      		 }	                      		
+    	                      	}else{
+    	                      		ShowMessage(getResources().getString(R.string.skillname));
+    	                      	}       
+                    	   }else{
+                    		   if(inputName.length()<7){
+                        		   boolean issame=false;
+    	                      		 for(int i=0;i<mlist.size();i++){ 
+    	                      			 if(mlist.get(i).equals(inputName)){
+    	                      				issame=true;
+    	                      				 ShowMessage(getResources().getString(R.string.repetskill));
+    	                      				 break;	                      				
+    	                      			 }
+    	                      		 }
+    	                      		 if(!issame){
+    	                      			createLable(inputName);
+    	                      		 }	                      		
+    	                      	}else{
+    	                      		ShowMessage(getResources().getString(R.string.skillname));
+    	                      	}     
+                    	   }
+                    	                     
                        }else{
                     	   ShowMessage("请输入秀场名");
                        }                       
@@ -137,7 +157,8 @@ public class MySkillActivity extends BasicActivity {
 			mlist.add(event.getLabel());		
 			changLabelsTask task=new changLabelsTask();
 			task.execute();	
-		}		
+		}
+		Hadtag=mlist.size();
 	}
 	public class changLabelsTask extends  AsyncTask<String, String, String>{
 

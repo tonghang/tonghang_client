@@ -97,7 +97,12 @@ public class CreatTopicActivity extends BasicActivity {
 				RadioButton tempButton = (RadioButton)findViewById(checkedId);
 				selectlabel=tempButton.getText().toString();
 				isselect=true;
-				System.out.println("选中的标签是："+tempButton.getText().toString());
+				if(isselect&&TextUtils.isEmpty(topic.getText().toString().trim())){
+					creattopic.setEnabled(false);
+				}else{
+					creattopic.setEnabled(true);
+				}
+				
 			}
 		});
 		topic=(EditText)findViewById(R.id.et_topic);

@@ -86,7 +86,7 @@ public class UpdatePasswordActivity extends BasicActivity {
 			remind.setText(getResources().getString(R.string.errorpswformat));
 			return;
 		}else if(!newpasws.equals(testnew)){
-			remind.setText(getResources().getString(R.string.notmatchpsw));
+			remind.setText(getResources().getString(R.string.oldnewnot));
 			return;
 		}else{
 			new Thread(new Runnable() {

@@ -111,14 +111,26 @@ public class RegisterTagActivity extends BasicActivity {
 			}			
 		}
 		if(!t1.equals("")&&!t2.equals("")){
+			String fomate="^[A-Za-z]+$";
 			for(int j=0;j<list.size();j++){	
-				if(list.get(j).length()<7){
-					Tolong=false;
+				if(list.get(j).matches(fomate)){
+					if(list.get(j).length()<13){
+						Tolong=false;
+					}else{
+						Tolong=true;
+						remind.setText(getResources().getString(R.string.skillname));
+						break;
+					}	
 				}else{
-					Tolong=true;
-					remind.setText(getResources().getString(R.string.skillname));
-					break;
-				}				
+					if(list.get(j).length()<7){
+						Tolong=false;
+					}else{
+						Tolong=true;
+						remind.setText(getResources().getString(R.string.skillname));
+						break;
+					}
+				}
+							
 			}
 			for(int j=0;j<list.size();j++){
 				for(int k=j+1;k<list.size();k++){

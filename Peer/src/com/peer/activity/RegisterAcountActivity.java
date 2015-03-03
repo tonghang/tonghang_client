@@ -6,8 +6,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.text.Editable;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.style.BulletSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -56,6 +60,10 @@ public class RegisterAcountActivity extends BasicActivity{
 		complete_registe.setEnabled(false);	
 		xieyi=(TextView)findViewById(R.id.xieyi);
 		xieyi.setOnClickListener(this);
+		SpannableStringBuilder builder = new SpannableStringBuilder(xieyi.getText().toString());
+		ForegroundColorSpan colorspan = new ForegroundColorSpan(getResources().getColor(R.color.backcolornol));
+		builder.setSpan(colorspan, 16, 31, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		xieyi.setText(builder);
 	}
 	
 	@Override

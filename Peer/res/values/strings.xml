@@ -39,13 +39,15 @@
     
     <string name="searchresult">搜索结果</string>
     <string name="personalpage_other">他的主页</string>
+    <string name="personalpage_nvother">她的主页</string>
     <string name="personalpage_own">我的主页</string>
     <string name="newfriends">新朋友</string>
     <string name="createtopic">创建话题</string>
     <string name="chatroommember">聊天室成员</string>
     <string name="topic_other">他的话题</string>
+    <string name="topic_nvother">她的话题</string>
       <string name="topic_owen">我的话题</string>
-    <string name="checkfriends">身份验证</string>
+    <string name="checkfriends">添加好友</string>
     <string name="chatmsg">聊天记录</string>
     <!-- 提示用语 -->
     <string name="remind_login">用户名或密码错误</string>
@@ -57,6 +59,7 @@
     <string name="erroroldpsw">旧密码不正确</string>
     <string name="errorpswformat">密码格式不正确</string>
     <string name="notmatchpsw">密码不一致</string>
+    <string name="oldnewnot">新密码与确认密码不一致</string>
     <string name="erroremail">邮箱格式不正确</string>
     <string name="errornike">昵称长度不得超过十个字</string>
     <string name="updatepasw">密码更新成功</string>
@@ -92,7 +95,7 @@
     <string name="deletechatmsg">聊天记录已删除</string>
     
     <string name="deletethisskill">是否删除该技能</string>
-    <string name="deleteskill">删除技能</string>
+    <string name="deleteskill">是否删除该行业标签</string>
     <string name="updateskill">修改技能</string>
     
     <string name="selectsex">请选择性别</string>
