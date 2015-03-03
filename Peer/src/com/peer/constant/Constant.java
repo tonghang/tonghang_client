@@ -12,6 +12,10 @@ public interface Constant {
 	/*LocalStorage key*/
 	public String EMAIL="email";	
 	
+	public String LOGINED="logined";
+	public String LOGOUT="logout";
+	
+	
 	/*homepage recommend user or topic*/
 	public String USER="user";
 	public String TOPIC="topic";

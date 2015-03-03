@@ -5,6 +5,8 @@ import java.io.File;
 import com.peer.R;
 import com.peer.IMimplements.easemobchatImp;
 import com.peer.constant.Constant;
+import com.peer.localDB.LocalStorage;
+import com.peer.localDB.UserDao;
 import com.peer.util.ManagerActivity;
 import com.umeng.update.UmengUpdateAgent;
 
@@ -104,41 +106,36 @@ public class SettingActivity extends BasicActivity{
 		.setMessage(getResources().getString(R.string.clearcash)) .setNegativeButton(getResources().getString(R.string.cancel), null) 
 		 .setPositiveButton(getResources().getString(R.string.sure), new DialogInterface.OnClickListener(){
              public void onClick(DialogInterface dialoginterface, int i){ 
-            	 deleteFilesByDirectory(getCacheDir());
+            	 deleteFilesByDirectory(getExternalCacheDir());
             	 ShowMessage(getResources().getString(R.string.cleancash));
              }
-		 })
-		 .show();  
+		 }).show();  
 	}
 	
 	private void Relogin(){
 		new AlertDialog.Builder(this).setTitle(getResources().getString(R.string.exitlogin))  
 		.setMessage(getResources().getString(R.string.relogin)) .setNegativeButton(getResources().getString(R.string.cancel), null) 
 		 .setPositiveButton(getResources().getString(R.string.sure), new DialogInterface.OnClickListener(){
-             public void onClick(DialogInterface dialoginterface, int i){            	 
-            	 ManagerActivity.getAppManager().finishAllActivity();
-            	 //退出环信账号
-            	 easemobchatImp.getInstance().logout();
-            	 Intent intent=new Intent(SettingActivity.this,LoginActivity.class);
-            	 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-         				| Intent.FLAG_ACTIVITY_NEW_TASK);
-            	 intent.putExtra(Constant.RELOGIN, Constant.RELOGIN);
-            	 startActivity(intent);
+             public void onClick(DialogInterface dialoginterface, int i){ 
+            	  ManagerActivity.getAppManager().restart(SettingActivity.this);
+	     	 //退出环信账号
+	     	 easemobchatImp.getInstance().logout(); 
+	     	UserDao userdao=new UserDao(SettingActivity.this);
+	     	String email=LocalStorage.getString(SettingActivity.this, Constant.EMAIL);
+			userdao.UpdateUserStatus(Constant.LOGOUT, email);
              }
-		 })
-		 .show();  
+		 }).show(); 
 	}
-	private void Todesk(){
+	private void Todesk(){	
 		new AlertDialog.Builder(this).setTitle(getResources().getString(R.string.close))  
 		.setMessage(getResources().getString(R.string.todesk)) .setNegativeButton(getResources().getString(R.string.cancel), null) 
 		 .setPositiveButton(getResources().getString(R.string.sure), new DialogInterface.OnClickListener(){
              public void onClick(DialogInterface dialoginterface, int i){
-            	ManagerActivity.getAppManager().finishAllActivity();
+            	  ManagerActivity.getAppManager().AppExit(SettingActivity.this);       	
              }
-		 })
-		 .show(); 
+		 }).show();
 	}
-    private static void deleteFilesByDirectory(File directory) {
+    private static void deleteFilesByDirectory(File directory) {  	
         if (directory != null && directory.exists() && directory.isDirectory()) {
             for (File item : directory.listFiles()) {
                 item.delete();

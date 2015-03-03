@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -34,6 +35,7 @@ import cn.sharesdk.wechat.moments.WechatMoments.ShareParams;
 import com.peer.R;
 import com.peer.IMimplements.easemobchatImp;
 import com.peer.activity.BasicActivity;
+import com.peer.activity.LoginActivity;
 import com.peer.activity.SettingActivity;
 import com.peer.client.User;
 import com.peer.client.ui.PeerUI;
@@ -51,6 +53,7 @@ public class CreatTopicActivity extends BasicActivity {
 	private AutoWrapRadioGroup tagContainer;	
 	private boolean isselect=false;
 	private String selectlabel;
+	private ProgressDialog pd;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -152,6 +155,7 @@ public class CreatTopicActivity extends BasicActivity {
 			@Override
 			public void onClick(DialogInterface dialoginterface, int i) {
 				// TODO Auto-generated method stub
+				pd = ProgressDialog.show(CreatTopicActivity.this,"", "正在创建话题请稍候。。。");
 				CreatTopicTask task=new CreatTopicTask();
 				task.execute(selectlabel,topic.getText().toString().trim());
 			}
@@ -179,6 +183,7 @@ public class CreatTopicActivity extends BasicActivity {
 				@Override
 				public void onComplete(Platform arg0, int arg1, HashMap<String, Object> arg2) {
 					// TODO Auto-generated method stub
+					pd = ProgressDialog.show(CreatTopicActivity.this,"", "正在创建话题请稍候。。。");
 					CreatTopicTask task=new CreatTopicTask();
 					task.execute(selectlabel,topic.getText().toString().trim());
 				}
@@ -198,7 +203,8 @@ public class CreatTopicActivity extends BasicActivity {
 
 		@Override
 		protected List<String> doInBackground(String... paramer) {
-			// TODO Auto-generated method stub				
+			// TODO Auto-generated method stub	
+			
 			List<String> list=new ArrayList<String>();
 			String groupid=null;
 			list.add(paramer[0]);
@@ -214,8 +220,7 @@ public class CreatTopicActivity extends BasicActivity {
 		}
 		@Override
 		protected void onPostExecute(List result) {
-			// TODO Auto-generated method stub
-			topic.setText("");
+			// TODO Auto-generated method stub			
 			ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.MULTICHAT);				
 			ChatRoomTypeUtil.getInstance().setTitle((String)result.get(0));
 			ChatRoomTypeUtil.getInstance().setTheme((String)result.get(1));
@@ -229,9 +234,12 @@ public class CreatTopicActivity extends BasicActivity {
 				e.printStackTrace();
 			}			
 			ChatRoomTypeUtil.getInstance().setUser(u);	
+			
 			Intent intent=new Intent(CreatTopicActivity.this,ChatRoomActivity.class);
 			startActivity(intent);
 			ManagerActivity.getAppManager().finishActivity(CreatTopicActivity.this);
+			topic.setText("");
+			pd.dismiss();
 		}
 	}
 }

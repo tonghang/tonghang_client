@@ -176,7 +176,7 @@ public class MainActivity extends BasicActivity{
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		unregisterReceiver(msgReceiver);
+//		unregisterReceiver(msgReceiver);
 	}
 	@Override
 	protected void onResume() {

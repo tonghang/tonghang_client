@@ -6,6 +6,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Calendar;
 
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.peer.BuildConfig;
 import com.peer.R;
 import com.peer.activitymain.PersonalPageActivity;
 import com.peer.client.User;
@@ -120,7 +126,7 @@ public class PersonalMessageActivity extends BasicActivity implements OnClickLis
 		birthday.setText(u.getAge());
 		address.setText(u.getCity());
 		nikename.setText(u.getNikename());
-		LoadImageUtil.imageLoader.displayImage(u.getImage(), headpic_personMSG, LoadImageUtil.options);				
+		LoadImageUtil.imageLoader.displayImage(u.getImage(), headpic_personMSG, LoadImageUtil.options);
 	}
 
 	@Override
@@ -181,6 +187,7 @@ public class PersonalMessageActivity extends BasicActivity implements OnClickLis
 							userdao.updateUser(userbean);	
 							runOnUiThread(new Runnable() {
 								public void run() {
+									deleteFilesByDirectory(getExternalCacheDir());
 									ShowMessage(getResources().getString(R.string.updatemsgsuccess));
 								}
 							});
@@ -195,7 +202,14 @@ public class PersonalMessageActivity extends BasicActivity implements OnClickLis
 				}
 			};
 			t.start();				
-	}	
+	}
+	private static void deleteFilesByDirectory(File directory) {  	
+        if (directory != null && directory.exists() && directory.isDirectory()) {
+            for (File item : directory.listFiles()) {
+                item.delete();
+            }
+        }
+    }
 	private void SexSelect() {
 		// TODO Auto-generated method stub
 		 final String[] items = getResources().getStringArray(  

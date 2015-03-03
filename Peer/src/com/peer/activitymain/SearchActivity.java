@@ -17,6 +17,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -24,7 +25,7 @@ public class SearchActivity extends BasicActivity {
 	public boolean isSearchSkill=true;
 	private TextView searchtag,searchuser;
 	private Button clean;
-	private Button search_search;
+	private ImageView search_search,downview;
 	private EditText contentsearch;
 	private LinearLayout back,mLayoutClearSearchText;
 	private InputMethodManager imm;
@@ -68,7 +69,7 @@ public class SearchActivity extends BasicActivity {
 		imm.showSoftInput(contentsearch, InputMethodManager.RESULT_SHOWN); 
 		imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY); 
 		
-		search_search=(Button)findViewById(R.id.bt_search_search);		
+		search_search=(ImageView)findViewById(R.id.im_search_search);		
 		search_search.setOnClickListener(this);
 		
 		tagPopup = new TitlePopup(this, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);	
@@ -78,22 +79,30 @@ public class SearchActivity extends BasicActivity {
 		userPopup = new TitlePopup(this, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);	
 		userPopup.addAction(new ActionItem(this, getResources().getString(R.string.bytag), R.color.white));
 		userPopup.addAction(new ActionItem(this, getResources().getString(R.string.bynike), R.color.white));
+		
+		downview=(ImageView)findViewById(R.id.search_downview);
+		downview.setOnClickListener(this);
 	}
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.searchtag:
-			SearchSkill();
-			tagPopup.showonserchtag(v);			
+			SearchSkill();					
 			break;
 		case R.id.search_user:
-			SearchUser();
-			userPopup.showonserchuser(v);			
+			SearchUser();						
 			break;
 		case R.id.btn_clear_search_text:
 			contentsearch.setText("");
 			mLayoutClearSearchText.setVisibility(View.GONE);
 			break;
-		case R.id.bt_search_search:
+		case R.id.search_downview:
+			if(isSearchSkill){
+				tagPopup.showonserchtag(v);	
+			}else{
+				userPopup.showonserchuser(v);
+			}
+			break;
+		case R.id.im_search_search:
 			if(checkNetworkState()){
 				String searchtaget=contentsearch.getText().toString().trim();
 				if(TextUtils.isEmpty(searchtaget)){
@@ -117,7 +126,8 @@ public class SearchActivity extends BasicActivity {
 	 
 	private void SearchSkill() {
 			// TODO Auto-generated method stub
-		  isSearchSkill=true;		
+		  isSearchSkill=true;	
+		  contentsearch.setHint(getResources().getString(R.string.bytopic));
 		  searchtag.setTextColor(getResources().getColor(R.color.black));
 		  searchtag.setBackgroundDrawable(getResources().getDrawable(R.drawable.searchborder));
 		  searchuser.setTextColor(getResources().getColor(R.color.seachbluetext));
@@ -126,6 +136,7 @@ public class SearchActivity extends BasicActivity {
 	private void SearchUser() {
 			// TODO Auto-generated method stub
 		  isSearchSkill=false;
+		  contentsearch.setHint(getResources().getString(R.string.bynike));
 		  searchuser.setTextColor(getResources().getColor(R.color.black));
 		  searchuser.setBackgroundDrawable(getResources().getDrawable(R.drawable.searchborder));
 		  searchtag.setTextColor(getResources().getColor(R.color.seachbluetext));

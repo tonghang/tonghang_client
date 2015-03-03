@@ -175,6 +175,7 @@ public class CompleteActivity extends BasicActivity{
 						SessionListener callback2=new SessionListener();
 						String email=LocalStorage.getString(CompleteActivity.this, Constant.EMAIL);
 						UserDao userdao=new UserDao(CompleteActivity.this);
+						userdao.UpdateUserStatus(Constant.LOGINED, email);
 						String password=userdao.getPassord(email);											
 						try {
 							User u=PeerUI.getInstance().getISessionManager().login(email, password, callback2);

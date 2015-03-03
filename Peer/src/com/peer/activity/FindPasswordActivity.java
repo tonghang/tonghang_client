@@ -4,6 +4,8 @@ import com.peer.R;
 import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
+import com.peer.localDB.LocalStorage;
+
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -34,8 +36,16 @@ public class FindPasswordActivity extends BasicActivity {
 		title.setText(getResources().getString(R.string.findpassword));
 		remind=(TextView)findViewById(R.id.email_test);
 		email=(EditText)findViewById(R.id.et_email_find);
+		
+		String emailadd=LocalStorage.getString(this, Constant.EMAIL);
+		email.setText(emailadd);
+		
 		find=(Button)findViewById(R.id.bt_findpassword);
-		find.setEnabled(false);
+		if(TextUtils.isEmpty(email.getText().toString())){
+			find.setEnabled(false);
+		}else{
+			find.setEnabled(true);
+		}
 		email.addTextChangedListener(new TextWatcher() {
 			
 			@Override

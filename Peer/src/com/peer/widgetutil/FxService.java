@@ -141,12 +141,12 @@ public class FxService extends Service
 	            	}
 					if(320<(int) event.getRawX()){
 						 wmParams.x = 720;
-						 wmParams.y = (int) event.getRawY();
+						 wmParams.y = (int) event.getRawY()-128;
 						 mWindowManager.updateViewLayout(mFloatLayout, wmParams);
 						 
 					}else{
 						 wmParams.x = 0;
-						 wmParams.y = (int) event.getRawY();
+						 wmParams.y = (int) event.getRawY()-128;
 						 mWindowManager.updateViewLayout(mFloatLayout, wmParams);						 
 					}
 					break;

@@ -11,7 +11,6 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -33,15 +32,13 @@ import com.peer.widgetutil.FxService;
  *
  */
 public class BasicActivity extends FragmentActivity implements OnClickListener{	
-	private static final int notifiId = 11;
     protected NotificationManager notificationManager;
     private HomeWatcher mHomeWatcher ;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		super.onCreate(savedInstanceState);
-	     
+		super.onCreate(savedInstanceState);	     
 	    ManagerActivity.getAppManager().addActivity(this);
 	    HomeKeyWatcher();				
 	}
@@ -127,12 +124,16 @@ public class BasicActivity extends FragmentActivity implements OnClickListener{
     }
     private void ToNotifyStyle(Notification notification) {
 		// TODO Auto-generated method stub
-		if(LocalStorage.getBoolean(this, "sound")){
-	    	 notification.defaults = Notification.DEFAULT_SOUND;//声音默认
-	     }
-	     if(LocalStorage.getBoolean(this, "vibrate")){
-	    	 notification.defaults = Notification.DEFAULT_VIBRATE;
-	     }	
+    	if(LocalStorage.getBoolean(this, "sound")&&LocalStorage.getBoolean(this, "vibrate")){
+    		notification.defaults = Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE;
+    	}else{
+    		 if(LocalStorage.getBoolean(this, "sound")){
+   	    	 	notification.defaults = Notification.DEFAULT_SOUND;//声音默认
+	   	     }else if(LocalStorage.getBoolean(this, "vibrate")){
+	   	    	 notification.defaults = Notification.DEFAULT_VIBRATE;
+	   	     }	
+    	}
+		
 	}
 	/**
 	 *  Prompt information to user

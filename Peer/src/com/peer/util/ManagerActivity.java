@@ -6,8 +6,10 @@ import com.peer.activity.LoginActivity;
 import com.peer.constant.Constant;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
 
 /**
  * application Activity managet :be used for manage Activity and exit application
@@ -16,7 +18,7 @@ import android.content.Intent;
  */
 public class ManagerActivity {
 
-	private static Stack<Activity> activityStack;
+	private static Stack<FragmentActivity> activityStack;
    
 	private static ManagerActivity instance;
 	
@@ -41,11 +43,11 @@ public class ManagerActivity {
 	/**
 	 * add activity to stack
 	 */
-	public void addActivity(Activity activity) {
+	public void addActivity(FragmentActivity activity) {
 		if (activityStack == null) {
 			 synchronized (ManagerActivity.class){
 				 if(activityStack == null){
-					 activityStack = new Stack<Activity>();
+					 activityStack = new Stack<FragmentActivity>();
 				 }
 			 }			
 		}
@@ -72,14 +74,14 @@ public class ManagerActivity {
 	 * finish current Activity
 	 */
 	public void finishActivity() {
-		Activity activity = activityStack.lastElement();
+		FragmentActivity activity = activityStack.lastElement();
 		finishActivity(activity);
 	}
 
 	/**
 	 * The end of the specified Activity
 	 */
-	public void finishActivity(Activity activity) {
+	public void finishActivity(FragmentActivity activity) {
 		if (activity != null) {
 			activityStack.remove(activity);
 			activity.finish();
@@ -91,7 +93,7 @@ public class ManagerActivity {
 	 * The end of the specified class name
 	 */
 	public void finishActivity(Class<?> cls) {
-		for (Activity activity : activityStack) {
+		for (FragmentActivity activity : activityStack) {
 			if (activity.getClass().equals(cls)) {
 				finishActivity(activity);
 			}
@@ -100,7 +102,7 @@ public class ManagerActivity {
 	/**
 	 * finsh All Top Activities 
 	 */
-	public void finishAllTopActivities(Activity activity) {
+	public void finishAllTopActivities(FragmentActivity activity) {
 		if (activity != null) {
 			boolean flag = false;
 
@@ -116,12 +118,11 @@ public class ManagerActivity {
 			}
 		}
 	}
-
 	/**
 	 * finsh all Activity
 	 */
 	public void finishAllActivity() {
-		for (int i = 0, size = activityStack.size(); i < size; i++) {
+		for (int i = 0; i < activityStack.size(); i++) {
 			if (null != activityStack.get(i)) {
 				activityStack.get(i).finish();
 			}
@@ -135,11 +136,12 @@ public class ManagerActivity {
 	public void AppExit(Context context) {
 		try {
 			finishAllActivity();
-			// ActivityManager activityMgr = (ActivityManager) context
-			// .getSystemService(Context.ACTIVITY_SERVICE);
-			// activityMgr.restartPackage(context.getPackageName());
-			// System.exit(0);
+			 ActivityManager activityMgr = (ActivityManager) context
+			 .getSystemService(Context.ACTIVITY_SERVICE);
+			 activityMgr.restartPackage(context.getPackageName());
+			 System.exit(0);
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	/**

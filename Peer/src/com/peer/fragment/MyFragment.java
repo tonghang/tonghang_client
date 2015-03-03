@@ -1,5 +1,7 @@
 package com.peer.fragment;
 
+import java.io.File;
+
 import com.peer.R;
 import com.peer.activity.LoginActivity;
 import com.peer.constant.Constant;
@@ -71,4 +73,5 @@ public class MyFragment extends BasicFragment {
 		tv_email.setText(user.getEmail());
 		LoadImageUtil.imageLoader.displayImage(user.getImage(), headpic, LoadImageUtil.options);		
 	}
+	
 }

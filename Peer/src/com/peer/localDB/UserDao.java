@@ -17,6 +17,7 @@ public class UserDao {
 	public static String COLUMN_NAME_PASSWORD="password";
 	public static String COLUMN_NAME_NIKENAME="nike";
 	public static String COLUMN_NAME_BIRTHDAY="birthday";
+	public static String COLUMN_NAME_LOGINED="logined";
 	
 	private MySQLiteHelper sqlhelper;
 	public UserDao(Context context){
@@ -122,6 +123,22 @@ public class UserDao {
 		db.update(TABEL_NAME, values,COLUMN_NAME_EMAIL+"=?" , new String[]{email});
 		db.close();
 		return true;
+	}
+	public void UpdateUserStatus(String status,String email){
+		SQLiteDatabase db=sqlhelper.getWritableDatabase();		
+		ContentValues values = new ContentValues();
+		values.put(COLUMN_NAME_LOGINED, status);
+		db.update(TABEL_NAME, values,COLUMN_NAME_EMAIL+"=?" , new String[]{email});
+		db.close();
+	}
+	public String getUserStatus(String email){
+		SQLiteDatabase db=sqlhelper.getReadableDatabase();		
+		Cursor cursor=db.query(TABEL_NAME, new String[]{COLUMN_NAME_LOGINED}, COLUMN_NAME_EMAIL+"=?" , new String[]{email}, null, null, null, null);		
+		String userstatus=null;
+		while(cursor.moveToNext()){
+			userstatus=cursor.getString(cursor.getColumnIndex(COLUMN_NAME_LOGINED));
+		}
+		return userstatus;
 	}
 	public UserBean findOne(String email){
 		SQLiteDatabase db=sqlhelper.getReadableDatabase();

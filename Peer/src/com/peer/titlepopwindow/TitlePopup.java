@@ -125,7 +125,7 @@ public class TitlePopup extends PopupWindow {
 		}
 		
 	
-		showAtLocation(view, popupGravity, 100, mRect.bottom);
+		showAtLocation(view, popupGravity, 0, mRect.bottom);
 	}
 	public void showonserchuser(View view){
 		view.getLocationOnScreen(mLocation);
@@ -138,7 +138,7 @@ public class TitlePopup extends PopupWindow {
 			populateActions();
 		}
 		
-		showAtLocation(view, popupGravity, 200, mRect.bottom);
+		showAtLocation(view, popupGravity, 0, mRect.bottom);
 	}
 	
 	

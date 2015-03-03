@@ -17,6 +17,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	+UserDao.COLUMN_NAME_IMAGE+" text,"
 	+UserDao.COLUMN_NAME_CITY+" text,"
 	+UserDao.COLUMN_NAME_SEX+" text,"
+	+UserDao.COLUMN_NAME_LOGINED+" text,"
 	+UserDao.COLUMN_NAME_BIRTHDAY+" text);";
 	private static final String USERLABEL_TABLE_CREATE="CREATE TABLE "
 			+LabelDao.TABEL_NAME + " ("

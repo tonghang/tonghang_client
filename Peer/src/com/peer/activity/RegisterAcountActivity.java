@@ -1,7 +1,5 @@
 package com.peer.activity;
 
-import java.util.Set;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -10,22 +8,12 @@ import android.os.RemoteException;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import cn.jpush.android.api.JPushInterface;
-import cn.jpush.android.api.TagAliasCallback;
-
-import com.easemob.EMError;
-import com.easemob.chat.EMChatManager;
-import com.easemob.exceptions.EaseMobException;
 import com.peer.R;
-import com.peer.IMimplements.easemobchatImp;
-import com.peer.IMinterface.IM;
 import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;

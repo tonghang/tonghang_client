@@ -46,14 +46,16 @@ public class LoginActivity extends BasicActivity{
 		intent.getStringExtra(Constant.RELOGIN);
 		UserDao userdao=new UserDao(LoginActivity.this);
 		String password=userdao.getPassord(email);
-		
+		String status=userdao.getUserStatus(email);
 		if(intent.getStringExtra(Constant.RELOGIN)!=null&&intent.getStringExtra(Constant.RELOGIN).equals(Constant.RELOGIN)){
 			 email_login.setText(email);			
 			 password_login.setText(password);
 		}else if(email!=null&&!email.equals("")){
 			 email_login.setText(email);					 
-			 password_login.setText(password);			 
-			 autologin(email, password);
+			 password_login.setText(password);
+			 if(status!=null&&status.equals(Constant.LOGINED)){
+				 autologin(email, password);
+			 }			
 		}
 		
 	}	
@@ -135,6 +137,8 @@ public class LoginActivity extends BasicActivity{
 						
 						 LocalStorage.saveString(LoginActivity.this, Constant.EMAIL, username);
 						 UserDao userdao=new UserDao(LoginActivity.this);
+						 userdao.UpdateUserStatus(Constant.LOGINED, username);
+						 
 						 com.peer.localDBbean.UserBean userbean=new com.peer.localDBbean.UserBean();
 						 userbean.setEmail(username);
 						 userbean.setPassword(password);
