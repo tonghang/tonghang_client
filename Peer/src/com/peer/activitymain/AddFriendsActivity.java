@@ -54,7 +54,6 @@ public class AddFriendsActivity extends BasicActivity {
 		back.setOnClickListener(this);
 		send=(Button)findViewById(R.id.bt_send);
 		send.setOnClickListener(this);
-		send.setEnabled(false);
 		headpic=(ImageView)findViewById(R.id.personhead);
 		LoadImageUtil.imageLoader.displayImage(image, headpic, LoadImageUtil.options);
 		tv_nike=(TextView)findViewById(R.id.personnike);
@@ -62,35 +61,6 @@ public class AddFriendsActivity extends BasicActivity {
 		tv_email=(TextView)findViewById(R.id.email);
 		tv_email.setText(email);
 		reson=(EditText)findViewById(R.id.add_reson);
-		reson.addTextChangedListener(new TextWatcher() {
-			
-			@Override
-			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-				// TODO Auto-generated method stub
-				if(TextUtils.isEmpty(reson.getText().toString().trim())){
-					send.setEnabled(false);
-				}else{
-					send.setEnabled(true);
-				}
-			}
-			
-			@Override
-			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
-					int arg3) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void afterTextChanged(Editable arg0) {
-				// TODO Auto-generated method stub
-				if(TextUtils.isEmpty(reson.getText().toString().trim())){
-					send.setEnabled(false);
-				}else{
-					send.setEnabled(true);
-				}
-			}
-		});
 	}
 	@Override
 	public void onClick(View v) {

@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -54,6 +55,7 @@ public class CreatTopicActivity extends BasicActivity {
 	private boolean isselect=false;
 	private String selectlabel;
 	private ProgressDialog pd;
+	private RelativeLayout mytopic;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -74,6 +76,8 @@ public class CreatTopicActivity extends BasicActivity {
 	}
 	private void init() {
 		// TODO Auto-generated method stub	
+		mytopic=(RelativeLayout)findViewById(R.id.rl_newfriends);
+		mytopic.setOnClickListener(this);
 		creattopic=(Button)findViewById(R.id.bt_creattopic);
 		creattopic.setEnabled(false);
 		creattopic.setOnClickListener(this);
@@ -148,7 +152,10 @@ public class CreatTopicActivity extends BasicActivity {
 				ShowMessage(getResources().getString(R.string.Broken_network_prompt));
 			}
 			break;
-
+		case R.id.rl_newfriends:
+			Intent intent=new Intent(CreatTopicActivity.this,MytopicActivity.class);
+			startActivity(intent);		
+			break;
 		default:
 			break;
 		}

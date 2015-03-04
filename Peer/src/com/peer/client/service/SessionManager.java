@@ -294,13 +294,13 @@ public class SessionManager extends ISessionManager.Stub {
 	}
 	/*search topic by label 通过测试*/
 	@Override
-	public List<Topic> searchTopicByLabel(String label,ISessionListener callback) throws RemoteException {
+	public List<Topic> searchTopicByLabel(String label,int page,ISessionListener callback) throws RemoteException {
 		// TODO Auto-generated method stub
 		List<Topic> mlist=new ArrayList<Topic>();
 		String message = null;
 		int code=1;
 		try {
-			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/topics.json?label_name="+label+"&page=1",List.class);
+			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/topics.json?label_name="+label+"&page="+page,List.class);
 			List<Map> list= result.getBody();
 			if(result.getStatusCode()==HttpStatus.OK){
 				for(int i=0;i<list.size();i++){
@@ -335,14 +335,14 @@ public class SessionManager extends ISessionManager.Stub {
 		return mlist;
 	}
 	@Override
-	public List<Topic> searchTopicBykey(String key, ISessionListener callback)
+	public List<Topic> searchTopicBykey(String key,int page, ISessionListener callback)
 			throws RemoteException {
 		// TODO Auto-generated method stub
 		List<Topic> mlist=new ArrayList<Topic>();
 		String message = null;
 		int code=1;
 		try {
-			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/topics.json?q="+key+"&page=1",List.class);
+			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/topics.json?q="+key+"&page="+page,List.class);
 			List<Map> list= result.getBody();
 			if(result.getStatusCode()==HttpStatus.OK){
 				for(int i=0;i<list.size();i++){
@@ -378,7 +378,7 @@ public class SessionManager extends ISessionManager.Stub {
 	}	
 	/*search user by nike 通过测试*/
 	@Override
-	public List<User> searchUsersByNickName(String username,ISessionListener callback)
+	public List<User> searchUsersByNickName(String username,int page,ISessionListener callback)
 			throws RemoteException {
 		// TODO Auto-generated method stub
 		List<User> mlist=new ArrayList<User>();
@@ -386,7 +386,7 @@ public class SessionManager extends ISessionManager.Stub {
 		String message = null;
 		int code=1;
 		try{
-			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/users.json?q="+username+"",List.class);
+			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/users.json?q="+username+"&page="+page,List.class);
 			List<Map> list= result.getBody();			
 			List<User> friendslist=myFriends();
 			if(result.getStatusCode()==HttpStatus.OK){
@@ -450,6 +450,7 @@ public class SessionManager extends ISessionManager.Stub {
 					u.setLabels((List)m.get("labels"));
 					u.setUsername((String)m.get("username"));
 					u.setEmail((String)m.get("email"));
+					u.setHuangxin_username((String)m.get("huanxin_username"));
 					u.setUserid(String.valueOf(m.get("id")));
 					list.add(u);
 				}							

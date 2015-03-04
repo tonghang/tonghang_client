@@ -72,7 +72,6 @@ public class FriendsAdapter extends FatherAdater {
 				labels=labels+" | "+s;
 			}			
 		}
-		final String personid=mlist.get(position).getUserid();
 		viewHolder.descripe.setText(labels);
 		viewHolder.click.setOnClickListener(new View.OnClickListener() {			
 			@Override
@@ -84,7 +83,9 @@ public class FriendsAdapter extends FatherAdater {
 					}else{
 						PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
 					}
-					PersonpageUtil.getInstance().setPersonid(personid);			
+					PersonpageUtil.getInstance().setPersonid(mlist.get(position).getUserid());			
+					PersonpageUtil.getInstance().setHuanxinId(mlist.get(position).getHuangxin_username());
+					PersonpageUtil.getInstance().setPersonname(mlist.get(position).getUsername());
 					Intent intent=new Intent(mContext,PersonalPageActivity.class);
 					mContext.startActivity(intent);
 				}else{

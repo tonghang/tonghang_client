@@ -3,21 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" 
-    android:background="@color/white"
-    >
-     <LinearLayout
+    android:background="@color/white">
+    <LinearLayout
         android:id="@+id/ll1"
         android:layout_width="fill_parent"
-        android:layout_height="48dip"
+        android:layout_height="48dp"
         android:orientation="horizontal" >
-        <include layout="@layout/layout_titlebar"/>
+
+        <include layout="@layout/layout_titlebar" />
     </LinearLayout>
-    <com.handmark.pulltorefresh.library.PullToRefreshListView
-        android:id="@+id/lv_searchresult" 
+    <ListView 
+        android:id="@+id/lv_topichistory"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@null"
-        >        
-    </com.handmark.pulltorefresh.library.PullToRefreshListView>  
+        ></ListView>
+    
 
 </LinearLayout>

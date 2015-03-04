@@ -23,11 +23,12 @@ import android.widget.TextView;
 
 public class SearchActivity extends BasicActivity {
 	public boolean isSearchSkill=true;
+	private int searchtype=2;//搜索类型 默认按话题关键字搜索话题
 	private TextView searchtag,searchuser;
 	private Button clean;
-	private ImageView search_search,downview;
+	private ImageView search_search;
 	private EditText contentsearch;
-	private LinearLayout back,mLayoutClearSearchText;
+	private LinearLayout back,mLayoutClearSearchText,downview;
 	private InputMethodManager imm;
 	private TitlePopup tagPopup,userPopup;
 	@Override
@@ -38,9 +39,29 @@ public class SearchActivity extends BasicActivity {
 		init();
 		popupwindow();
 	}
-	private void init() {
+	@Override
+	protected void onResume() {
 		// TODO Auto-generated method stub
-		SearchUtil.getInstance().setSearchtype(Constant.TOPICBYTOPIC);		
+		super.onResume();
+		switch (searchtype) {
+		case 1:
+			SearchUtil.getInstance().setSearchtype(Constant.LABELTOPIC);
+			break;
+		case 2:
+			SearchUtil.getInstance().setSearchtype(Constant.TOPICBYTOPIC);
+			break;
+		case 3:
+			SearchUtil.getInstance().setSearchtype(Constant.LABELUSER);
+			break;
+		case 4:
+			SearchUtil.getInstance().setSearchtype(Constant.USERBYNIKE);
+			break;
+		default:
+			break;
+		}
+	}
+	private void init() {
+		// TODO Auto-generated method stub		
 		searchtag=(TextView)findViewById(R.id.searchtag);
 		searchtag.setOnClickListener(this);
 		searchtag.setTextColor(getResources().getColor(R.color.black));
@@ -80,7 +101,7 @@ public class SearchActivity extends BasicActivity {
 		userPopup.addAction(new ActionItem(this, getResources().getString(R.string.bytag), R.color.white));
 		userPopup.addAction(new ActionItem(this, getResources().getString(R.string.bynike), R.color.white));
 		
-		downview=(ImageView)findViewById(R.id.search_downview);
+		downview=(LinearLayout)findViewById(R.id.search_downview);
 		downview.setOnClickListener(this);
 	}
 	public void onClick(View v) {
@@ -126,7 +147,9 @@ public class SearchActivity extends BasicActivity {
 	 
 	private void SearchSkill() {
 			// TODO Auto-generated method stub
-		  isSearchSkill=true;	
+		  isSearchSkill=true;
+		  searchtype=2;
+		  SearchUtil.getInstance().setSearchtype(Constant.TOPICBYTOPIC);
 		  contentsearch.setHint(getResources().getString(R.string.bytopic));
 		  searchtag.setTextColor(getResources().getColor(R.color.black));
 		  searchtag.setBackgroundDrawable(getResources().getDrawable(R.drawable.searchborder));
@@ -136,6 +159,8 @@ public class SearchActivity extends BasicActivity {
 	private void SearchUser() {
 			// TODO Auto-generated method stub
 		  isSearchSkill=false;
+		  searchtype=4;
+		  SearchUtil.getInstance().setSearchtype(Constant.USERBYNIKE);
 		  contentsearch.setHint(getResources().getString(R.string.bynike));
 		  searchuser.setTextColor(getResources().getColor(R.color.black));
 		  searchuser.setBackgroundDrawable(getResources().getDrawable(R.drawable.searchborder));
@@ -158,9 +183,11 @@ public class SearchActivity extends BasicActivity {
 					if(item.mTitle.equals(getResources().getString(R.string.bytag))){
 						contentsearch.setHint(item.mTitle);
 						SearchUtil.getInstance().setSearchtype(Constant.LABELTOPIC);
+						searchtype=1;//安标签搜索话题
 					}else if(item.mTitle.equals(getResources().getString(R.string.bytopic))){
 						contentsearch.setHint(item.mTitle);
 						SearchUtil.getInstance().setSearchtype(Constant.TOPICBYTOPIC);
+						searchtype=2;//按话题关键字搜索话题
 					}					
 				}
 		 });
@@ -172,9 +199,11 @@ public class SearchActivity extends BasicActivity {
 				if(item.mTitle.equals(getResources().getString(R.string.bytag))){
 					contentsearch.setHint(item.mTitle);
 					SearchUtil.getInstance().setSearchtype(Constant.LABELUSER);
+					searchtype=3;//按标签搜索用户
 				}else if(item.mTitle.equals(getResources().getString(R.string.bynike))){
 					contentsearch.setHint(item.mTitle);
 					SearchUtil.getInstance().setSearchtype(Constant.USERBYNIKE);
+					searchtype=4;//按昵称搜索用户
 				}
 				
 			}

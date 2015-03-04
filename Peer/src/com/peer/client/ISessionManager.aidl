@@ -35,11 +35,11 @@ interface ISessionManager {
  	
     List<String> search(String label,ISessionListener callback);
     
-    List<com.peer.client.Topic> searchTopicByLabel(String label,ISessionListener callback);
+    List<com.peer.client.Topic> searchTopicByLabel(String label,int page,ISessionListener callback);
     
-    List<com.peer.client.Topic> searchTopicBykey(String key,ISessionListener callback);
+    List<com.peer.client.Topic> searchTopicBykey(String key,int page,ISessionListener callback);
     
-    List<com.peer.client.User> searchUsersByNickName(String username,ISessionListener callback);
+    List<com.peer.client.User> searchUsersByNickName(String username,int page,ISessionListener callback);
  	
  	List recommendByPage(ISessionListener callback);
  	

@@ -84,10 +84,16 @@
     	    android:theme="@style/horizontal_slide"
     	    android:launchMode="singleTask"
     	     android:name="com.peer.activitymain.MainActivity"></activity>
+    	<activity
+    	    android:theme="@style/horizontal_slide"
+    	    android:launchMode="singleTask"
+    	     android:name="com.peer.activitymain.MytopicActivity"></activity>
     	<activity 
     	    android:launchMode="singleTask"
     	    android:name="com.peer.activitymain.SearchActivity"></activity>
-    	<activity android:name="com.peer.activitymain.ChatRoomActivity"></activity>
+    	<activity 
+    	    android:windowSoftInputMode="adjustPan"
+    	    android:name="com.peer.activitymain.ChatRoomActivity"></activity>
     	<activity android:name="com.peer.activitymain.ChatRoomListnikeActivity"></activity>
     	<activity android:name="com.peer.activitymain.PersonalPageActivity"></activity>
     	<activity android:name="com.peer.activitymain.NewFriendsActivity"></activity>

@@ -197,7 +197,7 @@ public class ChatRoomActivity extends BasicActivity {
 			
 			ReplieTask task=new ReplieTask();
 			task.execute(ChatRoomTypeUtil.getInstance().getTopicId());
-			
+			conversation.resetUnreadMsgCount();		
 		}else if(ChatRoomTypeUtil.getInstance().getChatroomtype()==Constant.SINGLECHAT){
 			rl_owner.setVisibility(View.GONE);
 			tv_tagname.setText(ChatRoomTypeUtil.getInstance().getTitle());

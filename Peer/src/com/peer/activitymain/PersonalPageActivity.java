@@ -53,8 +53,7 @@ public class PersonalPageActivity extends BasicActivity {
 		init();
 		LoadImageUtil.initImageLoader(this);
 		PersonalTask task=new PersonalTask();
-		task.execute(PersonpageUtil.getInstance().getPersonid());	
-		ViewType();
+		task.execute(PersonpageUtil.getInstance().getPersonid());			
 	}
 	private void init() {
 		// TODO Auto-generated method stub	
@@ -287,7 +286,7 @@ public class PersonalPageActivity extends BasicActivity {
 					skill.setTag(""+i);
 					tagContainer.addView(skill);
 				}
-				
+				ViewType();
 			}
 		}
 		

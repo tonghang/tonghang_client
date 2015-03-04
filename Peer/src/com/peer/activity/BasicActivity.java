@@ -7,6 +7,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -38,6 +39,7 @@ public class BasicActivity extends FragmentActivity implements OnClickListener{
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		super.onCreate(savedInstanceState);	     
 	    ManagerActivity.getAppManager().addActivity(this);
 	    HomeKeyWatcher();				
