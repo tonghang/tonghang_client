@@ -9,6 +9,7 @@ import com.peer.client.User;
 import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
+import com.peer.fragment.FriendsFragment;
 import com.peer.localDB.LocalStorage;
 import com.peer.localDB.UserDao;
 import com.peer.localDBbean.UserBean;
@@ -240,9 +241,10 @@ public class PersonalPageActivity extends BasicActivity {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-	//						if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
+							if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
+								FriendsFragment.refreshhandle.sendEmptyMessage(Constant.REFRESHHANDLE);
 								finish();
-	//						}
+							}
 						}
 					}).start();
 				}

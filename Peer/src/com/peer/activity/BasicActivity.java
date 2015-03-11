@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
+import com.easemob.chat.NotificationCompat;
 import com.easemob.chat.TextMessageBody;
 import com.peer.R;
 import com.peer.activitymain.MainActivity;
@@ -33,7 +34,8 @@ import com.peer.widgetutil.FxService;
  *
  */
 public class BasicActivity extends FragmentActivity implements OnClickListener{	
-    protected NotificationManager notificationManager;
+	private static final int notifiId = 11;
+	protected NotificationManager notificationManager;
     private HomeWatcher mHomeWatcher ;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +44,8 @@ public class BasicActivity extends FragmentActivity implements OnClickListener{
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		super.onCreate(savedInstanceState);	     
 	    ManagerActivity.getAppManager().addActivity(this);
-	    HomeKeyWatcher();				
+	    HomeKeyWatcher();
+	    notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 	}
 	@Override
 	protected void onResume() {
@@ -84,13 +87,12 @@ public class BasicActivity extends FragmentActivity implements OnClickListener{
     protected void notifyNewMessage(EMMessage message) {    
         TextMessageBody txtBody = (TextMessageBody) message.getBody();
         String ticker = txtBody.getMessage();
-      
+     
         Calendar c = Calendar.getInstance(); 
 	    int hours=c.get(Calendar.HOUR_OF_DAY); 
 		int munite=c.get(Calendar.MINUTE);
-        NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-	      //构建一个通知对象(需要传递的参数有三个,分别是图标,标题和 时间)
-	    Notification notification = new Notification(R.drawable.logo,"同行",System.currentTimeMillis());
+	    //构建一个通知对象(需要传递的参数有三个,分别是图标,标题和 时间)
+	    Notification notification = new Notification(R.drawable.titlelogo,"同行",System.currentTimeMillis());	    
 	    Intent intent = new Intent(BasicActivity.this,MainActivity.class);
 	     
 	      
@@ -121,7 +123,7 @@ public class BasicActivity extends FragmentActivity implements OnClickListener{
 			     }
 			    	
 			}		 	    
-	      manager.notify(1, notification);//发动通知,id由自己指定，每一个Notification对应的唯一标志           
+	      notificationManager.notify(1, notification);//发动通知,id由自己指定，每一个Notification对应的唯一标志           
         
     }
     private void ToNotifyStyle(Notification notification) {

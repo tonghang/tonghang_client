@@ -52,10 +52,12 @@ import com.peer.titlepopwindow.ActionItem;
 import com.peer.titlepopwindow.TitlePopup;
 import com.peer.titlepopwindow.TitlePopup.OnItemOnClickListener;
 import com.peer.util.ChatRoomTypeUtil;
+import com.peer.util.PersonpageUtil;
 import com.peer.widgetutil.FxService;
 import com.peer.widgetutil.LoadImageUtil;
 
 public class ChatRoomActivity extends BasicActivity {
+	private List<User> list;
 	private TitlePopup titlePopup;
 	private LinearLayout back;
 	private RelativeLayout rl_owner;
@@ -108,6 +110,7 @@ public class ChatRoomActivity extends BasicActivity {
 		downwindow.setOnClickListener(this);	
 		
 		ownerimg=(ImageView)findViewById(R.id.host_image);
+		ownerimg.setOnClickListener(this);
 		
 		tv_tagname=(TextView)findViewById(R.id.tv_tagname);		
 		nikename=(TextView)findViewById(R.id.tv_nikename);
@@ -124,7 +127,7 @@ public class ChatRoomActivity extends BasicActivity {
 
 		sendmessage=(Button)findViewById(R.id.btn_send);
 		sendmessage.setOnClickListener(this);	
-		sendmessage.setEnabled(true);
+		sendmessage.setEnabled(false);
 		messagebody.addTextChangedListener(new TextWatcher() {
 			
 			@Override
@@ -197,6 +200,7 @@ public class ChatRoomActivity extends BasicActivity {
 			
 			ReplieTask task=new ReplieTask();
 			task.execute(ChatRoomTypeUtil.getInstance().getTopicId());
+			conversation = EMChatManager.getInstance().getConversation(ChatRoomTypeUtil.getInstance().getHuanxingId());
 			conversation.resetUnreadMsgCount();		
 		}else if(ChatRoomTypeUtil.getInstance().getChatroomtype()==Constant.SINGLECHAT){
 			rl_owner.setVisibility(View.GONE);
@@ -284,7 +288,8 @@ public class ChatRoomActivity extends BasicActivity {
 
 			break;
 		case R.id.host_image:
-
+			FriendsTask task=new FriendsTask();
+			task.execute();
 			break;
 		case R.id.btn_send:
 			if(ChatRoomTypeUtil.getInstance().getChatroomtype()==Constant.MULTICHAT){
@@ -309,7 +314,7 @@ public class ChatRoomActivity extends BasicActivity {
 		  // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
 		  oks.setTitleUrl("http://sharesdk.cn");
 		  // text是分享文本，所有平台都需要这个字段
-		  oks.setText("我在同行APP中参与了关于"+tv_tagname.getText().toString()+"的话题群聊");
+		  oks.setText("我参与了"+tv_theme.getText().toString()+"的讨论。各位同行们：来“同行”APP吧，我们一起交流行业信息，没准还能找到更好的工作。下载地址：“下载链接”");
 		  // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
 		  oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
 		  // url仅在微信（包括好友和朋友圈）中使用
@@ -356,6 +361,15 @@ public class ChatRoomActivity extends BasicActivity {
 							messagebody.setText("");
 						}
 					});					
+				}else{
+					runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							// TODO Auto-generated method stub
+							ShowMessage(getResources().getString(R.string.broken_net));
+						}
+					});
 				}				
 			}
 		}).start();		
@@ -480,6 +494,48 @@ public class ChatRoomActivity extends BasicActivity {
 			unregisterReceiver(receiver);
 			receiver = null;
 		} catch (Exception e) {
+		}
+	}
+	private class FriendsTask extends AsyncTask<Void, Void, List<User>>{
+
+		@Override
+		protected List<User> doInBackground(Void... arg0) {
+			// TODO Auto-generated method stub       
+            try {
+            	list=PeerUI.getInstance().getISessionManager().myFriends();
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}           
+			return list;
+		}
+		@Override
+		protected void onPostExecute(List<User> result) {
+			// TODO Auto-generated method stub
+			if(ChatRoomTypeUtil.getInstance().getUser().getUserid().equals(userid)){			
+				PersonpageUtil.getInstance().setPersonid(ChatRoomTypeUtil.getInstance().getUser().getUserid());
+				PersonpageUtil.getInstance().setPersonpagetype(Constant.OWNPAGE);
+				Intent topersonalpage=new Intent(ChatRoomActivity.this,PersonalPageActivity.class);
+				startActivity(topersonalpage);
+			}else if(!result.isEmpty()){				
+					PersonpageUtil.getInstance().setPersonid(ChatRoomTypeUtil.getInstance().getUser().getUserid());
+					for(int i=0;i<result.size();i++){
+						if(ChatRoomTypeUtil.getInstance().getUser().getUserid().equals(result.get(i).getUserid())){
+							PersonpageUtil.getInstance().setPersonpagetype(Constant.FRIENDSPAGE);
+							break;
+						}else{
+							PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
+						}
+					}
+					Intent topersonalpage=new Intent(ChatRoomActivity.this,PersonalPageActivity.class);
+					startActivity(topersonalpage);				
+			}else{
+				PersonpageUtil.getInstance().setPersonid(ChatRoomTypeUtil.getInstance().getUser().getUserid());
+				PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
+				Intent topersonalpage=new Intent(ChatRoomActivity.this,PersonalPageActivity.class);
+				startActivity(topersonalpage);	
+				
+			}
 		}
 	}
 	/**

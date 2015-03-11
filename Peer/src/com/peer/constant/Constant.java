@@ -5,6 +5,8 @@ package com.peer.constant;
  *
  */
 public interface Constant {
+	public int REFRESHHANDLE=321;
+	
 	public String AGREED="agreed";
 	
 	public String PENDING="pending";

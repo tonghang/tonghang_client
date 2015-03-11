@@ -38,6 +38,7 @@ import com.peer.IMimplements.easemobchatImp;
 import com.peer.activity.BasicActivity;
 import com.peer.activity.LoginActivity;
 import com.peer.activity.SettingActivity;
+import com.peer.client.Topic;
 import com.peer.client.User;
 import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
@@ -48,7 +49,7 @@ import com.peer.util.ManagerActivity;
 public class CreatTopicActivity extends BasicActivity {
 	private TextView title;
 	private Button creattopic;
-	private LinearLayout back;
+	private LinearLayout back,inputtopic;
 	private EditText topic;
 	private List<String> list;
 	private AutoWrapRadioGroup tagContainer;	
@@ -85,7 +86,8 @@ public class CreatTopicActivity extends BasicActivity {
 		title.setText(getResources().getString(R.string.createtopic));
 		back=(LinearLayout)findViewById(R.id.ll_back);
 		back.setOnClickListener(this);
-		tagContainer = (AutoWrapRadioGroup) findViewById(R.id.tag_container);	
+		tagContainer = (AutoWrapRadioGroup) findViewById(R.id.tag_container);
+		inputtopic=(LinearLayout)findViewById(R.id.ll_inputtopic);
 		for(int i=0;i<list.size();i++){
 			RadioButton rb=(RadioButton)getLayoutInflater().inflate(R.layout.skillradio, tagContainer, false);
 			rb.setHeight((int)getResources().getDimension(R.dimen.hight));
@@ -101,6 +103,7 @@ public class CreatTopicActivity extends BasicActivity {
 				RadioButton tempButton = (RadioButton)findViewById(checkedId);
 				selectlabel=tempButton.getText().toString();
 				isselect=true;
+				inputtopic.setVisibility(View.VISIBLE);
 				if(isselect&&TextUtils.isEmpty(topic.getText().toString().trim())){
 					creattopic.setEnabled(false);
 				}else{
@@ -167,7 +170,6 @@ public class CreatTopicActivity extends BasicActivity {
 			@Override
 			public void onClick(DialogInterface dialoginterface, int i) {
 				// TODO Auto-generated method stub
-				pd = ProgressDialog.show(CreatTopicActivity.this,"", "正在创建话题请稍候。。。");
 				CreatTopicTask task=new CreatTopicTask();
 				task.execute(selectlabel,topic.getText().toString().trim());
 			}
@@ -178,7 +180,7 @@ public class CreatTopicActivity extends BasicActivity {
               OnekeyShare oks = new OnekeyShare();
       		oks.setNotification(R.drawable.logo, CreatTopicActivity.this.getString(R.string.app_name));
       		//不同平台的分享参数，请看文档		
-      		oks.setText("我在同行中创建了关于"+topic.getText().toString()+"的话题");
+      		oks.setText("我在“同行(hang)”APP中的"+selectlabel+"行业中，创建了"+topic.getText().toString()+"话题。想参与我的话题讨论的同行们，想认识更多同行来拓展人脉的职场精英们，请下载“同行(hang)”APP，和你的同行交流商业信（ji）息（mi）和行业新(qian)动(gui)态(ze) 。下载地址：“下载链接“");
       		oks.setSilent(true);
       		oks.setDialogMode();
       		oks.disableSSOWhenAuthorize();
@@ -195,7 +197,6 @@ public class CreatTopicActivity extends BasicActivity {
 				@Override
 				public void onComplete(Platform arg0, int arg1, HashMap<String, Object> arg2) {
 					// TODO Auto-generated method stub
-					pd = ProgressDialog.show(CreatTopicActivity.this,"", "正在创建话题请稍候。。。");
 					CreatTopicTask task=new CreatTopicTask();
 					task.execute(selectlabel,topic.getText().toString().trim());
 				}
@@ -211,32 +212,28 @@ public class CreatTopicActivity extends BasicActivity {
 		 })
 		 .show();  
 	}
-	private class CreatTopicTask extends AsyncTask<String, String, List>{
+	private class CreatTopicTask extends AsyncTask<String, String, Topic>{
 
 		@Override
-		protected List<String> doInBackground(String... paramer) {
-			// TODO Auto-generated method stub	
-			
-			List<String> list=new ArrayList<String>();
-			String groupid=null;
-			list.add(paramer[0]);
-			list.add(paramer[1]);			
+		protected Topic doInBackground(String... paramer) {
+			// TODO Auto-generated method stub					
+			Topic createtopic=null;
 			try {
-				groupid=PeerUI.getInstance().getISessionManager().creatTopic(paramer[0], paramer[1]);
+				createtopic=PeerUI.getInstance().getISessionManager().creatTopic(paramer[0], paramer[1]);
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			list.add(groupid);
-			return list;
+			return createtopic;
 		}
 		@Override
-		protected void onPostExecute(List result) {
+		protected void onPostExecute(Topic topicresult) {
 			// TODO Auto-generated method stub			
 			ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.MULTICHAT);				
-			ChatRoomTypeUtil.getInstance().setTitle((String)result.get(0));
-			ChatRoomTypeUtil.getInstance().setTheme((String)result.get(1));
-			ChatRoomTypeUtil.getInstance().setHuanxingId((String)result.get(2));
+			ChatRoomTypeUtil.getInstance().setTitle(topicresult.getLabel_name());
+			ChatRoomTypeUtil.getInstance().setTheme(topicresult.getSubject());
+			ChatRoomTypeUtil.getInstance().setHuanxingId(topicresult.getHuangxin_group_id());
+			ChatRoomTypeUtil.getInstance().setTopicId(topicresult.getTopicid());
 			User u=new User();
 			try {
 				u.setImage(PeerUI.getInstance().getISessionManager().getImagUrL());
@@ -251,7 +248,6 @@ public class CreatTopicActivity extends BasicActivity {
 			startActivity(intent);
 			ManagerActivity.getAppManager().finishActivity(CreatTopicActivity.this);
 			topic.setText("");
-			pd.dismiss();
 		}
 	}
 }

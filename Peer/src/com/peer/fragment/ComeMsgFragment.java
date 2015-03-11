@@ -163,8 +163,6 @@ public class ComeMsgFragment extends BasicFragment {
 			adapter=new ChatHistoryAdapter(getActivity(), result);
 //			adapter.setUsermsg(result);			
 			ListView_come.setAdapter(adapter);
-		}
-		
-		
+		}		
 	}
 }

@@ -2,20 +2,18 @@ package com.peer.fragment;
 
 import java.util.List;
 import com.peer.R;
-import com.peer.activitymain.NewFriendsActivity;
 import com.peer.adapter.FriendsAdapter;
 import com.peer.client.User;
 import com.peer.client.ui.PeerUI;
+import com.peer.constant.Constant;
 import com.readystatesoftware.viewbadger.BadgeView;
-
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.RemoteException;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -29,6 +27,7 @@ public class FriendsFragment extends BasicFragment{
 	private BadgeView newnum;
 	private TextView tv_newfriends;
 	private int newfriendsnum;
+	public static Handler refreshhandle;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -41,6 +40,19 @@ public class FriendsFragment extends BasicFragment{
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
 		init();
+		refreshhandle=new Handler(){
+			@Override
+			public void handleMessage(Message msg) {
+				// TODO Auto-generated method stub
+				if(msg.what==Constant.REFRESHHANDLE){
+					if(list!=null){
+						list.clear();
+					}
+					FriendsTask task=new FriendsTask();
+					task.execute();	
+				}
+			}
+		};
 	}
 	@Override
 	public void onHiddenChanged(boolean hidden) {
@@ -59,14 +71,7 @@ public class FriendsFragment extends BasicFragment{
 	@Override
 	public void onResume() {
 		// TODO Auto-generated method stub
-		super.onResume();
-		if(checkNetworkState()){
-			if(list!=null){
-				list.clear();
-			}
-			FriendsTask task=new FriendsTask();
-			task.execute();	
-		}				
+		super.onResume();				
 	}
 	private void init() {
 		// TODO Auto-generated method stub

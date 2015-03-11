@@ -5,9 +5,13 @@ import java.util.List;
 import org.springframework.http.ContentCodingType;
 
 import com.peer.R;
+import com.peer.activitymain.ChatRoomActivity;
 import com.peer.activitymain.PersonalPageActivity;
+import com.peer.client.User;
+import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
 import com.peer.entity.ChatMsgEntity;
+import com.peer.util.ChatRoomTypeUtil;
 import com.peer.util.PersonpageUtil;
 import com.peer.widgetutil.LoadImageUtil;
 
@@ -15,6 +19,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
+import android.os.AsyncTask;
+import android.os.RemoteException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +31,7 @@ import android.widget.Toast;
 
 
 public class ChatMsgViewAdapter extends FatherAdater {
-
+	private List<User> list;
 	public static interface IMsgViewType {
 		int IMVT_COM_MSG = 1;
 		int IMVT_TO_MSG = 0;
@@ -117,10 +123,23 @@ public class ChatMsgViewAdapter extends FatherAdater {
 					// TODO Auto-generated method stub
 					if(checkNetworkState()){
 						if(isComMsg==0){
-							PersonpageUtil.getInstance().setPersonpagetype(Constant.OWNPAGE);
 							PersonpageUtil.getInstance().setPersonid(userId);
-							Intent topersonalpage=new Intent(context,PersonalPageActivity.class);
-							context.startActivity(topersonalpage);
+							if(list==null){
+								FriendsTask task=new FriendsTask();
+								task.execute();
+							}else{
+								for(int i=0;i<list.size();i++){
+									if(PersonpageUtil.getInstance().getPersonid().equals(list.get(i).getUserid())){
+										PersonpageUtil.getInstance().setPersonpagetype(Constant.FRIENDSPAGE);
+										break;
+									}else{
+										PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
+									}
+								}
+								Intent topersonalpage=new Intent(context,PersonalPageActivity.class);
+								context.startActivity(topersonalpage);
+							}
+							
 						}else{
 							PersonpageUtil.getInstance().setPersonpagetype(Constant.OWNPAGE);
 							PersonpageUtil.getInstance().setPersonid(userId);
@@ -135,6 +154,42 @@ public class ChatMsgViewAdapter extends FatherAdater {
 			});			
 		return convertView;
 	}
+	private class FriendsTask extends AsyncTask<Void, Void, List<User>>{
+
+		@Override
+		protected List<User> doInBackground(Void... arg0) {
+			// TODO Auto-generated method stub       
+            try {
+            	list=PeerUI.getInstance().getISessionManager().myFriends();
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}           
+			return list;
+		}
+		@Override
+		protected void onPostExecute(List<User> result) {
+			// TODO Auto-generated method stub
+			if(!result.isEmpty()){
+				for(int i=0;i<result.size();i++){
+					if(PersonpageUtil.getInstance().getPersonid().equals(result.get(i).getUserid())){
+						PersonpageUtil.getInstance().setPersonpagetype(Constant.FRIENDSPAGE);
+						break;
+					}else{
+						PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
+					}
+				}
+				Intent topersonalpage=new Intent(context,PersonalPageActivity.class);
+				context.startActivity(topersonalpage);
+			}else{
+				PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
+				Intent topersonalpage=new Intent(context,PersonalPageActivity.class);
+				context.startActivity(topersonalpage);
+				
+			}
+		}
+	}
+
 	static class ViewHolder {
 		public ImageView heapic;
 		public TextView tvSendTime;

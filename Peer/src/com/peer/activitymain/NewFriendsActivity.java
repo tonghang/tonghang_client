@@ -21,6 +21,7 @@ import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
 import com.peer.event.NewFriensEvent;
+import com.peer.fragment.FriendsFragment;
 import com.peer.localDB.LocalStorage;
 import com.peer.localDB.UserDao;
 
@@ -66,6 +67,7 @@ public class NewFriendsActivity extends BasicActivity {
 		
 		mlist.remove(event.getPosition());
 		adapter.notifyDataSetChanged();
+		FriendsFragment.refreshhandle.sendEmptyMessage(Constant.REFRESHHANDLE);
 	}
 	@Override
 	protected void onDestroy() {

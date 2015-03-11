@@ -636,14 +636,14 @@ public class SessionManager extends ISessionManager.Stub {
 	
 	/*creat topic  测试通过*/
 	@Override
-	public String creatTopic(String label, String topic)
+	public Topic creatTopic(String label, String topiccontent)
 			throws RemoteException {
 		// TODO Auto-generated method stub		
 		MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();			
 		Map result=null;
-		String huanxing_group_id=null;
+		Topic topic=new Topic();
 		try {
-			parts.add("subject", topic);
+			parts.add("subject", topiccontent);
 			parts.add("label_name", label);	
 			
 			HttpHeaders headers=new HttpHeaders();			
@@ -658,12 +658,15 @@ public class SessionManager extends ISessionManager.Stub {
 			restTemplate.getMessageConverters().add(new StringHttpMessageConverter());			
 			
 			result= restTemplate.postForObject(Constant.WEB_SERVER_ADDRESS + "/topics.json", requestEntity, Map.class);
-			huanxing_group_id=(String)result.get("huanxin_group_id");			
+			topic.setHuangxin_group_id((String)result.get("huanxin_group_id"));
+			topic.setTopicid(String.valueOf(result.get("id")));
+			topic.setLabel_name((String)result.get("label_name"));
+			topic.setSubject((String)result.get("subject"));
 		} catch (Exception e) {
 			// TODO log exception
 			e.printStackTrace();
 		}
-		return huanxing_group_id;
+		return topic;
 	}
 	/*用户首页推荐 通过测试*/
 	@Override

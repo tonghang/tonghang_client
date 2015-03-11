@@ -61,7 +61,7 @@ interface ISessionManager {
  	
  	void updatePassword(String newPassword, ISessionListener callback);
  	
- 	String creatTopic(String label,String topic);
+ 	Topic creatTopic(String label,String topic);
  	
  	void setLabels(in List<String> labels);
  	

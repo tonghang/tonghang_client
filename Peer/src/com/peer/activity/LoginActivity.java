@@ -53,9 +53,9 @@ public class LoginActivity extends BasicActivity{
 		}else if(email!=null&&!email.equals("")){
 			 email_login.setText(email);					 
 			 password_login.setText(password);
-			 if(status!=null&&status.equals(Constant.LOGINED)){
-				 autologin(email, password);
-			 }			
+//			 if(status!=null&&status.equals(Constant.LOGINED)){
+//				 autologin(email, password);
+//			 }			
 		}
 		
 	}	

@@ -69,8 +69,9 @@ public class ChatHistoryAdapter extends FatherAdater {
 				viewHolder.nikename=(TextView)convertView.findViewById(R.id.tv_skill);			
 				viewHolder.descripe=(TextView)convertView.findViewById(R.id.tv_topic);
 				viewHolder.time=(TextView)convertView.findViewById(R.id.tv_time);				
-				viewHolder.click=(LinearLayout)convertView.findViewById(R.id.ll_clike);							
-				setTopicView(viewHolder,topic,position);				
+				viewHolder.click=(LinearLayout)convertView.findViewById(R.id.ll_clike);
+				EMConversation conversation = EMChatManager.getInstance().getConversation(topic.getHuangxin_group_id());
+				setTopicView(viewHolder,conversation,topic,position);				
 				convertView.setTag(viewHolder);
 			}else if(type.equals(Constant.USER)){	
 				User user=(User) userlist.get(position).get(Constant.USER);
@@ -128,11 +129,18 @@ public class ChatHistoryAdapter extends FatherAdater {
 		
 	}
 
-	private void setTopicView(ViewHolder viewHolder, final Topic topic, final int position) {
+	private void setTopicView(ViewHolder viewHolder, EMConversation conversation,final Topic topic, final int position) {
 		// TODO Auto-generated method stub
 		viewHolder.time.setText(topic.getCreate_time());
 		viewHolder.nikename.setText(topic.getLabel_name());
-		viewHolder.descripe.setText(topic.getSubject());				
+		viewHolder.descripe.setText(topic.getSubject());	
+		final BadgeView bd=new BadgeView(mContext, viewHolder.click);
+		if (conversation.getUnreadMsgCount() > 0) {				
+			bd.setText(String.valueOf(conversation.getUnreadMsgCount()));
+			bd.show();
+		}else{
+			bd.hide();
+		}
 		viewHolder.click.setOnClickListener(new View.OnClickListener() {			
 			@Override
 			public void onClick(View arg0) {
