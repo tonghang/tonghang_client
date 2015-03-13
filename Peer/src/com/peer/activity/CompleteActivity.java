@@ -55,7 +55,7 @@ public class CompleteActivity extends BasicActivity{
 	private static final int RESULT_REQUEST_CODE = 2;
 	Bitmap photo;
 	byte[] img;	
-	private static final String IMAGE_FILE_NAME = "faceImage.jpg";
+	private static final String IMAGE_FILE_NAME = "faceImage.png";
 	int width,height;
 	private ArrayList<String> tags;
 	private int mYear;  						
@@ -316,7 +316,7 @@ public class CompleteActivity extends BasicActivity{
 		intent.putExtra("outputX", 250);
 		intent.putExtra("outputY", 250);
 		
-		intent.putExtra("outputFormat", "JPEG");
+		intent.putExtra("outputFormat", "PNG");
 		intent.putExtra("noFaceDetection", true);
 		intent.putExtra("return-data", true);
 		startActivityForResult(intent, RESULT_REQUEST_CODE);
@@ -338,7 +338,7 @@ public class CompleteActivity extends BasicActivity{
 		  }  
 		  final ByteArrayOutputStream os = new ByteArrayOutputStream();  
 		  
-		  bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);//����PNG���кܶೣ���ʽ����jpeg�ȡ�  
+		  bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);  
 		  return os.toByteArray();
 	}
 	

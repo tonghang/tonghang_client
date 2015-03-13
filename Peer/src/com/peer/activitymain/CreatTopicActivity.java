@@ -180,7 +180,7 @@ public class CreatTopicActivity extends BasicActivity {
               OnekeyShare oks = new OnekeyShare();
       		oks.setNotification(R.drawable.logo, CreatTopicActivity.this.getString(R.string.app_name));
       		//不同平台的分享参数，请看文档		
-      		oks.setText("我在“同行(hang)”APP中的"+selectlabel+"行业中，创建了"+topic.getText().toString()+"话题。想参与我的话题讨论的同行们，想认识更多同行来拓展人脉的职场精英们，请下载“同行(hang)”APP，和你的同行交流商业信（ji）息（mi）和行业新(qian)动(gui)态(ze) 。下载地址：“下载链接“");
+      		oks.setText("我在“同行(hang)”APP中的"+selectlabel+"行业中，创建了"+topic.getText().toString()+"话题。想参与我的话题讨论的同行们，想认识更多同行来拓展人脉的职场精英们，请下载“同行(hang)”APP，和你的同行交流商业信（ji）息（mi）和行业新(qian)动(gui)态(ze) 。下载地址：http://114.215.143.83:3000/download/peer.apk");
       		oks.setSilent(true);
       		oks.setDialogMode();
       		oks.disableSSOWhenAuthorize();

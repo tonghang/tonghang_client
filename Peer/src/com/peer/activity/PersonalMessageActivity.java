@@ -67,7 +67,7 @@ public class PersonalMessageActivity extends BasicActivity implements OnClickLis
 	Bitmap photo;
 	byte[] img;
 	
-	private static final String IMAGE_FILE_NAME = "faceImage.jpg";
+	private static final String IMAGE_FILE_NAME = "faceImage.png";
 	
 	private int mYear;  						
 	private int mMonth;
@@ -315,7 +315,7 @@ public class PersonalMessageActivity extends BasicActivity implements OnClickLis
 		intent.putExtra("outputX", 250);
 		intent.putExtra("outputY", 250);
 		
-		intent.putExtra("outputFormat", "JPEG");
+		intent.putExtra("outputFormat", "PNG");
 		intent.putExtra("noFaceDetection", true);
 		intent.putExtra("return-data", true);
 		startActivityForResult(intent, RESULT_REQUEST_CODE);
@@ -337,7 +337,7 @@ public class PersonalMessageActivity extends BasicActivity implements OnClickLis
 		  }  
 		  final ByteArrayOutputStream os = new ByteArrayOutputStream();  
 		  
-		  bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);//����PNG���кܶೣ���ʽ����jpeg�ȡ�  
+		  bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);//����PNG���кܶೣ���ʽ����PNG�ȡ�  
 		  return os.toByteArray();
 	}
 

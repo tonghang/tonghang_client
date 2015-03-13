@@ -64,7 +64,8 @@ public class MainActivity extends BasicActivity{
 		// TODO Auto-generated method stub		
 		if(EMChatManager.getInstance().isConnected()){
 			msgReceiver = new NewMessageBroadcastReceiver();
-			IntentFilter intentFilter = new IntentFilter(EMChatManager.getInstance().getNewMessageBroadcastAction());
+			IntentFilter intentFilter = new IntentFilter(
+					EMChatManager.getInstance().getNewMessageBroadcastAction());
 			intentFilter.setPriority(3);
 			registerReceiver(msgReceiver, intentFilter);
 			EMChatManager.getInstance().addConnectionListener(new IMconnectionListner());

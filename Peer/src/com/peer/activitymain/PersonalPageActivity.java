@@ -17,31 +17,38 @@ import com.peer.titlepopwindow.ActionItem;
 import com.peer.titlepopwindow.TitlePopup;
 import com.peer.titlepopwindow.TitlePopup.OnItemOnClickListener;
 import com.peer.util.AutoWrapLinearLayout;
+import com.peer.util.AutoWrapRadioGroup;
 import com.peer.util.ChatRoomTypeUtil;
 import com.peer.util.ManagerActivity;
 import com.peer.util.PersonpageUtil;
+import com.peer.util.SearchUtil;
 import com.peer.widgetutil.LoadImageUtil;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 
 public class PersonalPageActivity extends BasicActivity {
 	private ImageView personhead,delete;
-	private TextView nikename,title,topic_whose,acount,city,sex,skill;
+	private TextView nikename,title,topic_whose,acount,city,sex;
+	private RadioButton skill;
 	private RelativeLayout topic_click;
 	private LinearLayout back,bottomline,content;
 	private Button send,addfriend;
 
-	private AutoWrapLinearLayout tagContainer;
+	private AutoWrapRadioGroup tagContainer;
 	private TitlePopup titlePopup;
 	
 	private List<HashMap<String, String>> list=new ArrayList<HashMap<String,String>>();
@@ -76,9 +83,24 @@ public class PersonalPageActivity extends BasicActivity {
 		personhead=(ImageView)findViewById(R.id.personhead);
 		bottomline=(LinearLayout)findViewById(R.id.ll_personpagebottom);
 		content=(LinearLayout)findViewById(R.id.contentauto);
-		tagContainer = (AutoWrapLinearLayout) findViewById(R.id.tag_container);
+		tagContainer = (AutoWrapRadioGroup) findViewById(R.id.tag_container);
 		send=(Button)findViewById(R.id.send);
-		addfriend=(Button)findViewById(R.id.addfriends);					
+		addfriend=(Button)findViewById(R.id.addfriends);
+		tagContainer.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				// TODO Auto-generated method stub
+				RadioButton tempButton = (RadioButton)findViewById(checkedId);
+				String selectlabel=tempButton.getText().toString();
+				SearchUtil.getInstance().setSearchname(selectlabel);
+				SearchUtil.getInstance().setSearchtype(Constant.USERBYNIKE);
+				SearchUtil.getInstance().setCallbacklabel(selectlabel);
+				Intent intent=new Intent(PersonalPageActivity.this, SearchResultActivity.class);
+				startActivity(intent);
+			}
+		});
+			
 	}
 	
 	private void ViewType() {
@@ -180,7 +202,7 @@ public class PersonalPageActivity extends BasicActivity {
 				}
 				for(int i=0;i<lables.size();i++){
 					String tag=lables.get(i);		
-					skill=(TextView) getLayoutInflater().inflate(R.layout.skill, tagContainer, false);
+					skill=(RadioButton) getLayoutInflater().inflate(R.layout.skill, tagContainer, false);
 					skill.setHeight((int)getResources().getDimension(R.dimen.hight));
 					skill.setTextSize(20);
 					skill.setTextColor(getResources().getColor(R.color.white));
@@ -279,7 +301,7 @@ public class PersonalPageActivity extends BasicActivity {
 				for(int i=0;i<user.getLabels().size();i++){
 					String tag=user.getLabels().get(i);					
 
-					skill=(TextView) getLayoutInflater().inflate(R.layout.skill, tagContainer, false);
+					skill=(RadioButton) getLayoutInflater().inflate(R.layout.skill, tagContainer, false);
 					skill.setHeight((int)getResources().getDimension(R.dimen.hight));
 					skill.setTextSize(20);
 					skill.setTextColor(getResources().getColor(R.color.white));

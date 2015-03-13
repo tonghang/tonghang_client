@@ -100,7 +100,9 @@ public class AddFriendsActivity extends BasicActivity {
 			if(result.equals(Constant.CALLBACKSUCCESS)){
 				ShowMessage(getResources().getString(R.string.addfriendssuccess));
 				finish();
-			}			
+			}else{
+				ShowMessage(getResources().getString(R.string.addfriendfail));
+			}
 		}
 	}
 }

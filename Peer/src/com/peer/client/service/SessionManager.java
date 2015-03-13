@@ -1,6 +1,8 @@
 package com.peer.client.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +40,7 @@ public class SessionManager extends ISessionManager.Stub {
 	private String username=null;
 	private int page;
 	private List<String> labels=null;
+	private HttpHeaders headers=new HttpHeaders();
 	/*web login 通过测试*/
 	@Override
 	public User login(String email, String password,
@@ -54,7 +57,8 @@ public class SessionManager extends ISessionManager.Stub {
 			result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "/login.json"
 					,parts, Map.class);						
 			Map body = result.getBody();			
-			token=(String) body.get("token");												
+			token=(String) body.get("token");
+			headers.add("x-token", token);
 			if (result.getStatusCode() == HttpStatus.OK) {
 				code=0;
 				user=new User();
@@ -166,7 +170,7 @@ public class SessionManager extends ISessionManager.Stub {
 			parts.add("city", city);
 			parts.add("sex", sex);
 			parts.add("image", imageFile);
-			parts.add("filename", "sign.jpg");
+			parts.add("filename", "sign.png");
 			
 			HttpHeaders headers=new HttpHeaders();
 			headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -204,20 +208,15 @@ public class SessionManager extends ISessionManager.Stub {
 		int code=1;
 		try {
 			parts.add("invitee_id", targetId);
-			parts.add("reason", reason);	
-			
-			HttpHeaders headers=new HttpHeaders();			
-			headers.add("x-token", token);			
+			parts.add("reason", reason);				
 			
 			HttpEntity<MultiValueMap<String, Object>> requestEntity=
 					new HttpEntity<MultiValueMap<String,Object>>(parts,headers);			
 			
-			RestTemplate restTemplate=new RestTemplate(true);	
-			
+			RestTemplate restTemplate=new RestTemplate(true);				
 			restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 			restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
-			restTemplate.getMessageConverters().add(new StringHttpMessageConverter());			
-			
+			restTemplate.getMessageConverters().add(new StringHttpMessageConverter());						
 			Map result=restTemplate.postForObject(Constant.WEB_SERVER_ADDRESS + "/invitations.json", requestEntity, Map.class);
 			message=Constant.CALLBACKSUCCESS;
 			code=0;
@@ -237,7 +236,10 @@ public class SessionManager extends ISessionManager.Stub {
 		String message = null;
 		int code=1;	
 		try {
-			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/labels.json?q="+label,List.class);
+			ResponseEntity<List> result =DataUtil.templateExchange(Constant.WEB_SERVER_ADDRESS+"/labels.json?q="+label, 
+					HttpMethod.GET, 
+					new HttpEntity(headers), 
+					List.class);			
 			List list= result.getBody();					
 			if (result.getStatusCode() == HttpStatus.OK) {
 				for(int i=0;i<list.size();i++){
@@ -265,7 +267,11 @@ public class SessionManager extends ISessionManager.Stub {
 		String message=null;
 		int code=1;
 		try {
-			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "/invitations/"+sourceId+"/refuse.json", "", Map.class);			
+//			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "/invitations/"+sourceId+"/refuse.json", "", Map.class);			
+			ResponseEntity<Map> result =DataUtil.templateExchange(Constant.WEB_SERVER_ADDRESS + "/invitations/"+sourceId+"/refuse.json", 
+					HttpMethod.POST, 
+					new HttpEntity(headers), Map.class);
+			
 			Map body = result.getBody();
 			message=Constant.CALLBACKSUCCESS;
 		} catch (Exception e) {
@@ -282,7 +288,11 @@ public class SessionManager extends ISessionManager.Stub {
 		String message=null;
 		int code=1;
 		try {
-			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "/invitations/"+sourceId+"/agree.json", "", Map.class);			
+//			ResponseEntity<Map> result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "/invitations/"+sourceId+"/agree.json", "", Map.class);			
+			ResponseEntity<Map> result =DataUtil.templateExchange(Constant.WEB_SERVER_ADDRESS + "/invitations/"+sourceId+"/agree.json", 
+					HttpMethod.POST, 
+					new HttpEntity(headers), 
+					Map.class);
 			Map body = result.getBody();
 			message=Constant.CALLBACKSUCCESS;
 		} catch (Exception e) {
@@ -300,7 +310,10 @@ public class SessionManager extends ISessionManager.Stub {
 		String message = null;
 		int code=1;
 		try {
-			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/topics.json?label_name="+label+"&page="+page,List.class);
+//			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/topics.json?label_name="+label+"&page="+page,List.class);
+			ResponseEntity<List> result =DataUtil.templateExchange(Constant.WEB_SERVER_ADDRESS+"/topics.json?label_name="+label+"&page="+page, 
+					HttpMethod.GET, 
+					new HttpEntity(headers), List.class);
 			List<Map> list= result.getBody();
 			if(result.getStatusCode()==HttpStatus.OK){
 				for(int i=0;i<list.size();i++){
@@ -342,7 +355,9 @@ public class SessionManager extends ISessionManager.Stub {
 		String message = null;
 		int code=1;
 		try {
-			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/topics.json?q="+key+"&page="+page,List.class);
+//			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/topics.json?q="+key+"&page="+page,List.class);
+			ResponseEntity<List> result =DataUtil.templateExchange(Constant.WEB_SERVER_ADDRESS+"/topics.json?q="+key+"&page="+page, HttpMethod.GET, 
+					new HttpEntity(headers), List.class);
 			List<Map> list= result.getBody();
 			if(result.getStatusCode()==HttpStatus.OK){
 				for(int i=0;i<list.size();i++){
@@ -359,7 +374,15 @@ public class SessionManager extends ISessionManager.Stub {
 					topic.setSubject((String)list.get(i).get("subject"));
 					topic.setTopicid(String.valueOf(list.get(i).get("id")));
 					topic.setHuangxin_group_id(String.valueOf(list.get(i).get("huanxin_group_id")));
-					topic.setCreate_time((String)list.get(i).get("created_at"));
+					
+					String created_at=(String)list.get(i).get("created_at");
+					Date d = new Date();
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");					
+					Date date=sdf.parse(created_at);
+					SimpleDateFormat timeminu = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+					String time=timeminu.format(date);
+					
+					topic.setCreate_time(time);
 					topic.setBody((String)list.get(i).get("body"));
 					mlist.add(topic);
 				}
@@ -382,11 +405,14 @@ public class SessionManager extends ISessionManager.Stub {
 			throws RemoteException {
 		// TODO Auto-generated method stub
 		List<User> mlist=new ArrayList<User>();
-
 		String message = null;
 		int code=1;
 		try{
-			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/users.json?q="+username+"&page="+page,List.class);
+//			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/users.json?q="+username+"&page="+page,List.class);
+			ResponseEntity<List> result =DataUtil.templateExchange(Constant.WEB_SERVER_ADDRESS+"/users.json?q="+username+"&page="+page,
+					HttpMethod.GET, 
+					new HttpEntity(headers),
+					List.class);
 			List<Map> list= result.getBody();			
 			List<User> friendslist=myFriends();
 			if(result.getStatusCode()==HttpStatus.OK){
@@ -426,20 +452,9 @@ public class SessionManager extends ISessionManager.Stub {
 		// TODO Auto-generated method stub
 		List<User> list=new ArrayList<User>();			
 		List result=null;		
-		try {
-			HttpHeaders headers=new HttpHeaders();			
-			headers.add("x-token", token);			
-						
-			RestTemplate restTemplate=new RestTemplate(true);	
-			
-			restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-			restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
-			restTemplate.getMessageConverters().add(new StringHttpMessageConverter());			
-						
-			ResponseEntity<List> response = restTemplate.exchange(Constant.WEB_SERVER_ADDRESS + "/friends.json",  
-				      HttpMethod.GET,  
-				      new HttpEntity(headers),  
-				      List.class);  		
+		try {					
+			ResponseEntity<List> response =DataUtil.templateExchange(Constant.WEB_SERVER_ADDRESS + "/friends.json",  
+				      HttpMethod.GET,new HttpEntity(headers),List.class);			  		
 			if(response.getStatusCode()==HttpStatus.OK){
 				result=response.getBody();
 				for(int i=0;i<result.size();i++){
@@ -471,7 +486,9 @@ public class SessionManager extends ISessionManager.Stub {
 		String message=null;
 		int code=1;
 		try {		
-			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS + "/users/"+userid+"/invitations.json", List.class);
+			ResponseEntity<List> result =DataUtil.templateExchange(Constant.WEB_SERVER_ADDRESS + "/users/"+userid+"/invitations.json", 
+					HttpMethod.GET, 
+					new HttpEntity(headers),List.class);
 			if(result.getStatusCode()==HttpStatus.OK){
 				message=Constant.CALLBACKSUCCESS;
 				code=0;
@@ -507,7 +524,11 @@ public class SessionManager extends ISessionManager.Stub {
 		List<String> mlist=new ArrayList<String>();
 		User user=null;
 		try {
-			ResponseEntity<Map> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/users/"+targetId+".json",Map.class);
+			ResponseEntity<Map> result =DataUtil.templateExchange(Constant.WEB_SERVER_ADDRESS+"/users/"+targetId+".json", 
+					HttpMethod.GET, 
+					new HttpEntity(headers), 
+					Map.class);
+			
 			Map u= result.getBody();
 			if (result.getStatusCode() == HttpStatus.OK &&result.getBody()!=null) {	
 				user=new User();
@@ -536,7 +557,10 @@ public class SessionManager extends ISessionManager.Stub {
 		String message=null;
 		int code=1;
 		try {
-			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS + "/topics.json?user_id="+targetId+"&page=1", List.class);						
+			ResponseEntity<List> result =DataUtil.templateExchange(Constant.WEB_SERVER_ADDRESS + "/topics.json?user_id="+targetId+"&page=1", 
+					HttpMethod.GET, 
+					new HttpEntity(headers), 
+					List.class);
 			if (result.getStatusCode() == HttpStatus.OK) {	
 				code=0;
 				List<Map>	body = result.getBody();
@@ -577,7 +601,10 @@ public class SessionManager extends ISessionManager.Stub {
 	public void TopicchatHistory(String topicId,ISessionListener callback) throws RemoteException {
 		// TODO Auto-generated method stub
 		try {
-			ResponseEntity<Map> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS + "/topics/"+topicId+ ".json", Map.class);			
+			ResponseEntity<Map> result =DataUtil.templateExchange(Constant.WEB_SERVER_ADDRESS + "/topics/"+topicId+ ".json",
+					HttpMethod.GET, 
+					new HttpEntity(headers), 
+					Map.class);
 			Map body = result.getBody();
 			if (result.getStatusCode() == HttpStatus.OK) {				
 				List list=(List) body.get("labels");
@@ -644,10 +671,7 @@ public class SessionManager extends ISessionManager.Stub {
 		Topic topic=new Topic();
 		try {
 			parts.add("subject", topiccontent);
-			parts.add("label_name", label);	
-			
-			HttpHeaders headers=new HttpHeaders();			
-			headers.add("x-token", token);			
+			parts.add("label_name", label);			
 			
 			HttpEntity<MultiValueMap<String, Object>> requestEntity=
 					new HttpEntity<MultiValueMap<String,Object>>(parts,headers);
@@ -677,8 +701,9 @@ public class SessionManager extends ISessionManager.Stub {
 		List mlist=new ArrayList();
 		String message=null;
 		int code=1;
-		try{
-			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/recommendations.json?page="+page, List.class);
+		try{					
+			ResponseEntity<List> result =DataUtil.templateExchange(Constant.WEB_SERVER_ADDRESS+"/recommendations.json?page="+page,
+					HttpMethod.GET,new HttpEntity(headers), List.class);
 			if(result.getStatusCode()==HttpStatus.OK){
 				List<Map> recomend=result.getBody();				
 				for(int i=0;i<recomend.size();i++){
@@ -708,8 +733,15 @@ public class SessionManager extends ISessionManager.Stub {
 						map.put(Constant.USER, user);
 						
 						Topic topic=new Topic();
+						String created_at=(String)recomend.get(i).get("created_at");
+						Date d = new Date();
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");					
+						Date date=sdf.parse(created_at);
+						SimpleDateFormat timeminu = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+						String time=timeminu.format(date);
+					
 						topic.setLabel_name((String)recomend.get(i).get("label_name"));
-						topic.setCreate_time((String)recomend.get(i).get("created_at"));
+						topic.setCreate_time(time);
 						topic.setHuangxin_group_id(String.valueOf(recomend.get(i).get("huanxin_group_id")));
 						topic.setBody((String)recomend.get(i).get("body"));
 						topic.setSubject((String)recomend.get(i).get("subject"));
@@ -738,7 +770,8 @@ public class SessionManager extends ISessionManager.Stub {
 		String message=null;
 		int code=1;
 		try {		
-			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS + "/users.json?topic_id="+topicid, List.class);
+			ResponseEntity<List> result =DataUtil.getJson(
+					Constant.WEB_SERVER_ADDRESS + "/users.json?topic_id="+topicid, List.class);
 			if(result.getStatusCode()==HttpStatus.OK){
 				message=Constant.CALLBACKSUCCESS;
 				code=0;
@@ -813,26 +846,29 @@ public class SessionManager extends ISessionManager.Stub {
 						map.put(Constant.USER, user);
 						
 						Topic topic=new Topic();
+						String created_at=(String)recomend.get(i).get("created_at");
+						Date d = new Date();
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");					
+						Date date=sdf.parse(created_at);
+						SimpleDateFormat timeminu = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+						String time=timeminu.format(date);
+						
 						topic.setLabel_name((String)recomend.get(i).get("label_name"));
-						topic.setCreate_time((String)recomend.get(i).get("created_at"));
+						topic.setCreate_time((String)recomend.get(i).get("time"));
 						topic.setHuangxin_group_id(String.valueOf(recomend.get(i).get("huanxin_group_id")));
 						topic.setBody((String)recomend.get(i).get("body"));
 						topic.setSubject((String)recomend.get(i).get("subject"));
 						topic.setTopicid(String.valueOf(recomend.get(i).get("id")));
 						map.put(Constant.TOPIC, topic);
 						mlist.add(map);
-					}	
-					
+					}						
 				}	
-				
-				
 			}
 		
 		}catch(Exception e){
 			message=Constant.CALLBACKFAIL;
 			e.printStackTrace();
-		}
-		
+		}		
 		callback.onCallBack(code, message);		
 		return mlist;
 	}
@@ -846,10 +882,7 @@ public class SessionManager extends ISessionManager.Stub {
 		Map result=null;
 		String id=null;
 		try {	
-			parts.add("content", content);			
-			HttpHeaders headers=new HttpHeaders();			
-			headers.add("x-token", token);			
-			
+			parts.add("content", content);					
 			HttpEntity<MultiValueMap<String, Object>> requestEntity=
 					new HttpEntity<MultiValueMap<String,Object>>(parts,headers);			
 			RestTemplate restTemplate=new RestTemplate(true);	
@@ -879,7 +912,9 @@ public class SessionManager extends ISessionManager.Stub {
 		int code=1;	
 		Map map=null;
 		try{
-			ResponseEntity<Map> result=DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/topics/"+topicId+".json", Map.class);
+			ResponseEntity<Map> result=DataUtil.templateExchange(Constant.WEB_SERVER_ADDRESS+"/topics/"+topicId+".json", 
+					HttpMethod.GET, 
+					new HttpEntity(headers),Map.class);
 			if(result.getStatusCode()==HttpStatus.OK){
 				list=new ArrayList();
 				message=Constant.CALLBACKSUCCESS;
@@ -895,7 +930,14 @@ public class SessionManager extends ISessionManager.Stub {
 					user.setUsername((String)usermap.get("username"));
 					user.setImage(Constant.WEB_SERVER_ADDRESS+(String)usermap.get("image"));
 					replies.put(Constant.USER, user);
-					replies.put(Constant.TIME, (String)mlist.get(i).get("created_at"));
+					String created_at=(String)mlist.get(i).get("created_at");
+					Date d = new Date();
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");					
+					Date date=sdf.parse(created_at);
+					SimpleDateFormat timeminu = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+					String time=timeminu.format(date);
+					
+					replies.put(Constant.TIME, time);
 					replies.put("replybody", (String)mlist.get(i).get("body"));
 					list.add(replies);
 				}
@@ -946,9 +988,7 @@ public class SessionManager extends ISessionManager.Stub {
 		// TODO Auto-generated method stub
 		String message = null;
 		int code=1;
-		try {
-			HttpHeaders headers=new HttpHeaders();			
-			headers.add("x-token", token);									
+		try {								
 			RestTemplate restTemplate=new RestTemplate(true);				
 			restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 			restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter());
@@ -977,10 +1017,7 @@ public class SessionManager extends ISessionManager.Stub {
 		int code=1;
 		String id=null;
 		try {	
-			parts.add("body", content);
-			
-			HttpHeaders headers=new HttpHeaders();			
-			headers.add("x-token", token);			
+			parts.add("body", content);		
 			
 			HttpEntity<MultiValueMap<String, Object>> requestEntity=
 					new HttpEntity<MultiValueMap<String,Object>>(parts,headers);

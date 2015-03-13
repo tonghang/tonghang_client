@@ -4,7 +4,10 @@ package com.peer.client.util;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
@@ -13,6 +16,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 public class DataUtil {
@@ -22,6 +26,9 @@ public class DataUtil {
 		jsonTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 		jsonTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 		jsonTemplate.getMessageConverters().add(new StringHttpMessageConverter());
+	}
+	public static RestTemplate getJsonTemplate(){
+		return jsonTemplate;
 	}
 	private final static RestTemplate formTemplate = new RestTemplate();
 	static {
@@ -69,5 +76,9 @@ public class DataUtil {
 	
 	public static <T> ResponseEntity<T> postForm(String url, Object data, Class<T> type, Object... uriVariables){						
 		return formTemplate.postForEntity(url, data, type, uriVariables);
+	}
+	
+	public static <T> ResponseEntity<T> templateExchange(String url,HttpMethod method, HttpEntity<T> requestEntity, Class<T> responseType, Object... uriVariables){
+		return (ResponseEntity<T>) jsonTemplate.exchange(url, method, requestEntity,responseType,uriVariables);
 	}
 }

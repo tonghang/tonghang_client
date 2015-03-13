@@ -98,7 +98,9 @@ public class BasicActivity extends FragmentActivity implements OnClickListener{
 	      
 	      PendingIntent pendingIntent = PendingIntent.getActivity(BasicActivity.this,0,intent,0);                                                                          notification.setLatestEventInfo(getApplicationContext(), "通知标题", "通知显示的内容", pendingIntent);
 	      notification.setLatestEventInfo(this, "同行",ticker, pendingIntent);	     
-	      notification.flags = Notification.FLAG_AUTO_CANCEL;//点击后自动消失	
+	      notification.flags = Notification.FLAG_AUTO_CANCEL;//点击后自动消失
+	      ToNotifyStyle(notification);
+	      /*
 	      int starth=LocalStorage.getInt(BasicActivity.this, "starth", 22);
 	      int startm=LocalStorage.getInt(BasicActivity.this, "startm", 30);
 	      int endh=LocalStorage.getInt(BasicActivity.this, "endh", 8);
@@ -122,7 +124,7 @@ public class BasicActivity extends FragmentActivity implements OnClickListener{
 					}
 			     }
 			    	
-			}		 	    
+			}	*/	 	    
 	      notificationManager.notify(1, notification);//发动通知,id由自己指定，每一个Notification对应的唯一标志           
         
     }

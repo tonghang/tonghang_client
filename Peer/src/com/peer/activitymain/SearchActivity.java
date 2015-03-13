@@ -204,8 +204,7 @@ public class SearchActivity extends BasicActivity {
 					contentsearch.setHint(item.mTitle);
 					SearchUtil.getInstance().setSearchtype(Constant.USERBYNIKE);
 					searchtype=4;//按昵称搜索用户
-				}
-				
+				}				
 			}
 		});
 	 }

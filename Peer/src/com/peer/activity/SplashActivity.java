@@ -97,14 +97,14 @@ public class SplashActivity extends BasicActivity {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub	
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 				SessionListener callback=new SessionListener();
-				try {					
+				try {
+					try {
+						Thread.sleep(2000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					User u=PeerUI.getInstance().getISessionManager().login(username, password, callback);					
 					if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){												
 						JPushInterface.setAlias(getApplication(), u.getHuangxin_username(), new TagAliasCallback() {							

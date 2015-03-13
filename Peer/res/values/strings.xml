@@ -76,7 +76,7 @@
     
     <string name="commit">提交成功</string>
     <string name="addfriendssuccess">发送成功</string>
-    
+    <string name="addfriendfail">发送失败</string>
     <string name="skillname">行业标签不能超过六个个字符</string>
     <string name="skillmax">最多六个字符</string>
     <string name="repetskill">技能名不可重复</string>

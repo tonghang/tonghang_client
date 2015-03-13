@@ -258,7 +258,8 @@ public class ChatRoomActivity extends BasicActivity {
 						adapter.notifyDataSetChanged();
 					}else if(item.mTitle.equals(getResources().getString(R.string.lookformember))){
 						Intent intent=new Intent(ChatRoomActivity.this,ChatRoomListnikeActivity.class);
-						intent.putExtra("topicId", topicId);			
+						intent.putExtra("topicId", topicId);
+						intent.putExtra("groupId", ChatRoomTypeUtil.getInstance().getHuanxingId());
 						startActivity(intent);			
 					}
 				}				
@@ -314,7 +315,7 @@ public class ChatRoomActivity extends BasicActivity {
 		  // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
 		  oks.setTitleUrl("http://sharesdk.cn");
 		  // text是分享文本，所有平台都需要这个字段
-		  oks.setText("我参与了"+tv_theme.getText().toString()+"的讨论。各位同行们：来“同行”APP吧，我们一起交流行业信息，没准还能找到更好的工作。下载地址：“下载链接”");
+		  oks.setText("我参与了"+tv_theme.getText().toString()+"的讨论。各位同行们：来“同行”APP吧，我们一起交流行业信息，没准还能找到更好的工作。下载地址：http://114.215.143.83:3000/download/peer.apk");
 		  // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
 		  oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
 		  // url仅在微信（包括好友和朋友圈）中使用
