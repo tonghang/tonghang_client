@@ -781,7 +781,7 @@ public class SessionManager extends ISessionManager.Stub {
 						user.setSex((String)recomend.get(i).get("sex"));
 						user.setCity((String)recomend.get(i).get("city"));
 						user.setBirthday((String)recomend.get(i).get("birth"));
-						
+						user.setEmail((String)recomend.get(i).get("email"));
 						map.put(Constant.USER, user);
 						mlist.add(map);
 					}else if(recomend.get(i).get("type").equals(Constant.TOPIC)){
@@ -898,8 +898,12 @@ public class SessionManager extends ISessionManager.Stub {
 						user.setUsername((String)recomend.get(i).get("username"));					
 						user.setLabels((List<String>)recomend.get(i).get("labels"));
 						user.setHuangxin_username((String)recomend.get(i).get("huanxin_username"));
+						user.setSex((String)recomend.get(i).get("sex"));
+						user.setCity((String)recomend.get(i).get("city"));
+						user.setBirthday((String)recomend.get(i).get("birth"));
 						//这里 没有is_friend键 是否为好友需要自己判断
 						//user.setIs_friends((Boolean)recomend.get(i).get("is_friend"));
+						user.setEmail((String)recomend.get(i).get("email"));
 						map.put(Constant.USER, user);
 						mlist.add(map);
 					}else if(recomend.get(i).get("type").equals(Constant.TOPIC)){

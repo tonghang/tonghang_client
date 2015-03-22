@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.easemob.chat.EMGroup;
 import com.easemob.chat.EMGroupManager;
+import com.easemob.exceptions.EaseMobException;
 import com.peer.R;
 import com.peer.activity.BasicActivity;
 import com.peer.adapter.FriendsAdapter;
@@ -39,7 +40,13 @@ public class ChatRoomListnikeActivity extends BasicActivity {
 		setContentView(R.layout.activity_chatroom_listnike);
 		init();
 		Intent intent=getIntent();
-		EMGroup group=EMGroupManager.getInstance().getGroup(intent.getStringExtra("groupId"));
+		EMGroup group=null;
+		try {
+			group=EMGroupManager.getInstance().getGroupFromServer(intent.getStringExtra("groupId"));
+		} catch (EaseMobException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		List<String> list=group.getMembers();
 		for(int i=0;i<list.size();i++){
 			Map m=new HashMap<String, Object>();
@@ -50,7 +57,8 @@ public class ChatRoomListnikeActivity extends BasicActivity {
 		easemobchatUser users=new easemobchatUser();
 		users.setEasemobchatusers(easemobchatusers);		
 		topicUserTask task=new topicUserTask();
-		task.execute(users);		
+		task.execute(users);
+				
 	}
 	private void init() {
 		// TODO Auto-generated method stub		
