@@ -29,9 +29,7 @@ import android.widget.ScrollView;
 import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
-import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
-
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMMessage;
@@ -48,10 +46,14 @@ import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
 import com.peer.entity.ChatMsgEntity;
+import com.peer.localDB.LocalStorage;
+import com.peer.localDB.UserDao;
+import com.peer.localDBbean.UserBean;
 import com.peer.titlepopwindow.ActionItem;
 import com.peer.titlepopwindow.TitlePopup;
 import com.peer.titlepopwindow.TitlePopup.OnItemOnClickListener;
 import com.peer.util.ChatRoomTypeUtil;
+import com.peer.util.ManagerActivity;
 import com.peer.util.PersonpageUtil;
 import com.peer.widgetutil.FxService;
 import com.peer.widgetutil.LoadImageUtil;
@@ -87,7 +89,9 @@ public class ChatRoomActivity extends BasicActivity {
 		LoadImageUtil.initImageLoader(this);
 		init();
 		roomType();
-		initChatListener();			
+		initChatListener();	
+		//单聊时ChatRoomTypeUtil.getInstance().getUser();toChatUsername=ChatRoomTypeUtil.getInstance().getHuanxingId();
+		//群聊时ChatRoomTypeUtil.getInstance().getTopic();toChatUsername=ChatRoomTypeUtil.getInstance().getHuanxingId();
 	}	
 	
 	private void init() {
@@ -99,7 +103,7 @@ public class ChatRoomActivity extends BasicActivity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
-		toChatUsername=ChatRoomTypeUtil.getInstance().getHuanxingId();
+		
 		titlePopup = new TitlePopup(this, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);	
 		rl_owner=(RelativeLayout)findViewById(R.id.host_imfor);		
 		popupwindow();
@@ -174,8 +178,7 @@ public class ChatRoomActivity extends BasicActivity {
 				titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.lookformember), R.color.white));			
 			}else{
 				titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.exitroom), R.color.white));
-				titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.lookformember), R.color.white));
-				
+				titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.lookformember), R.color.white));				
 			}
 			Intent intent=getIntent();
 			if(intent.getStringExtra(Constant.FROMFLOAT)!=null&&intent.getStringExtra(Constant.FROMFLOAT).equals(Constant.FROMFLOAT)){
@@ -186,27 +189,29 @@ public class ChatRoomActivity extends BasicActivity {
 				tv_theme.setText(intent.getStringExtra(Constant.THEME));
 				topicId=intent.getStringExtra(Constant.TOPICID);				
 			}else{
-				tv_tagname.setText(ChatRoomTypeUtil.getInstance().getTitle());
-				User u=ChatRoomTypeUtil.getInstance().getUser();
+				tv_tagname.setText(ChatRoomTypeUtil.getInstance().getTopic().getLabel_name());
+				User u=ChatRoomTypeUtil.getInstance().getTopic().getUser();
 				nikename.setText(u.getUsername());
 				LoadImageUtil.imageLoader.displayImage(u.getImage(), ownerimg,LoadImageUtil.options);	
-				tv_theme.setText(ChatRoomTypeUtil.getInstance().getTheme());
-				topicId=ChatRoomTypeUtil.getInstance().getTopicId();
+				tv_theme.setText(ChatRoomTypeUtil.getInstance().getTopic().getSubject());
+				topicId=ChatRoomTypeUtil.getInstance().getTopic().getTopicid();
 			}
+			//将浮动窗口取消并保存在配置文件中
 			Intent serviceintent = new Intent(ChatRoomActivity.this, FxService.class);
-			stopService(serviceintent);
+			stopService(serviceintent);			
+			LocalStorage.saveBoolean(ChatRoomActivity.this, Constant.ISFLOAT, false);
 			//加入公开群聊
 			easemobchatImp.getInstance().joingroup(toChatUsername);
 			
 			ReplieTask task=new ReplieTask();
-			task.execute(ChatRoomTypeUtil.getInstance().getTopicId());
-			conversation = EMChatManager.getInstance().getConversation(ChatRoomTypeUtil.getInstance().getHuanxingId());
+			task.execute(ChatRoomTypeUtil.getInstance().getTopic().getTopicid());
+			conversation = EMChatManager.getInstance().getConversation(ChatRoomTypeUtil.getInstance().getTopic().getHuangxin_group_id());
 			conversation.resetUnreadMsgCount();		
 		}else if(ChatRoomTypeUtil.getInstance().getChatroomtype()==Constant.SINGLECHAT){
 			rl_owner.setVisibility(View.GONE);
-			tv_tagname.setText(ChatRoomTypeUtil.getInstance().getTitle());
+			tv_tagname.setText(ChatRoomTypeUtil.getInstance().getUser().getUsername());
 			titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.deletemes), R.color.white));
-			conversation = EMChatManager.getInstance().getConversation(ChatRoomTypeUtil.getInstance().getHuanxingId());
+			conversation = EMChatManager.getInstance().getConversation(ChatRoomTypeUtil.getInstance().getUser().getHuangxin_username());
 			for(int i=0;i<conversation.getMsgCount();i++){
 				EMMessage message =conversation.getMessage(i);				
 				
@@ -259,7 +264,7 @@ public class ChatRoomActivity extends BasicActivity {
 					}else if(item.mTitle.equals(getResources().getString(R.string.lookformember))){
 						Intent intent=new Intent(ChatRoomActivity.this,ChatRoomListnikeActivity.class);
 						intent.putExtra("topicId", topicId);
-						intent.putExtra("groupId", ChatRoomTypeUtil.getInstance().getHuanxingId());
+						intent.putExtra("groupId", ChatRoomTypeUtil.getInstance().getTopic().getHuangxin_group_id());
 						startActivity(intent);			
 					}
 				}				
@@ -339,7 +344,7 @@ public class ChatRoomActivity extends BasicActivity {
 				final String content=messagebody.getText().toString().trim();				
 				SessionListener callback=new SessionListener();
 				try {
-					PeerUI.getInstance().getISessionManager().replyTopic(ChatRoomTypeUtil.getInstance().getTopicId(), content, callback);					
+					PeerUI.getInstance().getISessionManager().replyTopic(ChatRoomTypeUtil.getInstance().getTopic().getTopicid(), content, callback);					
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -425,18 +430,23 @@ public class ChatRoomActivity extends BasicActivity {
 	}
 	public void startfloatView(){
 		if(ChatRoomTypeUtil.getInstance().isIsowner()&&ChatRoomTypeUtil.getInstance().getChatroomtype()==Constant.MULTICHAT){
-			Intent intentfloat = new Intent(ChatRoomActivity.this, FxService.class);				
-			User u=ChatRoomTypeUtil.getInstance().getUser();			
-			intentfloat.putExtra(Constant.IMAGE, u.getImage());
-			intentfloat.putExtra(Constant.OWNERNIKE, u.getUsername());
-			intentfloat.putExtra(Constant.THEME, ChatRoomTypeUtil.getInstance().getTheme());			
-			intentfloat.putExtra(Constant.TAGNAME, ChatRoomTypeUtil.getInstance().getTitle());
-			intentfloat.putExtra(Constant.USERID, u.getUserid());
-			intentfloat.putExtra(Constant.ROOMID, ChatRoomTypeUtil.getInstance().getHuanxingId());
-			intentfloat.putExtra(Constant.TOPICID,  ChatRoomTypeUtil.getInstance().getTopicId());
-			intentfloat.putExtra(Constant.FROMFLOAT, "float");
-			startService(intentfloat);
-			finish();
+			if(!LocalStorage.getBoolean(ChatRoomActivity.this, Constant.ISFLOAT)){
+				Intent intentfloat = new Intent(ChatRoomActivity.this, FxService.class);				
+				User u=ChatRoomTypeUtil.getInstance().getUser();			
+				intentfloat.putExtra(Constant.IMAGE, u.getImage());
+				intentfloat.putExtra(Constant.OWNERNIKE, u.getUsername());
+				intentfloat.putExtra(Constant.THEME, ChatRoomTypeUtil.getInstance().getTopic().getSubject());			
+				intentfloat.putExtra(Constant.TAGNAME, ChatRoomTypeUtil.getInstance().getTopic().getLabel_name());
+				intentfloat.putExtra(Constant.USERID, u.getUserid());
+				intentfloat.putExtra(Constant.ROOMID, ChatRoomTypeUtil.getInstance().getTopic().getHuangxin_group_id());
+				intentfloat.putExtra(Constant.TOPICID,  ChatRoomTypeUtil.getInstance().getTopic().getTopicid());
+				intentfloat.putExtra(Constant.FROMFLOAT, "float");
+				startService(intentfloat);
+				finish();
+				LocalStorage.saveBoolean(ChatRoomActivity.this, Constant.ISFLOAT, true);
+			}else{
+				finish();
+			}
 		}else if(ChatRoomTypeUtil.getInstance().getChatroomtype()==Constant.SINGLECHAT){
 			// 把此会话的未读数置为0
 			conversation.resetUnreadMsgCount();
@@ -514,30 +524,57 @@ public class ChatRoomActivity extends BasicActivity {
 		protected void onPostExecute(List<User> result) {
 			// TODO Auto-generated method stub
 			if(ChatRoomTypeUtil.getInstance().getUser().getUserid().equals(userid)){			
-				PersonpageUtil.getInstance().setPersonid(ChatRoomTypeUtil.getInstance().getUser().getUserid());
-				PersonpageUtil.getInstance().setPersonpagetype(Constant.OWNPAGE);
-				Intent topersonalpage=new Intent(ChatRoomActivity.this,PersonalPageActivity.class);
-				startActivity(topersonalpage);
+				ToMypersonalpage();
 			}else if(!result.isEmpty()){				
-					PersonpageUtil.getInstance().setPersonid(ChatRoomTypeUtil.getInstance().getUser().getUserid());
-					for(int i=0;i<result.size();i++){
-						if(ChatRoomTypeUtil.getInstance().getUser().getUserid().equals(result.get(i).getUserid())){
-							PersonpageUtil.getInstance().setPersonpagetype(Constant.FRIENDSPAGE);
-							break;
-						}else{
-							PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
-						}
-					}
+//					PersonpageUtil.getInstance().setPersonid(ChatRoomTypeUtil.getInstance().getUser().getUserid());
+//					for(int i=0;i<result.size();i++){
+//						if(ChatRoomTypeUtil.getInstance().getUser().getUserid().equals(result.get(i).getUserid())){
+//							PersonpageUtil.getInstance().setPersonpagetype(Constant.FRIENDSPAGE);
+//							break;
+//						}else{
+//							PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
+//						}
+//					}
+					PersonpageUtil.getInstance().setUser(ChatRoomTypeUtil.getInstance().getUser());
 					Intent topersonalpage=new Intent(ChatRoomActivity.this,PersonalPageActivity.class);
 					startActivity(topersonalpage);				
 			}else{
-				PersonpageUtil.getInstance().setPersonid(ChatRoomTypeUtil.getInstance().getUser().getUserid());
-				PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
+//				PersonpageUtil.getInstance().setPersonid(ChatRoomTypeUtil.getInstance().getUser().getUserid());
+//				PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
+				PersonpageUtil.getInstance().setUser(ChatRoomTypeUtil.getInstance().getUser());
 				Intent topersonalpage=new Intent(ChatRoomActivity.this,PersonalPageActivity.class);
 				startActivity(topersonalpage);	
 				
 			}
 		}
+	}
+	private void ToMypersonalpage() {
+		// TODO Auto-generated method stub
+		String huangxin_username=null;
+		List<String> labels=null;
+		try {
+			huangxin_username=PeerUI.getInstance().getISessionManager().getHuanxingUser();
+			labels=PeerUI.getInstance().getISessionManager().getLabels();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		LocalStorage.getString(ChatRoomActivity.this, Constant.EMAIL);
+		UserDao userdao=new UserDao(ChatRoomActivity.this);
+		UserBean userbean=userdao.findOne(LocalStorage.getString(ChatRoomActivity.this, Constant.EMAIL));
+		User user=new User();
+		user.setEmail(userbean.getEmail());
+		user.setBirthday(userbean.getAge());
+		user.setCity(userbean.getCity());
+		user.setSex(userbean.getSex());
+		user.setImage(userbean.getImage());
+		user.setUsername(userbean.getNikename());
+		user.setUserid(userid);
+		user.setHuangxin_username(huangxin_username);
+		user.setLabels(labels);
+		PersonpageUtil.getInstance().setUser(user);
+		Intent topersonalpage=new Intent(ChatRoomActivity.this,PersonalPageActivity.class);
+		startActivity(topersonalpage);
 	}
 	/**
 	 * 消息广播接收者

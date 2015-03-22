@@ -8,11 +8,13 @@ import com.peer.client.User;
  *
  */
 public class PersonpageUtil {
-	private int personpagetype;	
-	private String personid;
-	private String huanxinId;
-	private String personname;
-	private String personImg;
+//	private int personpagetype;	
+//	private String personid;
+//	private String huanxinId;
+//	private String personname;
+//	private String personImg;
+	private boolean shouldRefresh;
+	private User user;
 	private static PersonpageUtil personpageutil;
 	private PersonpageUtil(){}
 	public static PersonpageUtil getInstance(){
@@ -21,12 +23,27 @@ public class PersonpageUtil {
 		}		
 		return personpageutil;
 	}
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
+	public boolean isShouldRefresh() {
+		return shouldRefresh;
+	}
+	public void setShouldRefresh(boolean shouldRefresh) {
+		this.shouldRefresh = shouldRefresh;
+	}
+	
+	/*
 	public int getPersonpagetype() {
 		return personpagetype;
 	}
 	public void setPersonpagetype(int personpagetype) {
 		this.personpagetype = personpagetype;
 	}
+	
 	public String getPersonid() {
 		return personid;
 	}
@@ -51,5 +68,5 @@ public class PersonpageUtil {
 	public void setPersonImg(String personImg) {
 		this.personImg = personImg;
 	}	
-	
+	*/
 }

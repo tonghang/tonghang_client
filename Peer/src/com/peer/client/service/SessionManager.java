@@ -325,7 +325,8 @@ public class SessionManager extends ISessionManager.Stub {
 					user.setUsername((String)usermap.get("username"));
 					user.setLabels((List<String>)usermap.get("labels"));
 					user.setHuangxin_username((String)usermap.get("huanxin_username"));
-					topic.setUser(user);
+					
+					topic.setUser(user);					
 					topic.setLabel_name((String)list.get(i).get("label_name"));
 					topic.setSubject((String)list.get(i).get("subject"));
 					topic.setTopicid(String.valueOf(list.get(i).get("id")));
@@ -399,6 +400,55 @@ public class SessionManager extends ISessionManager.Stub {
 		callback.onCallBack(code, message);	
 		return mlist;
 	}	
+	@Override
+	public List<User> searchUsersByLabel(String labename, int page,
+			ISessionListener callback) throws RemoteException {
+		// TODO Auto-generated method stub
+		List<User> mlist=new ArrayList<User>();
+		String message = null;
+		int code=1;
+		try{
+			ResponseEntity<List> result =DataUtil.templateExchange(Constant.WEB_SERVER_ADDRESS+"/users.json?label_name="+labename+"&page="+page,
+					HttpMethod.GET, 
+					new HttpEntity(headers),
+					List.class);
+			List<Map> list= result.getBody();			
+			List<User> friendslist=myFriends();
+			if(result.getStatusCode()==HttpStatus.OK){
+				for(Map m:list){
+					User user=new User();
+					user.setEmail((String)m.get("email"));
+					user.setUsername((String)m.get("username"));
+					user.setImage(Constant.WEB_SERVER_ADDRESS+(String)m.get("image"));
+					user.setUserid(String.valueOf(m.get("id")));
+					user.setBirthday((String)m.get("birth"));					
+					user.setLabels((List)m.get("labels"));
+					user.setCity((String)m.get("city"));
+					user.setSex((String)m.get("sex"));
+					user.setHuangxin_username((String)m.get("huanxin_username"));
+					for(User u:friendslist){
+						if(u.getUserid().equals(String.valueOf(m.get("id")))){
+							user.setIs_friends(true);
+							break;
+						}else{
+							user.setIs_friends(false);
+						}						
+					}	
+					mlist.add(user);
+				}
+				code=0;
+				message=Constant.CALLBACKSUCCESS;
+			}else{
+				message=Constant.CALLBACKFAIL;
+			}
+		}catch(Exception e){
+			message = Constant.CALLBACKFAIL;
+			e.printStackTrace();
+		}
+		callback.onCallBack(code, message);
+		return mlist;
+	}
+	
 	/*search user by nike 通过测试*/
 	@Override
 	public List<User> searchUsersByNickName(String username,int page,ISessionListener callback)
@@ -408,7 +458,7 @@ public class SessionManager extends ISessionManager.Stub {
 		String message = null;
 		int code=1;
 		try{
-//			ResponseEntity<List> result =DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/users.json?q="+username+"&page="+page,List.class);
+			//Constant.WEB_SERVER_ADDRESS+"/users.json?label_name="+username+"&page="+page
 			ResponseEntity<List> result =DataUtil.templateExchange(Constant.WEB_SERVER_ADDRESS+"/users.json?q="+username+"&page="+page,
 					HttpMethod.GET, 
 					new HttpEntity(headers),
@@ -424,12 +474,15 @@ public class SessionManager extends ISessionManager.Stub {
 					user.setUserid(String.valueOf(m.get("id")));
 					user.setBirthday((String)m.get("birth"));
 					user.setLabels((List)m.get("labels"));
+					user.setCity((String)m.get("city"));
+					user.setSex((String)m.get("sex"));
+					user.setHuangxin_username((String)m.get("huanxin_username"));
 					for(User u:friendslist){
 						if(u.getUserid().equals(String.valueOf(m.get("id")))){
-							user.setIs_friends("true");
+							user.setIs_friends(true);
 							break;
 						}else{
-							user.setIs_friends("false");
+							user.setIs_friends(false);
 						}						
 					}	
 					mlist.add(user);
@@ -461,12 +514,15 @@ public class SessionManager extends ISessionManager.Stub {
 					User u=new User();
 					Map m=(Map) result.get(i);
 					u.setImage(Constant.WEB_SERVER_ADDRESS+(String)m.get("image"));
-					u.setIs_friends("true");
+					u.setIs_friends(true);
 					u.setLabels((List)m.get("labels"));
 					u.setUsername((String)m.get("username"));
 					u.setEmail((String)m.get("email"));
 					u.setHuangxin_username((String)m.get("huanxin_username"));
 					u.setUserid(String.valueOf(m.get("id")));
+					u.setCity((String)m.get("city"));
+					u.setBirthday((String)m.get("birth"));
+					u.setSex((String)m.get("sex"));
 					list.add(u);
 				}							
 			}
@@ -504,6 +560,11 @@ public class SessionManager extends ISessionManager.Stub {
 						u.setUserid(String.valueOf(inviter.get("id")));
 						u.setReason((String)m.get("reason"));
 						u.setInvitionid(String.valueOf(m.get("id")));
+						u.setIs_friends(false);
+						u.setHuangxin_username((String)m.get("huanxin_username"));
+						u.setCity((String)m.get("city"));
+						u.setBirthday((String)m.get("birth"));
+						u.setSex((String)m.get("sex"));					
 						list.add(u);
 					}					
 				}
@@ -715,21 +776,29 @@ public class SessionManager extends ISessionManager.Stub {
 						user.setUserid(String.valueOf(recomend.get(i).get("id")));
 						user.setUsername((String)recomend.get(i).get("username"));					
 						user.setLabels((List<String>)recomend.get(i).get("labels"));
-						user.setHuangxin_username((String)recomend.get(i).get("huanxin_username"));
-						user.setIs_friends(String.valueOf(recomend.get(i).get("is_friend")));
+						user.setHuangxin_username(String.valueOf(recomend.get(i).get("huanxin_username")));
+						user.setIs_friends((Boolean)recomend.get(i).get("is_friend"));
+						user.setSex((String)recomend.get(i).get("sex"));
+						user.setCity((String)recomend.get(i).get("city"));
+						user.setBirthday((String)recomend.get(i).get("birth"));
+						
 						map.put(Constant.USER, user);
 						mlist.add(map);
 					}else if(recomend.get(i).get("type").equals(Constant.TOPIC)){
 						Map<String, Object> map=new HashMap<String, Object>();
 						map.put("type", Constant.TOPIC);
-						
+						//这里的m 没有is_friend键 是否为好友需要自己判断
 						Map m=(Map)recomend.get(i).get("user");						
 						User user=new User();
+//						user.setIs_friends((Boolean)recomend.get(i).get("is_friend"));						
 						user.setImage(Constant.WEB_SERVER_ADDRESS+(String)m.get("image"));
 						user.setUserid(String.valueOf(m.get("id")));
 						user.setUsername((String)m.get("username"));					
 						user.setLabels((List<String>)m.get("labels"));
 						user.setHuangxin_username((String)m.get("huanxin_username"));
+						user.setSex((String)m.get("sex"));
+						user.setCity((String)m.get("city"));
+						user.setBirthday((String)m.get("birth"));						
 						map.put(Constant.USER, user);
 						
 						Topic topic=new Topic();
@@ -784,10 +853,10 @@ public class SessionManager extends ISessionManager.Stub {
 					user.setUserid(String.valueOf(m.get("id")));
 					for(User u:friendslist){
 						if(u.getUserid().equals(String.valueOf(m.get("id")))){
-							user.setIs_friends("true");
+							user.setIs_friends(true);
 							break;
 						}else{
-							user.setIs_friends("false");
+							user.setIs_friends(false);
 						}						
 					}
 					user.setImage(Constant.WEB_SERVER_ADDRESS+(String)m.get("image"));
@@ -829,7 +898,8 @@ public class SessionManager extends ISessionManager.Stub {
 						user.setUsername((String)recomend.get(i).get("username"));					
 						user.setLabels((List<String>)recomend.get(i).get("labels"));
 						user.setHuangxin_username((String)recomend.get(i).get("huanxin_username"));
-						user.setIs_friends(String.valueOf(recomend.get(i).get("is_friend")));
+						//这里 没有is_friend键 是否为好友需要自己判断
+						//user.setIs_friends((Boolean)recomend.get(i).get("is_friend"));
 						map.put(Constant.USER, user);
 						mlist.add(map);
 					}else if(recomend.get(i).get("type").equals(Constant.TOPIC)){
@@ -1047,5 +1117,6 @@ public class SessionManager extends ISessionManager.Stub {
 		this.page=page+1;
 		return recommend(page, callback);
 	}
+	
 	
 }

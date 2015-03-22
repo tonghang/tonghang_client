@@ -78,12 +78,12 @@ public class TopicAdapter extends FatherAdater {
 				// TODO Auto-generated method stub				
 				if(checkNetworkState()){
 					ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.MULTICHAT);
-					ChatRoomTypeUtil.getInstance().setTitle(topic.getLabel_name());
+/*					ChatRoomTypeUtil.getInstance().setTitle(topic.getLabel_name());
 					ChatRoomTypeUtil.getInstance().setTheme(topic.getSubject());
 					ChatRoomTypeUtil.getInstance().setTopicId(topic.getTopicid());
 					ChatRoomTypeUtil.getInstance().setUser(topic.getUser());
 					ChatRoomTypeUtil.getInstance().setHuanxingId(topic.getHuangxin_group_id());
-					String ownerid=null;
+*/					String ownerid=null;
 					try {
 						ownerid = PeerUI.getInstance().getISessionManager().getUserId();
 					} catch (RemoteException e) {
@@ -94,7 +94,8 @@ public class TopicAdapter extends FatherAdater {
 						ChatRoomTypeUtil.getInstance().setIsowner(true);
 					}else{
 						ChatRoomTypeUtil.getInstance().setIsowner(false);
-					}					
+					}	
+					ChatRoomTypeUtil.getInstance().setTopic(topic);
 					Intent intent=new Intent(mContext,ChatRoomActivity.class);
 					intent.putExtra("topicid",String.valueOf(topic.getTopicid()));
 					mContext.startActivity(intent);

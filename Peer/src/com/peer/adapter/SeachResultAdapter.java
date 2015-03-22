@@ -80,13 +80,15 @@ public class SeachResultAdapter extends FatherAdater {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				if(checkNetworkState()){
-					if(Boolean.valueOf(mlist.get(position).getIs_friends())){
+/*					if(Boolean.valueOf(mlist.get(position).getIs_friends())){
 						PersonpageUtil.getInstance().setPersonpagetype(Constant.FRIENDSPAGE);
 					}else{
 						PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
 					}
 					
 					PersonpageUtil.getInstance().setPersonid(mlist.get(position).getUserid());
+					*/
+					PersonpageUtil.getInstance().setUser(mlist.get(position));
 					Intent intent=new Intent(mContext,PersonalPageActivity.class);
 					mContext.startActivity(intent);
 				}else{

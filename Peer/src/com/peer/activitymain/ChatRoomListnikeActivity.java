@@ -39,7 +39,6 @@ public class ChatRoomListnikeActivity extends BasicActivity {
 		setContentView(R.layout.activity_chatroom_listnike);
 		init();
 		Intent intent=getIntent();
-		intent.getStringExtra("groupId");
 		EMGroup group=EMGroupManager.getInstance().getGroup(intent.getStringExtra("groupId"));
 		List<String> list=group.getMembers();
 		for(int i=0;i<list.size();i++){
@@ -49,8 +48,7 @@ public class ChatRoomListnikeActivity extends BasicActivity {
 			easemobchatusers.add(m);
 		}
 		easemobchatUser users=new easemobchatUser();
-		users.setEasemobchatusers(easemobchatusers);
-		
+		users.setEasemobchatusers(easemobchatusers);		
 		topicUserTask task=new topicUserTask();
 		task.execute(users);		
 	}

@@ -1,7 +1,5 @@
 package com.peer.activitymain;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import com.peer.R;
 import com.peer.activity.BasicActivity;
@@ -50,8 +48,6 @@ public class PersonalPageActivity extends BasicActivity {
 
 	private AutoWrapRadioGroup tagContainer;
 	private TitlePopup titlePopup;
-	
-	private List<HashMap<String, String>> list=new ArrayList<HashMap<String,String>>();
 	private User userpage;	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +55,7 @@ public class PersonalPageActivity extends BasicActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_personalpage);
 		init();
-		LoadImageUtil.initImageLoader(this);
-		PersonalTask task=new PersonalTask();
-		task.execute(PersonpageUtil.getInstance().getPersonid());			
+		LoadImageUtil.initImageLoader(this);		
 	}
 	private void init() {
 		// TODO Auto-generated method stub	
@@ -94,7 +88,7 @@ public class PersonalPageActivity extends BasicActivity {
 				RadioButton tempButton = (RadioButton)findViewById(checkedId);
 				String selectlabel=tempButton.getText().toString();
 				SearchUtil.getInstance().setSearchname(selectlabel);
-				SearchUtil.getInstance().setSearchtype(Constant.USERBYNIKE);
+				SearchUtil.getInstance().setSearchtype(Constant.USERBYLABEL);
 				SearchUtil.getInstance().setCallbacklabel(selectlabel);
 				Intent intent=new Intent(PersonalPageActivity.this, SearchResultActivity.class);
 				startActivity(intent);
@@ -102,122 +96,172 @@ public class PersonalPageActivity extends BasicActivity {
 		});
 			
 	}
-	
-	private void ViewType() {
+	@Override
+	protected void onStart() {
 		// TODO Auto-generated method stub
+		super.onStart();
+		if(PersonpageUtil.getInstance().isShouldRefresh()){
+			//当传递过来的用户数据不全时，根据用户ID去获取完整的用户信息
+			PersonalTask task=new PersonalTask();
+			task.execute(PersonpageUtil.getInstance().getUser().getUserid());
+		}else{
+			User user=PersonpageUtil.getInstance().getUser();		
+			userpage=user;
+			LoadImageUtil.imageLoader.displayImage(user.getImage(), personhead, LoadImageUtil.options);				
+			nikename.setText(user.getUsername());
+			acount.setText(user.getEmail());
+			city.setText(user.getCity());
+			sex.setText(user.getSex());
+			for(int i=0;i<user.getLabels().size();i++){
+				String tag=user.getLabels().get(i);					
+
+				skill=(RadioButton) getLayoutInflater().inflate(R.layout.skill, tagContainer, false);
+				skill.setHeight((int)getResources().getDimension(R.dimen.hight));
+				skill.setTextSize(20);
+				skill.setTextColor(getResources().getColor(R.color.white));
+				int pading=(int)getResources().getDimension(R.dimen.pading);
+				skill.setText(tag);
+				skill.setTag(""+i);
+				tagContainer.addView(skill);
+			}
+			ViewType();
+		}
+	}
+	private void ViewType() {
+		// TODO Auto-generated method stub			
 		LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		params.weight=1;
 		params.gravity=Gravity.CENTER_VERTICAL;
-		switch (PersonpageUtil.getInstance().getPersonpagetype()) {
-		case Constant.UNFRIENDSPAGE:			
-			if(sex.getText().toString().equals("男")){
-				topic_whose.setText(getResources().getString(R.string.topic_other));
-				title.setText(getResources().getString(R.string.personalpage_other));
-			}else{
-				topic_whose.setText(getResources().getString(R.string.topic_nvother));
-				title.setText(getResources().getString(R.string.personalpage_nvother));
-			}			
-			send.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View arg0) {
-					// TODO Auto-generated method stub
-					ChatRoomTypeUtil.getInstance().setUserId(PersonpageUtil.getInstance().getPersonid());
-					ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.SINGLECHAT);
-					ChatRoomTypeUtil.getInstance().setHuanxingId(PersonpageUtil.getInstance().getHuanxinId());
-					ChatRoomTypeUtil.getInstance().setTitle(PersonpageUtil.getInstance().getPersonname());
-					Intent intent=new Intent(PersonalPageActivity.this,ChatRoomActivity.class);
-					startActivity(intent);
-					ManagerActivity.getAppManager().finishActivity();
-				}
-			});
-			addfriend.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View arg0) {
-					// TODO Auto-generated method stub				
-					Intent intent=new Intent(PersonalPageActivity.this,AddFriendsActivity.class);
-					intent.putExtra("userId", userpage.getUserid());
-					intent.putExtra("image", userpage.getImage());
-					intent.putExtra("nike", userpage.getUsername());
-					intent.putExtra("email", userpage.getEmail());
-					startActivity(intent);
-					ManagerActivity.getAppManager().finishActivity();
-				}
-			});
-			break;
-		case Constant.FRIENDSPAGE:
-			delete.setVisibility(View.VISIBLE);
-			send.setVisibility(View.GONE);
-			addfriend.setVisibility(View.GONE);
-			
-			titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.deletefriends), R.color.white));
-			popupwindow();
-			if(sex.getText().toString().equals("男")){
-				topic_whose.setText(getResources().getString(R.string.topic_other));
-				title.setText(getResources().getString(R.string.personalpage_other));
-			}else{
-				topic_whose.setText(getResources().getString(R.string.topic_nvother));
-				title.setText(getResources().getString(R.string.personalpage_nvother));
-			}	
-			Button bt3=new Button(this);
-			bt3.setText(getResources().getString(R.string.sendmsg));
-			bt3.setTextColor(getResources().getColor(R.color.white));
-			bt3.setBackgroundResource(R.drawable.select_personal);
-			bt3.setLayoutParams(params);
-			bottomline.addView(bt3);
-			bt3.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View arg0) {
-					// TODO Auto-generated method stub
-					ChatRoomTypeUtil.getInstance().setUserId(PersonpageUtil.getInstance().getPersonid());
-					ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.SINGLECHAT);
-					ChatRoomTypeUtil.getInstance().setHuanxingId(PersonpageUtil.getInstance().getHuanxinId());
-					ChatRoomTypeUtil.getInstance().setTitle(PersonpageUtil.getInstance().getPersonname());					
-					Intent intent=new Intent(PersonalPageActivity.this,ChatRoomActivity.class);
-					startActivity(intent);
-				}
-			});
-			break;
-		case Constant.OWNPAGE:
-			topic_whose.setText(getResources().getString(R.string.topic_owen));
-			title.setText(getResources().getString(R.string.personalpage_own));
-			bottomline.setVisibility(View.INVISIBLE);
-			if(!checkNetworkState()){
-				String email=LocalStorage.getString(PersonalPageActivity.this, Constant.EMAIL);
-				UserDao userdao=new UserDao(PersonalPageActivity.this);
-				UserBean user=userdao.findOne(email);
-				LoadImageUtil.imageLoader.displayImage(user.getImage(), personhead, LoadImageUtil.options);				
-				nikename.setText(user.getNikename());
-				acount.setText(user.getEmail());
-				city.setText(user.getCity());
-				sex.setText(user.getSex());
-				List<String> lables=null;
-				try {
-					lables = PeerUI.getInstance().getISessionManager().getLabels();
-				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				for(int i=0;i<lables.size();i++){
-					String tag=lables.get(i);		
-					skill=(RadioButton) getLayoutInflater().inflate(R.layout.skill, tagContainer, false);
-					skill.setHeight((int)getResources().getDimension(R.dimen.hight));
-					skill.setTextSize(20);
-					skill.setTextColor(getResources().getColor(R.color.white));
-					int pading=(int)getResources().getDimension(R.dimen.pading);
-					skill.setText(tag);
-					skill.setTag(""+i);
-					tagContainer.addView(skill);
-				}
-			}		
-			break;
-		default:
-			break;
-		}		
-				
+		String userid=null;
+		try {
+			userid = PeerUI.getInstance().getISessionManager().getUserId();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(userid.equals(PersonpageUtil.getInstance().getUser().getUserid())){
+			MypersonPage();
+		}else if(PersonpageUtil.getInstance().getUser().isIs_friends()){
+			friendsPersonPage();
+		}else{
+			unfriendsPersonPage();
+		}
+						
 	}
+	private void friendsPersonPage(){
+		LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		params.weight=1;
+		params.gravity=Gravity.CENTER_VERTICAL;
+		String userid=null;
+		
+		delete.setVisibility(View.VISIBLE);
+		send.setVisibility(View.GONE);
+		addfriend.setVisibility(View.GONE);
+		
+		titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.deletefriends), R.color.white));
+		popupwindow();
+		if(sex.getText().toString().equals("男")){
+			topic_whose.setText(getResources().getString(R.string.topic_other));
+			title.setText(getResources().getString(R.string.personalpage_other));
+		}else{
+			topic_whose.setText(getResources().getString(R.string.topic_nvother));
+			title.setText(getResources().getString(R.string.personalpage_nvother));
+		}	
+		Button bt3=new Button(this);
+		bt3.setText(getResources().getString(R.string.sendmsg));
+		bt3.setTextColor(getResources().getColor(R.color.white));
+		bt3.setBackgroundResource(R.drawable.select_personal);
+		bt3.setLayoutParams(params);
+		bottomline.addView(bt3);
+		bt3.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+	/*			ChatRoomTypeUtil.getInstance().setUserId(PersonpageUtil.getInstance().getUser().getUserid());
+				ChatRoomTypeUtil.getInstance().setHuanxingId(PersonpageUtil.getInstance().getUser().getHuangxin_username());
+				ChatRoomTypeUtil.getInstance().setTitle(PersonpageUtil.getInstance().getUser().getUsername());					
+	*/
+				ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.SINGLECHAT);
+				ChatRoomTypeUtil.getInstance().setUser(userpage);
+				Intent intent=new Intent(PersonalPageActivity.this,ChatRoomActivity.class);
+				startActivity(intent);
+			}
+		});
+	}
+	private void unfriendsPersonPage(){
+		if(sex.getText().toString().equals("男")){
+			topic_whose.setText(getResources().getString(R.string.topic_other));
+			title.setText(getResources().getString(R.string.personalpage_other));
+		}else{
+			topic_whose.setText(getResources().getString(R.string.topic_nvother));
+			title.setText(getResources().getString(R.string.personalpage_nvother));
+		}			
+		send.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+/*				ChatRoomTypeUtil.getInstance().setUserId(PersonpageUtil.getInstance().getUser().getUserid());
+				ChatRoomTypeUtil.getInstance().setHuanxingId(PersonpageUtil.getInstance().getUser().getHuangxin_username());
+				ChatRoomTypeUtil.getInstance().setTitle(PersonpageUtil.getInstance().getUser().getUsername());
+				
+*/				ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.SINGLECHAT);				
+				ChatRoomTypeUtil.getInstance().setUser(userpage);				
+				Intent intent=new Intent(PersonalPageActivity.this,ChatRoomActivity.class);
+				startActivity(intent);
+				ManagerActivity.getAppManager().finishActivity();
+			}
+		});
+		addfriend.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub				
+				Intent intent=new Intent(PersonalPageActivity.this,AddFriendsActivity.class);
+				intent.putExtra("userId", userpage.getUserid());
+				intent.putExtra("image", userpage.getImage());
+				intent.putExtra("nike", userpage.getUsername());
+				intent.putExtra("email", userpage.getEmail());
+				startActivity(intent);
+				ManagerActivity.getAppManager().finishActivity();
+			}
+		});
+	}
+	public void MypersonPage(){
+		topic_whose.setText(getResources().getString(R.string.topic_owen));
+		title.setText(getResources().getString(R.string.personalpage_own));
+		bottomline.setVisibility(View.INVISIBLE);
+		if(!checkNetworkState()){
+			String email=LocalStorage.getString(PersonalPageActivity.this, Constant.EMAIL);
+			UserDao userdao=new UserDao(PersonalPageActivity.this);
+			UserBean user=userdao.findOne(email);
+			LoadImageUtil.imageLoader.displayImage(user.getImage(), personhead, LoadImageUtil.options);				
+			nikename.setText(user.getNikename());
+			acount.setText(user.getEmail());
+			city.setText(user.getCity());
+			sex.setText(user.getSex());
+			List<String> lables=null;
+			try {
+				lables = PeerUI.getInstance().getISessionManager().getLabels();
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			for(int i=0;i<lables.size();i++){
+				String tag=lables.get(i);		
+				skill=(RadioButton) getLayoutInflater().inflate(R.layout.skill, tagContainer, false);
+				skill.setHeight((int)getResources().getDimension(R.dimen.hight));
+				skill.setTextSize(20);
+				skill.setTextColor(getResources().getColor(R.color.white));
+				int pading=(int)getResources().getDimension(R.dimen.pading);
+				skill.setText(tag);
+				skill.setTag(""+i);
+				tagContainer.addView(skill);
+			}
+		}
+	}
+	
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub

@@ -20,7 +20,7 @@
 	<!-- activity的标题显示文字 -->
     <string name="register_acount">注册账号</string>
     <string name="xieyi">同行科技使用协议</string>
-    <string name="register_tag">创建秀场</string>
+    <string name="register_tag">创建行业标签</string>
     <string name="complete">完善信息</string>
     <string name="findpassword">找回密码</string>
     <string name="mycount">我的账号</string>
@@ -68,9 +68,10 @@
     <string name="picture">设置头像</string>
     <string name="cancel">取消</string>
     <string name="sure">确定</string>
+    <string name="notshare">不分享</string>
     <string name="sharecancle">确定</string>
-    <string name="sharesure">确定并分享到朋友圈</string>
-   <string name="isshare">是否分享</string>
+    <string name="sharesure">分享</string>
+   <string name="isshare">是否分享话题</string>
     <string name="sharedailog">创建或创建并分享</string>
     <string name="sdcard">未找到存储卡，无法存储照片！</string>
     
@@ -94,9 +95,9 @@
     <string name="addfriends">加好友</string>
     <string name="deletechatmsg">聊天记录已删除</string>
     
-    <string name="deletethisskill">是否删除该技能</string>
+    <string name="deletethisskill">是否删除该行业标签</string>
     <string name="deleteskill">是否删除该行业标签</string>
-    <string name="updateskill">修改技能</string>
+    <string name="updateskill">修改行业标签</string>
     
     <string name="selectsex">请选择性别</string>
     <string name="selectbirthday">请选择出生日期</string>

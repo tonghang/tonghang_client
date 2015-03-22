@@ -43,7 +43,7 @@ public class SearchResultActivity extends BasicActivity {
 		// TODO Auto-generated method stub
 		String searchtarget=SearchUtil.getInstance().getSearchname();
 		title=(TextView)findViewById(R.id.tv_title);
-		title.setText(getResources().getString(R.string.searchresult));
+		title.setText(searchtarget);
 		back=(LinearLayout)findViewById(R.id.ll_back);
 		back.setOnClickListener(this);
 		mlistview=(PullToRefreshListView)findViewById(R.id.lv_searchresult);
@@ -62,6 +62,9 @@ public class SearchResultActivity extends BasicActivity {
 		}else if(SearchUtil.getInstance().getSearchtype().equals(Constant.TOPICLIST)){
 			SearchTask task=new SearchTask();
 			task.execute(SearchUtil.getInstance().getCallbacklabel());
+		}else if(SearchUtil.getInstance().getSearchtype().equals(Constant.USERBYLABEL)){
+			SearchTask task=new SearchTask();
+			task.execute(searchtarget);
 		}
 		RefreshListner();
 		
@@ -112,9 +115,11 @@ public class SearchResultActivity extends BasicActivity {
 				}else if(SearchUtil.getInstance().getSearchtype().equals(Constant.LABELUSER)){
 					labellist=PeerUI.getInstance().getISessionManager().search(paramer[0],callback);					
 				}else if(SearchUtil.getInstance().getSearchtype().equals(Constant.USERBYNIKE)){
-					userlist=PeerUI.getInstance().getISessionManager().searchUsersByNickName(paramer[0],page,callback);
+					userlist.addAll(PeerUI.getInstance().getISessionManager().searchUsersByNickName(paramer[0],page,callback));
 				}else if(SearchUtil.getInstance().getSearchtype().equals(Constant.TOPICLIST)){
 					topiclist.addAll(PeerUI.getInstance().getISessionManager().searchTopicByLabel(paramer[0],page,callback));
+				}else if(SearchUtil.getInstance().getSearchtype().equals(Constant.USERBYLABEL)){
+					userlist.addAll(PeerUI.getInstance().getISessionManager().searchUsersByNickName(paramer[0],page,callback));
 				}
 				
 			} catch (RemoteException e) {
@@ -146,6 +151,8 @@ public class SearchResultActivity extends BasicActivity {
 					userlist=PeerUI.getInstance().getISessionManager().searchUsersByNickName(paramer[0],page,callback);
 				}else if(SearchUtil.getInstance().getSearchtype().equals(Constant.TOPICLIST)){
 					topiclist=PeerUI.getInstance().getISessionManager().searchTopicByLabel(paramer[0],1,callback);
+				}else if(SearchUtil.getInstance().getSearchtype().equals(Constant.USERBYLABEL)){
+					userlist=PeerUI.getInstance().getISessionManager().searchUsersByLabel(paramer[0],page,callback);
 				}
 				
 			} catch (RemoteException e) {
@@ -190,9 +197,16 @@ public class SearchResultActivity extends BasicActivity {
 					if(labellist.isEmpty()){
 						ShowMessage(getResources().getString(R.string.search_null));
 					}else{
-						SearchSkillAdapter adapter=new SearchSkillAdapter(SearchResultActivity.this,labellist,Constant.USERBYNIKE);
+						SearchSkillAdapter adapter=new SearchSkillAdapter(SearchResultActivity.this,labellist,Constant.USERBYLABEL);
 						mlistview.setAdapter(adapter);
 					}	
+				}else if(SearchUtil.getInstance().getSearchtype().equals(Constant.USERBYLABEL)){
+					if(userlist.isEmpty()){
+						ShowMessage(getResources().getString(R.string.search_null));
+					}else{
+						SeachResultAdapter adapter=new SeachResultAdapter(SearchResultActivity.this,userlist);
+						mlistview.setAdapter(adapter);
+					}
 				}
 			}else{
 				ShowMessage("搜索失败");

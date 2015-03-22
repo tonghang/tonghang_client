@@ -31,7 +31,8 @@
     <color name="perpule">#ac92ec</color>
     
     <color name="personal_nol">#5d9cec</color>
-    <color name="personal_press">#4a89dc</color>
+ <!--   <color name="personal_press">#4a89dc</color> --> 
+    <color name="personal_press">#3b83ff</color>
    <color name="disenable">#e4e6e5</color>
     <color name="midblue">#00ff00</color>
 </resources>

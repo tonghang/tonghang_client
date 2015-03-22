@@ -71,10 +71,8 @@
             android:layout_centerVertical="true"
             android:layout_margin="8dp"
             android:layout_toLeftOf="@+id/btn_send"
-
-            android:background="@drawable/input_editext"           
-            android:singleLine="false"
-            android:maxLines="10"
+            android:background="@drawable/input_editext"                       
+            android:maxLines="5"
             android:paddingLeft="5dp"
             android:textSize="18sp" >
      	<requestFocus />
@@ -111,41 +109,12 @@
     android:layout_below="@+id/rl_layout"
     android:background="@drawable/icon_chatroomback" >
 
-    <LinearLayout
-        android:id="@+id/host_imfor_main"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_toLeftOf="@+id/tv_seemember"
-        android:layout_toRightOf="@+id/host_image"
-        android:layout_weight="1.0"
-        android:gravity="center_vertical"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/tv_nikename"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            
-            android:textColor="@color/white"
-            android:textSize="@dimen/textsize_middle" />
-
-        <TextView
-            android:id="@+id/theme_chat"
-            android:layout_width="206dp"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:lines="1"
-            
-            android:textSize="@dimen/textsize_smallmiddle"
-            android:textColor="@color/deepgray" />
-
-    </LinearLayout>
 
     <ImageView
         android:id="@+id/host_image"
         android:clickable="true"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
@@ -163,6 +132,26 @@
         android:textSize="@dimen/textsize_large"
         android:textColor="@color/white"
         android:text="分享" />
+
+    <TextView
+        android:id="@+id/tv_nikename"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/host_image"
+        android:layout_toRightOf="@+id/host_image"
+        android:textColor="@color/white"
+        android:textSize="@dimen/textsize_middle" />
+
+    <TextView
+        android:id="@+id/theme_chat"
+        android:layout_width="206dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tv_nikename"
+        android:layout_below="@+id/tv_nikename"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="@color/deepgray"
+        android:textSize="@dimen/textsize_smallmiddle" />
 
 </RelativeLayout>
 </RelativeLayout>

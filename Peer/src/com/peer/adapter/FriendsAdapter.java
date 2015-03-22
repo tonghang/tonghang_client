@@ -78,7 +78,7 @@ public class FriendsAdapter extends FatherAdater {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				if(checkNetworkState()){
-					if(Boolean.valueOf(mlist.get(position).getIs_friends())){
+		/*			if(Boolean.valueOf(mlist.get(position).getIs_friends())){
 						PersonpageUtil.getInstance().setPersonpagetype(Constant.FRIENDSPAGE);
 					}else{
 						PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
@@ -86,6 +86,8 @@ public class FriendsAdapter extends FatherAdater {
 					PersonpageUtil.getInstance().setPersonid(mlist.get(position).getUserid());			
 					PersonpageUtil.getInstance().setHuanxinId(mlist.get(position).getHuangxin_username());
 					PersonpageUtil.getInstance().setPersonname(mlist.get(position).getUsername());
+					*/
+					PersonpageUtil.getInstance().setUser(mlist.get(position));
 					Intent intent=new Intent(mContext,PersonalPageActivity.class);
 					mContext.startActivity(intent);
 				}else{

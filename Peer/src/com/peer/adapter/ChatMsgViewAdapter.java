@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.http.ContentCodingType;
 
+import cn.jpush.android.api.c;
+
 import com.peer.R;
 import com.peer.activitymain.ChatRoomActivity;
 import com.peer.activitymain.PersonalPageActivity;
@@ -11,6 +13,9 @@ import com.peer.client.User;
 import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
 import com.peer.entity.ChatMsgEntity;
+import com.peer.localDB.LocalStorage;
+import com.peer.localDB.UserDao;
+import com.peer.localDBbean.UserBean;
 import com.peer.util.ChatRoomTypeUtil;
 import com.peer.util.PersonpageUtil;
 import com.peer.widgetutil.LoadImageUtil;
@@ -112,6 +117,11 @@ public class ChatMsgViewAdapter extends FatherAdater {
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
+		if(position==1){//在第一次加载item时取得自己的好友列表（避免多次从server获取），以后用来判断某个用户是不是自己的好友
+			FriendsTask task=new FriendsTask();
+			task.execute();
+		}
+		
 			LoadImageUtil.imageLoader.displayImage(entity.getImage(), viewHolder.heapic, LoadImageUtil.options);
 			viewHolder.tvSendTime.setText(entity.getDate());			
 			viewHolder.tvContent.setText(entity.getMessage());
@@ -123,28 +133,31 @@ public class ChatMsgViewAdapter extends FatherAdater {
 					// TODO Auto-generated method stub
 					if(checkNetworkState()){
 						if(isComMsg==0){
-							PersonpageUtil.getInstance().setPersonid(userId);
-							if(list==null){
-								FriendsTask task=new FriendsTask();
-								task.execute();
+							if(list==null||list.isEmpty()){
+								User user=new User();
+								user.setUserid(userId);
+								user.setIs_friends(false);
+								PersonpageUtil.getInstance().setUser(user);
 							}else{
 								for(int i=0;i<list.size();i++){
-									if(PersonpageUtil.getInstance().getPersonid().equals(list.get(i).getUserid())){
-										PersonpageUtil.getInstance().setPersonpagetype(Constant.FRIENDSPAGE);
-										break;
+									if(userId.equals(list.get(i).getUserid())){
+										 list.get(i).setIs_friends(true);					 
+										 PersonpageUtil.getInstance().setUser(list.get(i));
+										 break;
 									}else{
-										PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
+										User user=new User();
+										user.setUserid(userId);
+										user.setIs_friends(false);
+										PersonpageUtil.getInstance().setUser(user);
 									}
 								}
+								PersonpageUtil.getInstance().setShouldRefresh(true);
 								Intent topersonalpage=new Intent(context,PersonalPageActivity.class);
 								context.startActivity(topersonalpage);
 							}
 							
 						}else{
-							PersonpageUtil.getInstance().setPersonpagetype(Constant.OWNPAGE);
-							PersonpageUtil.getInstance().setPersonid(userId);
-							Intent topersonalpage=new Intent(context,PersonalPageActivity.class);
-							context.startActivity(topersonalpage);
+							ToMypersonalpage(context);
 						}	
 					}else{
 						Toast.makeText(context, context.getResources().getString(R.string.Broken_network_prompt), 0).show();
@@ -170,26 +183,41 @@ public class ChatMsgViewAdapter extends FatherAdater {
 		@Override
 		protected void onPostExecute(List<User> result) {
 			// TODO Auto-generated method stub
-			if(!result.isEmpty()){
-				for(int i=0;i<result.size();i++){
-					if(PersonpageUtil.getInstance().getPersonid().equals(result.get(i).getUserid())){
-						PersonpageUtil.getInstance().setPersonpagetype(Constant.FRIENDSPAGE);
-						break;
-					}else{
-						PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
-					}
-				}
-				Intent topersonalpage=new Intent(context,PersonalPageActivity.class);
-				context.startActivity(topersonalpage);
-			}else{
-				PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
-				Intent topersonalpage=new Intent(context,PersonalPageActivity.class);
-				context.startActivity(topersonalpage);
-				
-			}
 		}
 	}
-
+	private void ToMypersonalpage(Context context) {
+		// TODO Auto-generated method stub
+		String userid=null,huangxin_username=null;
+		List<String> labels=null;
+		try {
+			userid=PeerUI.getInstance().getISessionManager().getUserId();
+			huangxin_username=PeerUI.getInstance().getISessionManager().getHuanxingUser();
+			labels=PeerUI.getInstance().getISessionManager().getLabels();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+/*
+//		PersonpageUtil.getInstance().setPersonpagetype(Constant.OWNPAGE);
+//		PersonpageUtil.getInstance().setPersonid(userid);
+*/			
+		LocalStorage.getString(context, Constant.EMAIL);
+		UserDao userdao=new UserDao(context);
+		UserBean userbean=userdao.findOne(LocalStorage.getString(context, Constant.EMAIL));
+		User user=new User();
+		user.setEmail(userbean.getEmail());
+		user.setBirthday(userbean.getAge());
+		user.setCity(userbean.getCity());
+		user.setSex(userbean.getSex());
+		user.setImage(userbean.getImage());
+		user.setUsername(userbean.getNikename());
+		user.setUserid(userid);
+		user.setHuangxin_username(huangxin_username);
+		user.setLabels(labels);
+		PersonpageUtil.getInstance().setUser(user);
+		Intent topersonalpage=new Intent(context,PersonalPageActivity.class);
+		context.startActivity(topersonalpage);
+	}
 	static class ViewHolder {
 		public ImageView heapic;
 		public TextView tvSendTime;

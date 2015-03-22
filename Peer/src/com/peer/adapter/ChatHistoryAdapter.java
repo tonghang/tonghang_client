@@ -115,12 +115,12 @@ public class ChatHistoryAdapter extends FatherAdater {
 				if(!checkNetworkState()){
 					Toast.makeText(mContext, mContext.getResources().getString(R.string.Broken_network_prompt), 0).show();
 				}else{	
-					bd.hide();
-					ChatRoomTypeUtil.getInstance().setUserId(user.getUserid());
+					bd.hide();					
 					ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.SINGLECHAT);
-					ChatRoomTypeUtil.getInstance().setTitle(user.getUsername());
+/*					ChatRoomTypeUtil.getInstance().setTitle(user.getUsername());
+					ChatRoomTypeUtil.getInstance().setUserId(user.getUserid());
 					ChatRoomTypeUtil.getInstance().setHuanxingId(user.getHuangxin_username());
-					
+*/					ChatRoomTypeUtil.getInstance().setUser(user);
 					Intent intent=new Intent(mContext,ChatRoomActivity.class);
 					mContext.startActivity(intent);
 				}
@@ -149,11 +149,11 @@ public class ChatHistoryAdapter extends FatherAdater {
 					Toast.makeText(mContext, mContext.getResources().getString(R.string.Broken_network_prompt), 0).show();
 				}else{							
 					ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.MULTICHAT);	
-					ChatRoomTypeUtil.getInstance().setHuanxingId(topic.getHuangxin_group_id());
+/*					ChatRoomTypeUtil.getInstance().setHuanxingId(topic.getHuangxin_group_id());
 					ChatRoomTypeUtil.getInstance().setTitle(topic.getLabel_name());
 					ChatRoomTypeUtil.getInstance().setTheme(topic.getSubject());
 					ChatRoomTypeUtil.getInstance().setTopicId(topic.getTopicid());
-					
+*/					
 					User user=(User)userlist.get(position).get(Constant.USER);
 					String ownerid=null;
 					try {
@@ -167,7 +167,8 @@ public class ChatHistoryAdapter extends FatherAdater {
 					}else{
 						ChatRoomTypeUtil.getInstance().setIsowner(false);
 					}
-					ChatRoomTypeUtil.getInstance().setUser(user);	
+					topic.setUser(user);
+					ChatRoomTypeUtil.getInstance().setTopic(topic);	
 					Intent intent=new Intent(mContext,ChatRoomActivity.class);
 					mContext.startActivity(intent);
 				}

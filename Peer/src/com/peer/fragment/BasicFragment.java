@@ -1,5 +1,7 @@
 package com.peer.fragment;
 
+import java.util.List;
+
 import com.peer.R;
 import com.peer.activity.MyAcountActivity;
 import com.peer.activity.MySkillActivity;
@@ -9,8 +11,12 @@ import com.peer.activitymain.CreatTopicActivity;
 import com.peer.activitymain.NewFriendsActivity;
 import com.peer.activitymain.PersonalPageActivity;
 import com.peer.activitymain.SearchActivity;
+import com.peer.client.User;
 import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
+import com.peer.localDB.LocalStorage;
+import com.peer.localDB.UserDao;
+import com.peer.localDBbean.UserBean;
 import com.peer.util.PersonpageUtil;
 
 import android.content.Context;
@@ -57,22 +63,45 @@ public class BasicFragment extends Fragment implements OnClickListener{
 			Intent setting=new Intent(getActivity(),SettingActivity.class);
 			startActivity(setting);
 			break;
-		case R.id.rl_ponseralpage:	
-			String userid=null;
-			try {
-				userid=PeerUI.getInstance().getISessionManager().getUserId();
-			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			PersonpageUtil.getInstance().setPersonpagetype(Constant.OWNPAGE);
-			PersonpageUtil.getInstance().setPersonid(userid);
-			Intent topersonalpage=new Intent(getActivity(),PersonalPageActivity.class);
-			startActivity(topersonalpage);
+		case R.id.rl_ponseralpage:
+			ToMypersonalpage();			
 			break;
 		default:
 			break;	
 		}
+	}
+	private void ToMypersonalpage() {
+		// TODO Auto-generated method stub
+		String userid=null,huangxin_username=null;
+		List<String> labels=null;
+		try {
+			userid=PeerUI.getInstance().getISessionManager().getUserId();
+			huangxin_username=PeerUI.getInstance().getISessionManager().getHuanxingUser();
+			labels=PeerUI.getInstance().getISessionManager().getLabels();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+/*
+//		PersonpageUtil.getInstance().setPersonpagetype(Constant.OWNPAGE);
+//		PersonpageUtil.getInstance().setPersonid(userid);
+*/			
+		LocalStorage.getString(getActivity(), Constant.EMAIL);
+		UserDao userdao=new UserDao(getActivity());
+		UserBean userbean=userdao.findOne(LocalStorage.getString(getActivity(), Constant.EMAIL));
+		User user=new User();
+		user.setEmail(userbean.getEmail());
+		user.setBirthday(userbean.getAge());
+		user.setCity(userbean.getCity());
+		user.setSex(userbean.getSex());
+		user.setImage(userbean.getImage());
+		user.setUsername(userbean.getNikename());
+		user.setUserid(userid);
+		user.setHuangxin_username(huangxin_username);
+		user.setLabels(labels);
+		PersonpageUtil.getInstance().setUser(user);
+		Intent topersonalpage=new Intent(getActivity(),PersonalPageActivity.class);
+		startActivity(topersonalpage);
 	}
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -1,5 +1,6 @@
 package com.peer.util;
 
+import com.peer.client.Topic;
 import com.peer.client.User;
 
 /**
@@ -9,6 +10,7 @@ import com.peer.client.User;
  */
 public class ChatRoomTypeUtil {
 	private int chatroomtype;
+	/*
 	private String topicId;
 	private String title;
 	private String userId;
@@ -16,7 +18,9 @@ public class ChatRoomTypeUtil {
 	private String Image;
 	private String theme;
 	private String nike;
+	*/
 	private User user;
+	private Topic topic;
 	private boolean isowner;
 	private static ChatRoomTypeUtil chatroomtypeutil;
 	private ChatRoomTypeUtil(){}
@@ -32,6 +36,7 @@ public class ChatRoomTypeUtil {
 	public void setChatroomtype(int chatroomtype) {
 		this.chatroomtype = chatroomtype;
 	}
+	/*
 	public String getUserId() {
 		return userId;
 	}
@@ -63,12 +68,7 @@ public class ChatRoomTypeUtil {
 	public void setHuanxingId(String huanxingId) {
 		this.huanxingId = huanxingId;
 	}
-	public User getUser() {
-		return user;
-	}
-	public void setUser(User user) {
-		this.user = user;
-	}
+	
 	public String getTitle() {
 		return title;
 	}
@@ -81,11 +81,24 @@ public class ChatRoomTypeUtil {
 	public void setTopicId(String topicId) {
 		this.topicId = topicId;
 	}
+	*/
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
 	public boolean isIsowner() {
 		return isowner;
 	}
 	public void setIsowner(boolean isowner) {
 		this.isowner = isowner;
+	}
+	public Topic getTopic() {
+		return topic;
+	}
+	public void setTopic(Topic topic) {
+		this.topic = topic;
 	}
 
 }

@@ -40,6 +40,8 @@ interface ISessionManager {
     List<com.peer.client.Topic> searchTopicBykey(String key,int page,ISessionListener callback);
     
     List<com.peer.client.User> searchUsersByNickName(String username,int page,ISessionListener callback);
+    
+    List<com.peer.client.User> searchUsersByLabel(String labename,int page,ISessionListener callback);
  	
  	List recommendByPage(ISessionListener callback);
  	

@@ -126,7 +126,7 @@ public class MySkillActivity extends BasicActivity {
                     	   }
                     	                     
                        }else{
-                    	   ShowMessage("请输入秀场名");
+                    	   ShowMessage("请输入行业标签名");
                        }                       
                     }
                 });

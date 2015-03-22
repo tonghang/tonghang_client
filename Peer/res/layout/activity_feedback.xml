@@ -27,26 +27,26 @@
 		    android:gravity="top"
         	android:layout_marginLeft="8dp"
 	    	android:layout_marginRight="8dp"
-	    	android:layout_marginBottom="80dp"
+	    	android:layout_marginBottom="16dp"
 		    android:textColor="@color/black"    
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
-		    android:background="@drawable/border"	    
+		    android:background="@drawable/border"	
+		    android:layout_above="@+id/commite_feedback"    
 	    />
 
 		<Button
 		    android:id="@+id/commite_feedback"
 		    android:layout_width="match_parent"
-		    android:layout_marginLeft="8dp"
-		    android:layout_marginRight="8dp"
 		    android:layout_height="40dp"
-		    android:layout_marginBottom="24dp"
+		    android:layout_alignLeft="@+id/et_feedback_content"
 		    android:layout_alignParentBottom="true"
-		    android:layout_centerHorizontal="true"
-		    android:textSize="@dimen/textsize_middle"
+		    android:layout_alignRight="@+id/et_feedback_content"
+		    android:layout_marginBottom="240dp"
 		    android:background="@drawable/selector_back"
+		    android:text="提交"
 		    android:textColor="@color/white"
-		    android:text="提交" />
+		    android:textSize="@dimen/textsize_middle" />
 
 		</RelativeLayout>
 		</LinearLayout>

@@ -165,7 +165,7 @@ public class CreatTopicActivity extends BasicActivity {
 	}
 	public void ShareDialog(){
 		new AlertDialog.Builder(this).setTitle(getResources().getString(R.string.sharedailog))  
-		.setMessage(getResources().getString(R.string.isshare)) .setNegativeButton(getResources().getString(R.string.sure), new DialogInterface.OnClickListener() {
+		.setMessage(getResources().getString(R.string.isshare)) .setNegativeButton(getResources().getString(R.string.notshare), new DialogInterface.OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialoginterface, int i) {
@@ -230,19 +230,20 @@ public class CreatTopicActivity extends BasicActivity {
 		protected void onPostExecute(Topic topicresult) {
 			// TODO Auto-generated method stub			
 			ChatRoomTypeUtil.getInstance().setChatroomtype(Constant.MULTICHAT);				
-			ChatRoomTypeUtil.getInstance().setTitle(topicresult.getLabel_name());
+/*			ChatRoomTypeUtil.getInstance().setTitle(topicresult.getLabel_name());
 			ChatRoomTypeUtil.getInstance().setTheme(topicresult.getSubject());
 			ChatRoomTypeUtil.getInstance().setHuanxingId(topicresult.getHuangxin_group_id());
 			ChatRoomTypeUtil.getInstance().setTopicId(topicresult.getTopicid());
-			User u=new User();
+*/			User u=new User();
 			try {
 				u.setImage(PeerUI.getInstance().getISessionManager().getImagUrL());
 				u.setUsername(PeerUI.getInstance().getISessionManager().getUserName());
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}			
-			ChatRoomTypeUtil.getInstance().setUser(u);	
+			}
+			topicresult.setUser(u);
+			ChatRoomTypeUtil.getInstance().setTopic(topicresult);	
 			
 			Intent intent=new Intent(CreatTopicActivity.this,ChatRoomActivity.class);
 			startActivity(intent);

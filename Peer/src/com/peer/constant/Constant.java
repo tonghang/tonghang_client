@@ -10,6 +10,8 @@ public interface Constant {
 	public String AGREED="agreed";
 	
 	public String PENDING="pending";
+	
+	public String ISFLOAT="isfloat";
 		
 	/*LocalStorage key*/
 	public String EMAIL="email";	
@@ -23,10 +25,6 @@ public interface Constant {
 	public String TOPIC="topic";
 	public String TIME="time";
 	
-	/*personalpage type*/
-	public int OWNPAGE=1;
-	public int FRIENDSPAGE=2;
-	public int UNFRIENDSPAGE=3;
 	/*chatroom type*/
 	public int SINGLECHAT=1;
 	public int MULTICHAT=2;
@@ -41,6 +39,7 @@ public interface Constant {
 	public String TOPICBYTOPIC="topicbytopic";
 	public String LABELUSER="labeluser";
 	public String USERBYNIKE="userbynike";
+	public String USERBYLABEL="userbylabel";
 	public String TOPICLIST="topiclist";
 	
 	/*web server*/

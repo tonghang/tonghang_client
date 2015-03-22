@@ -148,8 +148,10 @@ public class NewfriendsAdapter extends FatherAdater {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				if(checkNetworkState()){
-					PersonpageUtil.getInstance().setPersonid(mlist.get(position).getUserid());	
-					PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
+	/*				PersonpageUtil.getInstance().setPersonid(mlist.get(position).getUserid());	
+					PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);			
+					*/
+					PersonpageUtil.getInstance().setUser(mlist.get(position));
 					Intent intent=new Intent(mContext,PersonalPageActivity.class);
 					mContext.startActivity(intent);
 				}else{
