@@ -432,7 +432,7 @@ public class ChatRoomActivity extends BasicActivity {
 		if(ChatRoomTypeUtil.getInstance().isIsowner()&&ChatRoomTypeUtil.getInstance().getChatroomtype()==Constant.MULTICHAT){
 			if(!LocalStorage.getBoolean(ChatRoomActivity.this, Constant.ISFLOAT)){
 				Intent intentfloat = new Intent(ChatRoomActivity.this, FxService.class);				
-				User u=ChatRoomTypeUtil.getInstance().getUser();			
+				User u=ChatRoomTypeUtil.getInstance().getTopic().getUser();			
 				intentfloat.putExtra(Constant.IMAGE, u.getImage());
 				intentfloat.putExtra(Constant.OWNERNIKE, u.getUsername());
 				intentfloat.putExtra(Constant.THEME, ChatRoomTypeUtil.getInstance().getTopic().getSubject());			

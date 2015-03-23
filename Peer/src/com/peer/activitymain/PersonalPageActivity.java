@@ -55,7 +55,33 @@ public class PersonalPageActivity extends BasicActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_personalpage);
 		init();
-		LoadImageUtil.initImageLoader(this);		
+		LoadImageUtil.initImageLoader(this);
+		if(PersonpageUtil.getInstance().isShouldRefresh()){
+			//当传递过来的用户数据不全时，根据用户ID去获取完整的用户信息
+			PersonalTask task=new PersonalTask();
+			task.execute(PersonpageUtil.getInstance().getUser().getUserid());
+		}else{
+			User user=PersonpageUtil.getInstance().getUser();		
+			userpage=user;
+			LoadImageUtil.imageLoader.displayImage(user.getImage(), personhead, LoadImageUtil.options);				
+			nikename.setText(user.getUsername());
+			acount.setText(user.getEmail());
+			city.setText(user.getCity());
+			sex.setText(user.getSex());
+			for(int i=0;i<user.getLabels().size();i++){
+				String tag=user.getLabels().get(i);					
+
+				skill=(RadioButton) getLayoutInflater().inflate(R.layout.skill, tagContainer, false);
+				skill.setHeight((int)getResources().getDimension(R.dimen.hight));
+				skill.setTextSize(20);
+				skill.setTextColor(getResources().getColor(R.color.white));
+				int pading=(int)getResources().getDimension(R.dimen.pading);
+				skill.setText(tag);
+				skill.setTag(""+i);
+				tagContainer.addView(skill);
+			}
+			ViewType();
+		}
 	}
 	private void init() {
 		// TODO Auto-generated method stub	
@@ -93,39 +119,12 @@ public class PersonalPageActivity extends BasicActivity {
 				Intent intent=new Intent(PersonalPageActivity.this, SearchResultActivity.class);
 				startActivity(intent);
 			}
-		});
-			
+		});		
 	}
 	@Override
 	protected void onStart() {
 		// TODO Auto-generated method stub
-		super.onStart();
-		if(PersonpageUtil.getInstance().isShouldRefresh()){
-			//当传递过来的用户数据不全时，根据用户ID去获取完整的用户信息
-			PersonalTask task=new PersonalTask();
-			task.execute(PersonpageUtil.getInstance().getUser().getUserid());
-		}else{
-			User user=PersonpageUtil.getInstance().getUser();		
-			userpage=user;
-			LoadImageUtil.imageLoader.displayImage(user.getImage(), personhead, LoadImageUtil.options);				
-			nikename.setText(user.getUsername());
-			acount.setText(user.getEmail());
-			city.setText(user.getCity());
-			sex.setText(user.getSex());
-			for(int i=0;i<user.getLabels().size();i++){
-				String tag=user.getLabels().get(i);					
-
-				skill=(RadioButton) getLayoutInflater().inflate(R.layout.skill, tagContainer, false);
-				skill.setHeight((int)getResources().getDimension(R.dimen.hight));
-				skill.setTextSize(20);
-				skill.setTextColor(getResources().getColor(R.color.white));
-				int pading=(int)getResources().getDimension(R.dimen.pading);
-				skill.setText(tag);
-				skill.setTag(""+i);
-				tagContainer.addView(skill);
-			}
-			ViewType();
-		}
+		super.onStart();		
 	}
 	private void ViewType() {
 		// TODO Auto-generated method stub			
