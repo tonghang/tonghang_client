@@ -16,6 +16,8 @@ import com.peer.client.ui.PeerUI;
 import com.peer.constant.Constant;
 import com.peer.localDB.LocalStorage;
 import com.peer.localDB.UserDao;
+import com.umeng.analytics.AnalyticsConfig;
+import com.umeng.analytics.MobclickAgent;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -45,7 +47,10 @@ public class SplashActivity extends BasicActivity {
 		AlphaAnimation animation = new AlphaAnimation(0.3f, 1.0f);
 		animation.setDuration(2000);
 		rootLayout.startAnimation(animation);
-
+		//友盟统计 发送策略
+		MobclickAgent.updateOnlineConfig( this );
+		//友盟统计 数据加密
+		AnalyticsConfig.enableEncrypt(true);
 	}
 	
 	@Override

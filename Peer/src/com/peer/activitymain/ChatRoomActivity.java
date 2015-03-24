@@ -57,6 +57,7 @@ import com.peer.util.ManagerActivity;
 import com.peer.util.PersonpageUtil;
 import com.peer.widgetutil.FxService;
 import com.peer.widgetutil.LoadImageUtil;
+import com.umeng.analytics.MobclickAgent;
 
 public class ChatRoomActivity extends BasicActivity {
 	private List<User> list;
@@ -78,7 +79,7 @@ public class ChatRoomActivity extends BasicActivity {
 	private NewMessageBroadcastReceiver receiver;
 	private InputMethodManager manager;
 	private List<Map> Mulmlist;
-	
+	private String mPageName="ChatRoom";
 	private String imagurl=null;
 	private String userid=null;
 	@Override
@@ -93,7 +94,18 @@ public class ChatRoomActivity extends BasicActivity {
 		//单聊时ChatRoomTypeUtil.getInstance().getUser();toChatUsername=ChatRoomTypeUtil.getInstance().getHuanxingId();
 		//群聊时ChatRoomTypeUtil.getInstance().getTopic();toChatUsername=ChatRoomTypeUtil.getInstance().getHuanxingId();
 	}	
-	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		MobclickAgent.onPageStart(mPageName);
+	}
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		MobclickAgent.onPageEnd(mPageName);
+	}
 	private void init() {
 		// TODO Auto-generated method stub
 		try {
@@ -173,6 +185,7 @@ public class ChatRoomActivity extends BasicActivity {
 	private void roomType() {
 		// TODO Auto-generated method stub
 		if(ChatRoomTypeUtil.getInstance().getChatroomtype()==Constant.MULTICHAT){			
+			toChatUsername=ChatRoomTypeUtil.getInstance().getTopic().getHuangxin_group_id();
 			rl_owner.setVisibility(View.VISIBLE);
 			if(!ChatRoomTypeUtil.getInstance().isIsowner()){
 				titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.lookformember), R.color.white));			
@@ -208,6 +221,7 @@ public class ChatRoomActivity extends BasicActivity {
 			conversation = EMChatManager.getInstance().getConversation(ChatRoomTypeUtil.getInstance().getTopic().getHuangxin_group_id());
 			conversation.resetUnreadMsgCount();		
 		}else if(ChatRoomTypeUtil.getInstance().getChatroomtype()==Constant.SINGLECHAT){
+			toChatUsername=ChatRoomTypeUtil.getInstance().getUser().getHuangxin_username();
 			rl_owner.setVisibility(View.GONE);
 			tv_tagname.setText(ChatRoomTypeUtil.getInstance().getUser().getUsername());
 			titlePopup.addAction(new ActionItem(this, getResources().getString(R.string.deletemes), R.color.white));
@@ -283,8 +297,7 @@ public class ChatRoomActivity extends BasicActivity {
 			}else{
 				finish();
 			}			
-			break;
-		
+			break;		
 		case R.id.tv_share:
 			showShare();			
 			break;

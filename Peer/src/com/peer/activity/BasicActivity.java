@@ -28,6 +28,7 @@ import com.peer.util.HomeWatcher;
 import com.peer.util.ManagerActivity;
 import com.peer.util.OnHomePressedListener;
 import com.peer.widgetutil.FxService;
+import com.umeng.analytics.MobclickAgent;
 /**
  * all activity extends this activity
  * @author Concoon-break
@@ -52,7 +53,13 @@ public class BasicActivity extends FragmentActivity implements OnClickListener{
 		// TODO Auto-generated method stub
 		super.onResume();
 		EMChatManager.getInstance().activityResumed();
-	       
+		MobclickAgent.onResume(this);  //友盟统计代码 
+	}
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		MobclickAgent.onPause(this);//友盟统计代码
 	}
 	@Override
 	protected void onDestroy() {

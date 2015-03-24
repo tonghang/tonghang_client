@@ -32,6 +32,7 @@ import com.peer.fragment.HomeFragment;
 import com.peer.fragment.MyFragment;
 import com.peer.widgetutil.FxService;
 import com.readystatesoftware.viewbadger.BadgeView;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 
 
@@ -51,6 +52,8 @@ public class MainActivity extends BasicActivity{
 	private NewMessageBroadcastReceiver msgReceiver;
 	private BadgeView unredmsg,bdnewfriendsnum;
 	public int intnewfriendsnum;
+	
+	private String mPageName="MainActivity";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -180,10 +183,17 @@ public class MainActivity extends BasicActivity{
 //		unregisterReceiver(msgReceiver);
 	}
 	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		MobclickAgent.onPageEnd(mPageName);
+	}
+	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
 		updateUnreadLabel();
+		MobclickAgent.onPageStart(mPageName);
 		new Thread(new Runnable() {
 			
 			@Override
