@@ -70,7 +70,7 @@ public class easemobchatImp implements IM{
 		message.setAttribute(Constant.IMAGEURL, imageUrl);
 		//自定义扩展消息，用于携带用户Id
 		message.setAttribute(Constant.USERID, userid);
-		
+		//自定义的扩展消息，用户携带用户昵称
 		// 设置要发给谁,用户username或者群聊groupid
 		message.setReceipt(targetId);		
 		try {

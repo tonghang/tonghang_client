@@ -94,12 +94,13 @@ public class ChatMsgViewAdapter extends FatherAdater {
 				viewHolder = new ViewHolder();
 				viewHolder.tvSendTime = (TextView) convertView
 						.findViewById(R.id.tv_sendtime);
-		
+				viewHolder.nick=(TextView)convertView.findViewById(R.id.nickname);
 				viewHolder.tvContent = (TextView) convertView
 						.findViewById(R.id.tv_chatcontent);
 				viewHolder.tvContent.setTextColor(context.getResources().getColor(R.color.white));
 				viewHolder.heapic=(ImageView)convertView.findViewById(R.id.iv_ownerhead);
 				viewHolder.isComMsg = isComMsg;
+				
 				convertView.setTag(viewHolder);
 			} else if(isComMsg==1){
 				convertView = mInflater.inflate(
@@ -107,7 +108,8 @@ public class ChatMsgViewAdapter extends FatherAdater {
 				viewHolder = new ViewHolder();
 				viewHolder.tvSendTime = (TextView) convertView
 						.findViewById(R.id.tv_sendtime);
-				
+				viewHolder.nick=(TextView)convertView.findViewById(R.id.nickname);
+				viewHolder.nick.setVisibility(View.GONE);
 				viewHolder.tvContent = (TextView) convertView
 						.findViewById(R.id.tv_chatcontent);
 				viewHolder.heapic=(ImageView)convertView.findViewById(R.id.iv_userhead);
@@ -125,6 +127,9 @@ public class ChatMsgViewAdapter extends FatherAdater {
 			LoadImageUtil.imageLoader.displayImage(entity.getImage(), viewHolder.heapic, LoadImageUtil.options);
 			viewHolder.tvSendTime.setText(entity.getDate());			
 			viewHolder.tvContent.setText(entity.getMessage());
+			if(entity.getName()!=null){
+				viewHolder.nick.setText(entity.getName());
+			}		
 			final String userId=entity.getUserId();
 			viewHolder.heapic.setOnClickListener(new View.OnClickListener() {
 				
@@ -220,6 +225,7 @@ public class ChatMsgViewAdapter extends FatherAdater {
 	}
 	static class ViewHolder {
 		public ImageView heapic;
+		public TextView nick;
 		public TextView tvSendTime;
 		public TextView tvContent;
 		public int isComMsg;
