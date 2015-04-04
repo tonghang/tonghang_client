@@ -42,18 +42,17 @@
             android:orientation="vertical"
 		    >
         <TextView
-            android:paddingLeft="8dp"
+     	     android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:layout_marginTop="6dp"
             android:paddingTop="8dp"
-            android:id="@+id/searchtag"
+     	    android:id="@+id/search_user"
+     	    android:textSize="@dimen/textsize_large"    	    
+     	    android:textColor="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:text="搜用户"
             android:clickable="true"
-            android:text="搜话题"
-            android:textColor="@color/white"
-            android:textSize="@dimen/textsize_large" 
-            
             />
 
      </LinearLayout>
@@ -63,19 +62,20 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
 		    >
-     	 <TextView
-     	     android:paddingLeft="8dp"
+		    <TextView
+            android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:layout_marginTop="6dp"
             android:paddingTop="8dp"
-     	    android:id="@+id/search_user"
-     	    android:textSize="@dimen/textsize_large"
-     	    android:textColor="@color/seachbluetext"
+            android:id="@+id/searchtag"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="搜用户"
             android:clickable="true"
+            android:text="搜话题"
+            android:textColor="@color/seachbluetext"
+            android:textSize="@dimen/textsize_large"           
             />
+     	 
      	 </LinearLayout>
     </LinearLayout>
             <Button

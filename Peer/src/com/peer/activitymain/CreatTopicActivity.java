@@ -1,9 +1,7 @@
 package com.peer.activitymain;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -22,22 +20,14 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.RadioGroup.OnCheckedChangeListener;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
-import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
-import cn.sharesdk.onekeyshare.ShareContentCustomizeCallback;
-import cn.sharesdk.wechat.friends.Wechat;
 import cn.sharesdk.wechat.moments.WechatMoments;
-import cn.sharesdk.wechat.moments.WechatMoments.ShareParams;
 
 import com.peer.R;
-import com.peer.IMimplements.easemobchatImp;
 import com.peer.activity.BasicActivity;
-import com.peer.activity.LoginActivity;
-import com.peer.activity.SettingActivity;
 import com.peer.client.Topic;
 import com.peer.client.User;
 import com.peer.client.ui.PeerUI;
@@ -45,6 +35,7 @@ import com.peer.constant.Constant;
 import com.peer.util.AutoWrapRadioGroup;
 import com.peer.util.ChatRoomTypeUtil;
 import com.peer.util.ManagerActivity;
+import com.peer.util.SdCardUtil;
 
 public class CreatTopicActivity extends BasicActivity {
 	private TextView title;
@@ -177,10 +168,13 @@ public class CreatTopicActivity extends BasicActivity {
 		 .setPositiveButton(getResources().getString(R.string.sharesure), new DialogInterface.OnClickListener(){
              public void onClick(DialogInterface dialoginterface, int i){            	 
               
-              OnekeyShare oks = new OnekeyShare();
+            OnekeyShare oks = new OnekeyShare();
       		oks.setNotification(R.drawable.logo, CreatTopicActivity.this.getString(R.string.app_name));
       		//不同平台的分享参数，请看文档		
-      		oks.setText("我在“同行(hang)”APP中的"+selectlabel+"行业中，创建了"+topic.getText().toString()+"话题。想参与我的话题讨论的同行们，想认识更多同行来拓展人脉的职场精英们，请下载“同行(hang)”APP，和你的同行交流商业信（ji）息（mi）和行业新(qian)动(gui)态(ze) 。下载地址：http://114.215.143.83:3000/download/peer.apk");
+//      		oks.setImagePath(SdCardUtil.getInstance(CreatTopicActivity.this).getLogoPath());
+      		
+      		oks.setText("我在"+selectlabel+"行业中，创建了"+topic.getText().toString()+"话题。想参与我的话题讨论的同行们，请下载同行(hang)APP。 ");
+      		
       		oks.setSilent(true);
       		oks.setDialogMode();
       		oks.disableSSOWhenAuthorize();

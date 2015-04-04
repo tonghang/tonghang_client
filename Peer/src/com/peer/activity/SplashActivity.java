@@ -30,7 +30,7 @@ import android.widget.TextView;
 
 public class SplashActivity extends BasicActivity {
 	private LinearLayout rootLayout;
-	private TextView versionText;
+//	private TextView versionText;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -42,7 +42,7 @@ public class SplashActivity extends BasicActivity {
 		
 		
 		rootLayout = (LinearLayout) findViewById(R.id.splash_root);
-		versionText = (TextView) findViewById(R.id.tv_version);
+//		versionText = (TextView) findViewById(R.id.tv_version);
 
 		AlphaAnimation animation = new AlphaAnimation(0.3f, 1.0f);
 		animation.setDuration(2000);

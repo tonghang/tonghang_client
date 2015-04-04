@@ -57,34 +57,38 @@ public class SessionManager extends ISessionManager.Stub {
 			result =DataUtil.postEntity(Constant.WEB_SERVER_ADDRESS + "/login.json"
 					,parts, Map.class);						
 			Map body = result.getBody();			
-			token=(String) body.get("token");
-			headers.add("x-token", token);
+			
 			if (result.getStatusCode() == HttpStatus.OK) {
-				code=0;
-				user=new User();
-				Map u=(Map) body.get("user");	
-				huanxin_user=(String)u.get("huanxin_username");
-				String id=String.valueOf(u.get("id"));
-				userid=id;
-				user.setUserid(id);
-				imageURL=Constant.WEB_SERVER_ADDRESS+(String)u.get("image");
-				user.setHuangxin_username(huanxin_user);
-				user.setEmail(imageURL);
-				user.setCity((String)u.get("city"));
-				user.setBirthday((String)u.get("birth"));
-				user.setImage(Constant.WEB_SERVER_ADDRESS+(String)u.get("image"));
-				user.setSex((String)u.get("sex"));
-				username=(String)u.get("username");
-				user.setUsername(username);
-				labels=(List) u.get("labels");
-				user.setLabels(labels);				
-				message = Constant.CALLBACKSUCCESS;
+				if(body.get("code").equals("fail")){
+					code=-1;
+					message=(String)body.get("message");
+				}else{
+					token=(String) body.get("token");
+					headers.add("x-token", token);
+					code=0;
+					user=new User();
+					Map u=(Map) body.get("user");	
+					huanxin_user=(String)u.get("huanxin_username");
+					String id=String.valueOf(u.get("id"));
+					userid=id;
+					user.setUserid(id);
+					imageURL=Constant.WEB_SERVER_ADDRESS+(String)u.get("image");
+					user.setHuangxin_username(huanxin_user);
+					user.setEmail(imageURL);
+					user.setCity((String)u.get("city"));
+					user.setBirthday((String)u.get("birth"));
+					user.setImage(Constant.WEB_SERVER_ADDRESS+(String)u.get("image"));
+					user.setSex((String)u.get("sex"));
+					username=(String)u.get("username");
+					user.setUsername(username);
+					labels=(List) u.get("labels");
+					user.setLabels(labels);				
+					message = Constant.CALLBACKSUCCESS;
+				}				
 			} else {
 				message = Constant.CALLBACKFAIL;
 			}
-			if(result.getStatusCode()==HttpStatus.UNAUTHORIZED){
-				message = Constant.CALLBACKFAIL;
-			}
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			message = Constant.CALLBACKFAIL;

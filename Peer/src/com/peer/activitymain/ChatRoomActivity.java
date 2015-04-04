@@ -55,6 +55,7 @@ import com.peer.titlepopwindow.TitlePopup.OnItemOnClickListener;
 import com.peer.util.ChatRoomTypeUtil;
 import com.peer.util.ManagerActivity;
 import com.peer.util.PersonpageUtil;
+import com.peer.util.SdCardUtil;
 import com.peer.widgetutil.FxService;
 import com.peer.widgetutil.LoadImageUtil;
 import com.umeng.analytics.MobclickAgent;
@@ -327,15 +328,16 @@ public class ChatRoomActivity extends BasicActivity {
 //		  oks.disableSSOWhenAuthorize(); 
 
 		 // 分享时Notification的图标和文字
-		  oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
+		  oks.setNotification(R.drawable.logo, getString(R.string.app_name));
 		  // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
 		  oks.setTitle(getString(R.string.share));
 		  // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
 		  oks.setTitleUrl("http://sharesdk.cn");
 		  // text是分享文本，所有平台都需要这个字段
-		  oks.setText("我参与了"+tv_theme.getText().toString()+"的讨论。各位同行们：来“同行”APP吧，我们一起交流行业信息，没准还能找到更好的工作。下载地址：http://114.215.143.83:3000/download/peer.apk");
+		  oks.setText("我参与了"+tv_theme.getText().toString()+"的讨论。各位同行们：来“同行”APP吧，我们一起交流行业信息，没准还能找到更好的工作。");
 		  // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-		  oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
+		 // oks.setImagePath("file:///android_asset/logo.png");//确保SDcard下面存在此张图片
+//		  oks.setImagePath(SdCardUtil.getInstance(ChatRoomActivity.this).getLogoPath());
 		  // url仅在微信（包括好友和朋友圈）中使用
 		  oks.setUrl("http://sharesdk.cn");
 		  // comment是我对这条分享的评论，仅在人人网和QQ空间使用

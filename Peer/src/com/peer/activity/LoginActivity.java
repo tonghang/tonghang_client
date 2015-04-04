@@ -115,7 +115,7 @@ public class LoginActivity extends BasicActivity{
 			public void run() {
 				// TODO Auto-generated method stub
 				
-				SessionListener callback=new SessionListener();
+				final SessionListener callback=new SessionListener();
 				try {
 					
 					User u=PeerUI.getInstance().getISessionManager().login(username, password, callback);
@@ -167,13 +167,20 @@ public class LoginActivity extends BasicActivity{
 							startActivity(intent);
 							finish();
 						 }
-					}else{						
+					}else if(callback.getCode()==-1){						
+						runOnUiThread(new Runnable() {
+							public void run() {
+								pd.dismiss();
+								login_remind.setText(callback.getMessage());
+							}
+						});						
+					}else{
 						runOnUiThread(new Runnable() {
 							public void run() {
 								pd.dismiss();
 								login_remind.setText(getResources().getString(R.string.remind_login));
 							}
-						});						
+						});		
 					}
 				
 				} catch (RemoteException e) {

@@ -41,6 +41,11 @@ public interface Constant {
 	public String USERBYNIKE="userbynike";
 	public String USERBYLABEL="userbylabel";
 	public String TOPICLIST="topiclist";
+	/*search int type*/
+	public int TOPIC_LABEL=1;
+	public int TOPIC_TOPICKEY=2;
+	public int USER_LABEL=3;
+	public int USER_NICK=4;
 	
 	/*web server*/
 	//	 String SERVER_ADDRESS = "10.0.2.2:3000";
