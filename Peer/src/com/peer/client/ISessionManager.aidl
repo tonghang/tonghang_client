@@ -76,4 +76,6 @@ interface ISessionManager {
  	void deleteFriend(String targetId,ISessionListener callback);
  	
  	void replyTopic(String topicId,String content, ISessionListener callback);
+ 	
+ 	Map SystemConfig();
 }

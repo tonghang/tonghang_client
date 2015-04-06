@@ -2,6 +2,7 @@ package com.peer.activity;
 
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import cn.jpush.android.api.JPushInterface;
@@ -104,65 +105,79 @@ public class SplashActivity extends BasicActivity {
 				// TODO Auto-generated method stub	
 				SessionListener callback=new SessionListener();
 				try {
-					try {
-						Thread.sleep(2000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					User u=PeerUI.getInstance().getISessionManager().login(username, password, callback);					
-					if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){												
-						JPushInterface.setAlias(getApplication(), u.getHuangxin_username(), new TagAliasCallback() {							
-							@Override
-							public void gotResult(int code, String arg1, Set<String> arg2) {
-								// TODO Auto-generated method stub
-								System.out.println("code"+code);
-								Log.i("注册极光结果放回", String.valueOf(code));
-//								Toast.makeText(RegisterAcountActivity.this, code, 0).show();
-							}
-						});
-						//本地存储操作。。。			
-						String userid=PeerUI.getInstance().getISessionManager().getUserId();
-						
-						 LocalStorage.saveString(SplashActivity.this, Constant.EMAIL, username);
-						 UserDao userdao=new UserDao(SplashActivity.this);
-						 userdao.UpdateUserStatus(Constant.LOGINED, username);
-						 
-						 com.peer.localDBbean.UserBean userbean=new com.peer.localDBbean.UserBean();
-						 userbean.setEmail(username);
-						 userbean.setPassword(password);
-						 userbean.setAge(u.getBirthday());
-						 userbean.setCity(u.getCity());
-						 userbean.setNikename(u.getUsername());
-						 userbean.setImage(u.getImage());
-						 userbean.setSex(u.getSex());
-						 if(userdao.findOne(username)==null){						
-							 userdao.addUser(userbean);
-						 }else{
-							 userdao.updateUser(userbean);
-						 }
-						 
-						 List<String> labels=PeerUI.getInstance().getISessionManager().getLabels();
-						 if(labels.isEmpty()){					
-							 Intent intent=new Intent(SplashActivity.this,RegisterTagActivity.class);
-							 startActivity(intent);
-						 }else{							
-							String huanxinid=PeerUI.getInstance().getISessionManager().getHuanxingUser();
-							easemobchatImp.getInstance().login(huanxinid, password);
-							easemobchatImp.getInstance().loadConversationsandGroups();	
-							Intent intent=new Intent(SplashActivity.this,MainActivity.class);
-							startActivity(intent);
-							finish();
-						 }
-					}else{						
+					Map config=PeerUI.getInstance().getISessionManager().SystemConfig();
+					LocalStorage.saveBoolean(SplashActivity.this, Constant.CAN_UPGRADE_SILENTLY, (Boolean)config.get("can_upgrade_silently"));
+					LocalStorage.saveBoolean(SplashActivity.this, Constant.CAN_LOGIN, (Boolean)config.get("can_login"));
+					LocalStorage.saveBoolean(SplashActivity.this, Constant.CAN_REGISTER_USER, (Boolean)config.get("can_register_user"));
+					if(!(Boolean)config.get("can_login")){
+						//禁止用户登录
 						runOnUiThread(new Runnable() {
 							public void run() {
 								Intent intent=new Intent(SplashActivity.this,LoginActivity.class);
 								startActivity(intent);
 							}
-						});						
+						});	
+					}else{
+						try {
+							Thread.sleep(2000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						User u=PeerUI.getInstance().getISessionManager().login(username, password, callback);					
+						if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){												
+							JPushInterface.setAlias(getApplication(), u.getHuangxin_username(), new TagAliasCallback() {							
+								@Override
+								public void gotResult(int code, String arg1, Set<String> arg2) {
+									// TODO Auto-generated method stub
+									System.out.println("code"+code);
+									Log.i("注册极光结果放回", String.valueOf(code));
+//									Toast.makeText(RegisterAcountActivity.this, code, 0).show();
+								}
+							});
+							//本地存储操作。。。			
+							String userid=PeerUI.getInstance().getISessionManager().getUserId();
+							
+							 LocalStorage.saveString(SplashActivity.this, Constant.EMAIL, username);
+							 UserDao userdao=new UserDao(SplashActivity.this);
+							 userdao.UpdateUserStatus(Constant.LOGINED, username);
+							 
+							 com.peer.localDBbean.UserBean userbean=new com.peer.localDBbean.UserBean();
+							 userbean.setEmail(username);
+							 userbean.setPassword(password);
+							 userbean.setAge(u.getBirthday());
+							 userbean.setCity(u.getCity());
+							 userbean.setNikename(u.getUsername());
+							 userbean.setImage(u.getImage());
+							 userbean.setSex(u.getSex());
+							 if(userdao.findOne(username)==null){						
+								 userdao.addUser(userbean);
+							 }else{
+								 userdao.updateUser(userbean);
+							 }
+							 
+							 List<String> labels=PeerUI.getInstance().getISessionManager().getLabels();
+							 if(labels.isEmpty()){					
+								 Intent intent=new Intent(SplashActivity.this,RegisterTagActivity.class);
+								 startActivity(intent);
+							 }else{							
+								String huanxinid=PeerUI.getInstance().getISessionManager().getHuanxingUser();
+								easemobchatImp.getInstance().login(huanxinid, password);
+								easemobchatImp.getInstance().loadConversationsandGroups();	
+								Intent intent=new Intent(SplashActivity.this,MainActivity.class);
+								startActivity(intent);
+								finish();
+							 }
+						}else{						
+							runOnUiThread(new Runnable() {
+								public void run() {
+									Intent intent=new Intent(SplashActivity.this,LoginActivity.class);
+									startActivity(intent);
+								}
+							});						
+						}
 					}
-				
+
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

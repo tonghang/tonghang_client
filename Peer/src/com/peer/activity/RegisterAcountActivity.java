@@ -106,10 +106,15 @@ public class RegisterAcountActivity extends BasicActivity{
 		}else if(nike_registe.length()>10){
 			registe_remind.setText(getResources().getString(R.string.errornike));
 			return ;
-		}else{	
-			pd = ProgressDialog.show(RegisterAcountActivity.this, "", "正在注册。。。");
-			RegisterTask task=new RegisterTask();
-			task.execute(email,password,nikename);
+		}else{			
+			if(LocalStorage.getBoolean(RegisterAcountActivity.this, Constant.CAN_REGISTER_USER)){
+				registe_remind.setText(getResources().getString(R.string.config_registe));
+			}else{
+				pd = ProgressDialog.show(RegisterAcountActivity.this, "", "正在注册。。。");
+				RegisterTask task=new RegisterTask();
+				task.execute(email,password,nikename);
+			}
+			
 		}		
 	}	
 	 TextWatcher textwatcher=new TextWatcher() {

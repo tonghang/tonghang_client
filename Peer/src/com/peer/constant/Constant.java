@@ -73,4 +73,8 @@ public interface Constant {
 	    String ROOMID="roomid";
 	    String TOPICID="topicid";
 	    String FROMFLOAT="float";
+	//全局配置
+	    String CAN_UPGRADE_SILENTLY="can_upgrade_silently";
+	    String CAN_LOGIN="can_login";
+	    String CAN_REGISTER_USER="can_register_user";
 }

@@ -5,6 +5,7 @@ import java.util.Set;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.text.Editable;
@@ -103,94 +104,89 @@ public class LoginActivity extends BasicActivity{
 	public void autologin(String email,String password){
 		if(checkNetworkState()){			
 			pd = ProgressDialog.show(LoginActivity.this,"", "正在登陆请稍候。。。");
-			Login(email,password);
+			if(LocalStorage.getBoolean(LoginActivity.this, Constant.CAN_LOGIN)){
+				LoginTask task=new LoginTask();
+				task.execute(email,password);
+			}else{
+				login_remind.setText(getResources().getString(R.string.config_login));
+			}
+			
+			
 		}else{
 			ShowMessage(getResources().getString(R.string.Broken_network_prompt));
 		}	
 	}
-	public void Login(final String username,final String password){
-		Thread t=new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				
-				final SessionListener callback=new SessionListener();
-				try {
-					
-					User u=PeerUI.getInstance().getISessionManager().login(username, password, callback);
-					
-					if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){											
 	
-						JPushInterface.setAlias(getApplication(), u.getHuangxin_username(), new TagAliasCallback() {
-							
-							@Override
-							public void gotResult(int code, String arg1, Set<String> arg2) {
-								// TODO Auto-generated method stub
-								System.out.println("code"+code);
-								Log.i("注册极光结果放回", String.valueOf(code));
-//								Toast.makeText(RegisterAcountActivity.this, code, 0).show();
-							}
-						});
-						//本地存储操作。。。			
-						String userid=PeerUI.getInstance().getISessionManager().getUserId();
+	private class LoginTask extends AsyncTask<String, String, SessionListener>{
+
+		@Override
+		protected SessionListener doInBackground(String... params) {
+			// TODO Auto-generated method stub			
+			 SessionListener callback=new SessionListener();
+			 User u=null;
+			try {				
+				u=PeerUI.getInstance().getISessionManager().login(params[0], params[1], callback);
+				if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
+					JPushInterface.setAlias(getApplication(), u.getHuangxin_username(), new TagAliasCallback() {
 						
-						 LocalStorage.saveString(LoginActivity.this, Constant.EMAIL, username);
-						 UserDao userdao=new UserDao(LoginActivity.this);
-						 userdao.UpdateUserStatus(Constant.LOGINED, username);
-						 
-						 com.peer.localDBbean.UserBean userbean=new com.peer.localDBbean.UserBean();
-						 userbean.setEmail(username);
-						 userbean.setPassword(password);
-						 userbean.setAge(u.getBirthday());
-						 userbean.setCity(u.getCity());
-						 userbean.setNikename(u.getUsername());
-						 userbean.setImage(u.getImage());
-						 userbean.setSex(u.getSex());
-						 if(userdao.findOne(username)==null){						
-							 userdao.addUser(userbean);
-						 }else{
-							 userdao.updateUser(userbean);
-						 }
-						 
-						 List<String> labels=PeerUI.getInstance().getISessionManager().getLabels();
-						 if(labels.isEmpty()){
-							 pd.dismiss();
-							 Intent intent=new Intent(LoginActivity.this,RegisterTagActivity.class);
-							 startActivity(intent);
-						 }else{
-							pd.dismiss();
-							String huanxinid=PeerUI.getInstance().getISessionManager().getHuanxingUser();
-							easemobchatImp.getInstance().login(huanxinid, password);
-							easemobchatImp.getInstance().loadConversationsandGroups();	
-							Intent intent=new Intent(LoginActivity.this,MainActivity.class);
-							startActivity(intent);
-							finish();
-						 }
-					}else if(callback.getCode()==-1){						
-						runOnUiThread(new Runnable() {
-							public void run() {
-								pd.dismiss();
-								login_remind.setText(callback.getMessage());
-							}
-						});						
-					}else{
-						runOnUiThread(new Runnable() {
-							public void run() {
-								pd.dismiss();
-								login_remind.setText(getResources().getString(R.string.remind_login));
-							}
-						});		
-					}
-				
-				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}	
+						@Override
+						public void gotResult(int code, String arg1, Set<String> arg2) {
+							// TODO Auto-generated method stub
+							System.out.println("code"+code);
+							Log.i("注册极光结果放回", String.valueOf(code));
+	//						Toast.makeText(RegisterAcountActivity.this, code, 0).show();
+						}
+					});
+					String userid=PeerUI.getInstance().getISessionManager().getUserId();
+					
+					 LocalStorage.saveString(LoginActivity.this, Constant.EMAIL, params[0]);
+					 UserDao userdao=new UserDao(LoginActivity.this);
+					 userdao.UpdateUserStatus(Constant.LOGINED, params[0]);
+					 
+					 com.peer.localDBbean.UserBean userbean=new com.peer.localDBbean.UserBean();
+					 userbean.setEmail(params[0]);
+					 userbean.setPassword(params[1]);
+					 userbean.setAge(u.getBirthday());
+					 userbean.setCity(u.getCity());
+					 userbean.setNikename(u.getUsername());
+					 userbean.setImage(u.getImage());
+					 userbean.setSex(u.getSex());
+					 if(userdao.findOne(params[0])==null){						
+						 userdao.addUser(userbean);
+					 }else{
+						 userdao.updateUser(userbean);
+					 }
+					 
+					 List<String> labels=PeerUI.getInstance().getISessionManager().getLabels();
+					 if(labels.isEmpty()){						 
+						 Intent intent=new Intent(LoginActivity.this,RegisterTagActivity.class);
+						 startActivity(intent);
+					 }else{						
+						String huanxinid=PeerUI.getInstance().getISessionManager().getHuanxingUser();
+						easemobchatImp.getInstance().login(huanxinid, params[1]);
+						easemobchatImp.getInstance().loadConversationsandGroups();	
+						Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+						startActivity(intent);
+						finish();
+					 }
+				}
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		});
-		t.start();
+			
+			return callback;
+		}
+		@Override
+		protected void onPostExecute(SessionListener callback) {
+			// TODO Auto-generated method stub
+			pd.dismiss();
+			if(callback.getCode()==-1){
+				login_remind.setText(callback.getMessage());
+			}
+		}
 	}
+	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// TODO Auto-generated method stub

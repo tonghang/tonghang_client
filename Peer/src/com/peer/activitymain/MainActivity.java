@@ -26,10 +26,12 @@ import com.peer.activity.BasicActivity;
 import com.peer.client.User;
 import com.peer.client.service.SessionListener;
 import com.peer.client.ui.PeerUI;
+import com.peer.constant.Constant;
 import com.peer.fragment.ComeMsgFragment;
 import com.peer.fragment.FriendsFragment;
 import com.peer.fragment.HomeFragment;
 import com.peer.fragment.MyFragment;
+import com.peer.localDB.LocalStorage;
 import com.peer.widgetutil.FxService;
 import com.readystatesoftware.viewbadger.BadgeView;
 import com.umeng.analytics.MobclickAgent;
@@ -61,7 +63,12 @@ public class MainActivity extends BasicActivity{
 		setContentView(R.layout.activity_main);	
 		init();
 		registerEMchat();
-		UmengUpdateAgent.update(this);
+		if(LocalStorage.getBoolean(this, Constant.CAN_UPGRADE_SILENTLY)){
+			UmengUpdateAgent.silentUpdate(this);
+		}else{
+			UmengUpdateAgent.update(this);
+		}
+		
 	}
 	private void registerEMchat() {
 		// TODO Auto-generated method stub		

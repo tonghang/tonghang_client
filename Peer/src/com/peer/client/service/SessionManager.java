@@ -1125,6 +1125,20 @@ public class SessionManager extends ISessionManager.Stub {
 		this.page=page+1;
 		return recommend(page, callback);
 	}
+	@Override
+	public Map SystemConfig()throws RemoteException {
+		// TODO Auto-generated method stub
+		Map map=null;
+		try{
+			ResponseEntity<Map> result=DataUtil.getJson(Constant.WEB_SERVER_ADDRESS+"/system_config.json", Map.class);
+			if(result.getStatusCode()==HttpStatus.OK){
+				map=result.getBody();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return map;
+	}
 	
 	
 }
