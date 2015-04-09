@@ -103,15 +103,13 @@ public class LoginActivity extends BasicActivity{
 	}
 	public void autologin(String email,String password){
 		if(checkNetworkState()){			
-			pd = ProgressDialog.show(LoginActivity.this,"", "正在登陆请稍候。。。");
 			if(LocalStorage.getBoolean(LoginActivity.this, Constant.CAN_LOGIN)){
+				pd = ProgressDialog.show(LoginActivity.this,"", "正在登陆请稍候。。。");
 				LoginTask task=new LoginTask();
 				task.execute(email,password);
 			}else{
 				login_remind.setText(getResources().getString(R.string.config_login));
-			}
-			
-			
+			}		
 		}else{
 			ShowMessage(getResources().getString(R.string.Broken_network_prompt));
 		}	

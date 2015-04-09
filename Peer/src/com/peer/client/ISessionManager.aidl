@@ -77,5 +77,5 @@ interface ISessionManager {
  	
  	void replyTopic(String topicId,String content, ISessionListener callback);
  	
- 	Map SystemConfig();
+ 	Map SystemConfig(ISessionListener callback);
 }
