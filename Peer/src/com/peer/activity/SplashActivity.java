@@ -40,9 +40,13 @@ public class SplashActivity extends BasicActivity {
 		//全屏显示
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-				
-		Autologin();
-		
+		if(checkNetworkState()){
+			Autologin();
+		}else{
+			Intent intent=new Intent(SplashActivity.this,LoginActivity.class);
+			startActivity(intent);
+			finish();
+		}		
 		rootLayout = (LinearLayout) findViewById(R.id.splash_root);
 
 		AlphaAnimation animation = new AlphaAnimation(0.3f, 1.0f);
@@ -74,30 +78,13 @@ public class SplashActivity extends BasicActivity {
 	}
 	private void Autologin() {
 		// TODO Auto-generated method stub
-		String email=LocalStorage.getString(this, Constant.EMAIL);
+		final String email=LocalStorage.getString(this, Constant.EMAIL);
 		UserDao userdao=new UserDao(this);
-		String password=userdao.getPassord(email);
+		final String password=userdao.getPassord(email);
 		String status=userdao.getUserStatus(email);
-		 if(status!=null&&status.equals(Constant.LOGINED)){
-			 SystemConfig(email,password);						 
-		 }else{
-			 new Thread(new Runnable() {			
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub
-						try {
-							Thread.sleep(3000);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						Intent intent=new Intent(SplashActivity.this,LoginActivity.class);
-						startActivity(intent);
-					}
-				}).start();
-		 }
+		SystemConfig(email,password,status);
 	}
-	public void SystemConfig(final String username,final String password){
+	public void SystemConfig(final String username,final String password,final String status){
 		Thread t=new Thread(new Runnable() {
 			
 			@Override
@@ -111,14 +98,16 @@ public class SplashActivity extends BasicActivity {
 					LocalStorage.saveBoolean(SplashActivity.this, Constant.CAN_LOGIN, (Boolean)config.get("can_login"));
 					LocalStorage.saveBoolean(SplashActivity.this, Constant.CAN_REGISTER_USER, (Boolean)config.get("can_register_user"));
 					boolean canlogin=(Boolean)config.get("can_login");
-					if(canlogin){
-						 LoginTask task=new LoginTask();
-						 task.execute(username,password);
+					if(canlogin&&!username.equals("")&&!password.equals("")&&
+							status!=null&&status.equals(Constant.LOGINED)){						
+							LoginTask task=new LoginTask();
+							task.execute(username,password);					 
 					}else{						
 						 runOnUiThread(new Runnable() {
 								public void run() {
 									Intent intent=new Intent(SplashActivity.this,LoginActivity.class);
 									startActivity(intent);
+									finish();
 								}
 							});	
 					}
@@ -187,6 +176,7 @@ public class SplashActivity extends BasicActivity {
 						public void run() {
 							Intent intent=new Intent(SplashActivity.this,LoginActivity.class);
 							startActivity(intent);
+							finish();
 						}
 					});						
 				}											

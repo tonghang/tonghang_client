@@ -3,7 +3,7 @@
     android:id="@+id/splash_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/icon_loginback"
+    android:background="@drawable/splash_back"
      android:gravity="center"
     android:orientation="vertical" >
      

@@ -52,12 +52,17 @@ public class RegisterAcountActivity extends BasicActivity{
 		complete_registe=(Button)findViewById(R.id.bt_complete_registe);
 		complete_registe.setOnClickListener(this);		
 		back=(LinearLayout)findViewById(R.id.ll_back);
-		back.setOnClickListener(this);				
-		email_registe.addTextChangedListener(textwatcher);
-		password_registe.addTextChangedListener(textwatcher);
-		repasword_registe.addTextChangedListener(textwatcher);
-		nike_registe.addTextChangedListener(textwatcher);
-		complete_registe.setEnabled(false);	
+		back.setOnClickListener(this);
+		if(!LocalStorage.getBoolean(RegisterAcountActivity.this, Constant.CAN_REGISTER_USER)||
+				!LocalStorage.getBoolean(RegisterAcountActivity.this, Constant.CAN_LOGIN)){
+			registe_remind.setText(getResources().getString(R.string.config_registe));				
+		}else{
+			email_registe.addTextChangedListener(textwatcher);
+			password_registe.addTextChangedListener(textwatcher);
+			repasword_registe.addTextChangedListener(textwatcher);
+			nike_registe.addTextChangedListener(textwatcher);
+		}
+		complete_registe.setEnabled(false);
 		xieyi=(TextView)findViewById(R.id.xieyi);
 		xieyi.setOnClickListener(this);
 		SpannableStringBuilder builder = new SpannableStringBuilder(xieyi.getText().toString());
@@ -106,15 +111,10 @@ public class RegisterAcountActivity extends BasicActivity{
 		}else if(nike_registe.length()>10){
 			registe_remind.setText(getResources().getString(R.string.errornike));
 			return ;
-		}else{			
-			if(LocalStorage.getBoolean(RegisterAcountActivity.this, Constant.CAN_REGISTER_USER)){
-				registe_remind.setText(getResources().getString(R.string.config_registe));
-			}else{
+		}else{
 				pd = ProgressDialog.show(RegisterAcountActivity.this, "", "正在注册。。。");
 				RegisterTask task=new RegisterTask();
-				task.execute(email,password,nikename);
-			}
-			
+				task.execute(email,password,nikename);			
 		}		
 	}	
 	 TextWatcher textwatcher=new TextWatcher() {

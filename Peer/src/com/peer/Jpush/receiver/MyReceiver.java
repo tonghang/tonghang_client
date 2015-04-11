@@ -43,15 +43,11 @@ public class MyReceiver extends BroadcastReceiver {
             Log.d(TAG, "[MyReceiver] 接收到推送下来的通知");
             int notifactionId = bundle.getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
  //           Log.d(TAG, "[MyReceiver] 接收到推送下来的通知的ID: " + notifactionId);           
-            String title = bundle.getString(JPushInterface.EXTRA_NOTIFICATION_TITLE);
-            String content=bundle.getString(JPushInterface.EXTRA_ALERT);
-            String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
+            String content=bundle.getString(JPushInterface.EXTRA_ALERT);            
             if(content.contains("封号")||content.contains("删除")){
             	Log.d(TAG, "[MyReceiver] 接收到推送下来的通知"+content);
             	ManagerActivity.getAppManager().finishAllActivity();            	
-            }else if(content.contains("解封")){
-            	
-            }           
+            }         
         } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
             Log.d(TAG, "[MyReceiver] 用户点击打开了通知");
             String islogin=null;
@@ -67,7 +63,10 @@ public class MyReceiver extends BroadcastReceiver {
             	context.startActivity(i);
             }else{
             	String content=bundle.getString(JPushInterface.EXTRA_ALERT);
-            	if(content.contains("好友")){
+            	if(content.contains("封号")||content.contains("删除")){
+                	Log.d(TAG, "[MyReceiver] 接收到推送下来的通知"+content);
+                	//ManagerActivity.getAppManager().finishAllActivity();            	
+                }else if(content.contains("好友")){
             		//打开自定义的Activity
                 	Intent i = new Intent(context, NewFriendsActivity.class);
                 	i.putExtras(bundle);

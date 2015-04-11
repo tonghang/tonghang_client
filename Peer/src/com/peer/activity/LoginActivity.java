@@ -78,6 +78,10 @@ public class LoginActivity extends BasicActivity{
 		forget_login.setOnClickListener(this);
 		login_login.setOnClickListener(this);
 		
+		if(!LocalStorage.getBoolean(this, Constant.CAN_LOGIN)){		
+			login_remind.setText(getResources().getString(R.string.config_login));		
+		}
+		login_login.setEnabled(false);
 	}
 	
 	@Override
@@ -103,13 +107,9 @@ public class LoginActivity extends BasicActivity{
 	}
 	public void autologin(String email,String password){
 		if(checkNetworkState()){			
-			if(LocalStorage.getBoolean(LoginActivity.this, Constant.CAN_LOGIN)){
 				pd = ProgressDialog.show(LoginActivity.this,"", "正在登陆请稍候。。。");
 				LoginTask task=new LoginTask();
-				task.execute(email,password);
-			}else{
-				login_remind.setText(getResources().getString(R.string.config_login));
-			}		
+				task.execute(email,password);					
 		}else{
 			ShowMessage(getResources().getString(R.string.Broken_network_prompt));
 		}	
