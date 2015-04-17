@@ -541,22 +541,14 @@ public class ChatRoomActivity extends BasicActivity {
 			if(ChatRoomTypeUtil.getInstance().getUser().getUserid().equals(userid)){			
 				ToMypersonalpage();
 			}else if(!result.isEmpty()){				
-//					PersonpageUtil.getInstance().setPersonid(ChatRoomTypeUtil.getInstance().getUser().getUserid());
-//					for(int i=0;i<result.size();i++){
-//						if(ChatRoomTypeUtil.getInstance().getUser().getUserid().equals(result.get(i).getUserid())){
-//							PersonpageUtil.getInstance().setPersonpagetype(Constant.FRIENDSPAGE);
-//							break;
-//						}else{
-//							PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
-//						}
-//					}
-					PersonpageUtil.getInstance().setUser(ChatRoomTypeUtil.getInstance().getUser());
+
+					PersonpageUtil.getInstance().setUser(ChatRoomTypeUtil.getInstance().getTopic().getUser());
 					Intent topersonalpage=new Intent(ChatRoomActivity.this,PersonalPageActivity.class);
 					startActivity(topersonalpage);				
 			}else{
 //				PersonpageUtil.getInstance().setPersonid(ChatRoomTypeUtil.getInstance().getUser().getUserid());
 //				PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
-				PersonpageUtil.getInstance().setUser(ChatRoomTypeUtil.getInstance().getUser());
+				PersonpageUtil.getInstance().setUser(ChatRoomTypeUtil.getInstance().getTopic().getUser());
 				Intent topersonalpage=new Intent(ChatRoomActivity.this,PersonalPageActivity.class);
 				startActivity(topersonalpage);	
 				

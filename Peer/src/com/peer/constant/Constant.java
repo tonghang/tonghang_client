@@ -49,7 +49,7 @@ public interface Constant {
 	
 	/*web server*/
 	//	 String SERVER_ADDRESS = "10.0.2.2:3000";
-	String SERVER_ADDRESS = "114.215.143.83:3000";
+	String SERVER_ADDRESS = "www.tonghang1.com:3000";
 	
 	 int WEB_SERVER_PORT = 3000;
 	 String WEB_SERVER_ADDRESS="http://" + SERVER_ADDRESS;

@@ -47,7 +47,6 @@ public class LoginActivity extends BasicActivity{
 		intent.getStringExtra(Constant.RELOGIN);
 		UserDao userdao=new UserDao(LoginActivity.this);
 		String password=userdao.getPassord(email);
-		String status=userdao.getUserStatus(email);
 		if(intent.getStringExtra(Constant.RELOGIN)!=null&&intent.getStringExtra(Constant.RELOGIN).equals(Constant.RELOGIN)){
 			 email_login.setText(email);			
 			 password_login.setText(password);
@@ -65,8 +64,6 @@ public class LoginActivity extends BasicActivity{
 		email_login=(EditText)findViewById(R.id.et_email_login);
 		password_login=(EditText)findViewById(R.id.et_password_login);
 		
-		email_login.addTextChangedListener(textwatcher);
-		password_login.addTextChangedListener(textwatcher);
 		
 		login_login=(Button)findViewById(R.id.bt_login_login);
 
@@ -80,6 +77,9 @@ public class LoginActivity extends BasicActivity{
 		
 		if(!LocalStorage.getBoolean(this, Constant.CAN_LOGIN)){		
 			login_remind.setText(getResources().getString(R.string.config_login));		
+		}else{
+			email_login.addTextChangedListener(textwatcher);
+			password_login.addTextChangedListener(textwatcher);
 		}
 		login_login.setEnabled(false);
 	}

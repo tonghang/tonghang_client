@@ -8,7 +8,7 @@
         android:id="@+id/ll_head_my"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/ll_bottom_my"
+        
         android:orientation="vertical" >
 		<LinearLayout 
         android:id="@+id/ll_head_my"
@@ -116,7 +116,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"                   
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/iv_myacount"
+                    
                     android:layout_marginLeft="16dp"
                     android:text="我的账号"
                     android:textColor="@color/black"
@@ -165,7 +165,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"                   
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/iv_message"
+                    
                     android:layout_marginLeft="16dp"
                     android:text="个人信息"
                     android:textColor="@color/black"
@@ -202,7 +202,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"                   
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/iv_mytag"
+                    
                     android:layout_marginLeft="16dp"
                     android:text="行业标签"
                     android:textColor="@color/black"
@@ -240,7 +240,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"                   
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/iv_setting"
+                    
                     android:layout_marginLeft="16dp"
                     android:text="设        置"
                     android:textColor="@color/black"

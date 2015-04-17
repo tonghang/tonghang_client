@@ -81,6 +81,7 @@ public class SearchActivity extends BasicActivity {
 		back.setOnClickListener(this);
 		
 		contentsearch=(EditText)findViewById(R.id.et_contentsearch);
+		contentsearch.setHint(getResources().getString(R.string.bytag));
 		contentsearch.addTextChangedListener(watcher);
 		contentsearch.setFocusable(true);
 		contentsearch.setFocusableInTouchMode(true); 

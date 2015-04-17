@@ -66,6 +66,7 @@ public class MainActivity extends BasicActivity{
 		if(LocalStorage.getBoolean(this, Constant.CAN_UPGRADE_SILENTLY)){
 			UmengUpdateAgent.silentUpdate(this);
 		}else{
+			UmengUpdateAgent.setUpdateOnlyWifi(false);
 			UmengUpdateAgent.update(this);
 		}
 		
