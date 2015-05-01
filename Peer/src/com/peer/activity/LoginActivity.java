@@ -91,7 +91,7 @@ public class LoginActivity extends BasicActivity{
 		case R.id.bt_login_login:
 			String email=email_login.getText().toString().trim();
 			String password=password_login.getText().toString().trim();
-			autologin(email,password);		
+			login(email,password);		
 			break;
 		case R.id.tv_register_login:
 			Intent regist=new Intent(LoginActivity.this,RegisterAcountActivity.class);
@@ -105,14 +105,34 @@ public class LoginActivity extends BasicActivity{
 			break;
 		}
 	}
-	public void autologin(String email,String password){
+	public void login(String email,String password){
 		if(checkNetworkState()){			
-				pd = ProgressDialog.show(LoginActivity.this,"", "正在登陆请稍候。。。");
+				pd = ProgressDialog.show(LoginActivity.this,"", "正在登录请稍候。。。");
 				LoginTask task=new LoginTask();
 				task.execute(email,password);					
 		}else{
 			ShowMessage(getResources().getString(R.string.Broken_network_prompt));
 		}	
+	}
+	private void SaveMsg(String emial,String password,User u){
+		//本地存储操作。。。										
+		 LocalStorage.saveString(LoginActivity.this, Constant.EMAIL, emial);
+		 UserDao userdao=new UserDao(LoginActivity.this);
+		 userdao.UpdateUserStatus(Constant.LOGINED, emial);
+		 
+		 com.peer.localDBbean.UserBean userbean=new com.peer.localDBbean.UserBean();
+		 userbean.setEmail(emial);
+		 userbean.setPassword(password);
+		 userbean.setAge(u.getBirthday());
+		 userbean.setCity(u.getCity());
+		 userbean.setNikename(u.getUsername());
+		 userbean.setImage(u.getImage());
+		 userbean.setSex(u.getSex());
+		 if(userdao.findOne(emial)==null){						
+			 userdao.addUser(userbean);
+		 }else{
+			 userdao.updateUser(userbean);
+		 }
 	}
 	
 	private class LoginTask extends AsyncTask<String, String, SessionListener>{
@@ -122,7 +142,8 @@ public class LoginActivity extends BasicActivity{
 			// TODO Auto-generated method stub			
 			 SessionListener callback=new SessionListener();
 			 User u=null;
-			try {				
+			try {	
+				Thread.sleep(2000);
 				u=PeerUI.getInstance().getISessionManager().login(params[0], params[1], callback);
 				if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
 					JPushInterface.setAlias(getApplication(), u.getHuangxin_username(), new TagAliasCallback() {
@@ -135,27 +156,11 @@ public class LoginActivity extends BasicActivity{
 	//						Toast.makeText(RegisterAcountActivity.this, code, 0).show();
 						}
 					});
-					String userid=PeerUI.getInstance().getISessionManager().getUserId();
-					
-					 LocalStorage.saveString(LoginActivity.this, Constant.EMAIL, params[0]);
-					 UserDao userdao=new UserDao(LoginActivity.this);
-					 userdao.UpdateUserStatus(Constant.LOGINED, params[0]);
-					 
-					 com.peer.localDBbean.UserBean userbean=new com.peer.localDBbean.UserBean();
-					 userbean.setEmail(params[0]);
-					 userbean.setPassword(params[1]);
-					 userbean.setAge(u.getBirthday());
-					 userbean.setCity(u.getCity());
-					 userbean.setNikename(u.getUsername());
-					 userbean.setImage(u.getImage());
-					 userbean.setSex(u.getSex());
-					 if(userdao.findOne(params[0])==null){						
-						 userdao.addUser(userbean);
-					 }else{
-						 userdao.updateUser(userbean);
-					 }
-					 
-					 List<String> labels=PeerUI.getInstance().getISessionManager().getLabels();
+					SaveMsg(params[0], params[1],u);
+					String huanxinid=PeerUI.getInstance().getISessionManager().getHuanxingUser();
+					easemobchatImp.getInstance().login(huanxinid, params[1]);
+					easemobchatImp.getInstance().loadConversationsandGroups();
+					/* List<String> labels=PeerUI.getInstance().getISessionManager().getLabels();
 					 if(labels.isEmpty()){						 
 						 Intent intent=new Intent(LoginActivity.this,RegisterTagActivity.class);
 						 startActivity(intent);
@@ -167,8 +172,12 @@ public class LoginActivity extends BasicActivity{
 						startActivity(intent);
 						finish();
 					 }
+					 */
 				}
 			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -181,6 +190,23 @@ public class LoginActivity extends BasicActivity{
 			pd.dismiss();
 			if(callback.getCode()==-1){
 				login_remind.setText(callback.getMessage());
+			}else if(callback.getCode()==0){
+				List<String> labels=null;
+				try {
+					labels = PeerUI.getInstance().getISessionManager().getLabels();
+					if(labels.isEmpty()){					
+						 Intent intent=new Intent(LoginActivity.this,RegisterTagActivity.class);
+						 startActivity(intent);
+						 finish();
+					 }else{						
+						Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+						startActivity(intent);
+						finish();
+					 }
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
 			}
 		}
 	}

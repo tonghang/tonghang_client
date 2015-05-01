@@ -99,6 +99,7 @@ public class BasicFragment extends Fragment implements OnClickListener{
 		user.setUserid(userid);
 		user.setHuangxin_username(huangxin_username);
 		user.setLabels(labels);
+		PersonpageUtil.getInstance().setShouldRefresh(false);
 		PersonpageUtil.getInstance().setUser(user);
 		Intent topersonalpage=new Intent(getActivity(),PersonalPageActivity.class);
 		startActivity(topersonalpage);

@@ -128,8 +128,11 @@ public class ChatMsgViewAdapter extends FatherAdater {
 			viewHolder.tvSendTime.setText(entity.getDate());			
 			viewHolder.tvContent.setText(entity.getMessage());
 			if(entity.getName()!=null){
+				viewHolder.nick.setVisibility(View.VISIBLE);
 				viewHolder.nick.setText(entity.getName());
-			}		
+			}else{
+				viewHolder.nick.setVisibility(View.GONE);
+			}
 			final String userId=entity.getUserId();
 			viewHolder.heapic.setOnClickListener(new View.OnClickListener() {
 				

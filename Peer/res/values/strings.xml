@@ -85,8 +85,8 @@
     <string name="repetskill">技能名不可重复</string>
     <string name="skillnull">技能1和技能2不能为空</string>
     <string name="cleancash">缓存清理成功</string>
-    <string name="exitlogin">退出登陆</string>
-    <string name="relogin">是否重新登陆</string>
+    <string name="exitlogin">退出登录</string>
+    <string name="relogin">是否重新登录</string>
     <string name="close">关闭</string>
     <string name="todesk">是否回到桌面</string>
     

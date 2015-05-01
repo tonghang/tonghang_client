@@ -38,7 +38,7 @@ public class SessionManager extends ISessionManager.Stub {
 	private String userid=null;
 	private String imageURL=null;
 	private String username=null;
-	private int page;
+	private int page=1;
 	private List<String> labels=null;
 	private HttpHeaders headers=new HttpHeaders();
 	/*web login 通过测试*/
@@ -74,10 +74,10 @@ public class SessionManager extends ISessionManager.Stub {
 					user.setUserid(id);
 					imageURL=Constant.WEB_SERVER_ADDRESS+(String)u.get("image");
 					user.setHuangxin_username(huanxin_user);
-					user.setEmail(imageURL);
+					//user.setEmail(imageURL);
 					user.setCity((String)u.get("city"));
 					user.setBirthday((String)u.get("birth"));
-					user.setImage(Constant.WEB_SERVER_ADDRESS+(String)u.get("image"));
+					user.setImage(imageURL);
 					user.setSex((String)u.get("sex"));
 					username=(String)u.get("username");
 					user.setUsername(username);
@@ -1139,6 +1139,7 @@ public class SessionManager extends ISessionManager.Stub {
 				map=result.getBody();
 			}
 		}catch(Exception e){
+			message=Constant.CALLBACKFAIL;
 			e.printStackTrace();
 		}
 		callback.onCallBack(code, message);

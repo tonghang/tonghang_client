@@ -136,9 +136,9 @@ public class ManagerActivity {
 	public void AppExit(Context context) {
 		try {
 			finishAllActivity();
-			 ActivityManager activityMgr = (ActivityManager) context
-			 .getSystemService(Context.ACTIVITY_SERVICE);
-			 activityMgr.restartPackage(context.getPackageName());
+//			 ActivityManager activityMgr = (ActivityManager) context
+//			 .getSystemService(Context.ACTIVITY_SERVICE);
+//			 activityMgr.restartPackage(context.getPackageName());
 			 System.exit(0);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -159,6 +159,5 @@ public class ManagerActivity {
 				| Intent.FLAG_ACTIVITY_NEW_TASK);
 		i.putExtra(Constant.RELOGIN, Constant.RELOGIN);
 		context.startActivity(i);
-
 	}
 }

@@ -1,5 +1,6 @@
 package com.peer.fragment;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
@@ -146,7 +147,9 @@ public class HomeFragment extends BasicFragment{
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
 			if(result!=null&&result.equals(Constant.CALLBACKSUCCESS)){
+//				mPullrefreshlistview.invalidate();
 				adapter.notifyDataSetChanged();
+//				adapter=new HomepageAdapter(getActivity(),list);
 				mPullrefreshlistview.onRefreshComplete();
 			}else{
 				mPullrefreshlistview.onRefreshComplete();

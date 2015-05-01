@@ -131,7 +131,7 @@ public class SettingActivity extends BasicActivity{
 		.setMessage(getResources().getString(R.string.todesk)) .setNegativeButton(getResources().getString(R.string.cancel), null) 
 		 .setPositiveButton(getResources().getString(R.string.sure), new DialogInterface.OnClickListener(){
              public void onClick(DialogInterface dialoginterface, int i){
-            	  ManagerActivity.getAppManager().AppExit(SettingActivity.this);       	
+            	 ManagerActivity.getAppManager().AppExit(SettingActivity.this);       	
              }
 		 }).show();
 	}

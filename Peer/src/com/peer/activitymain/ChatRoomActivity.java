@@ -83,6 +83,7 @@ public class ChatRoomActivity extends BasicActivity {
 	private String mPageName="ChatRoom";
 	private String imagurl=null;
 	private String userid=null;
+	private String username=null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -112,11 +113,11 @@ public class ChatRoomActivity extends BasicActivity {
 		try {
 			imagurl=PeerUI.getInstance().getISessionManager().getImagUrL();
 			userid=PeerUI.getInstance().getISessionManager().getUserId();
+			username=PeerUI.getInstance().getISessionManager().getUserName();
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}		
-		
+		}				
 		titlePopup = new TitlePopup(this, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);	
 		rl_owner=(RelativeLayout)findViewById(R.id.host_imfor);		
 		popupwindow();
@@ -372,6 +373,7 @@ public class ChatRoomActivity extends BasicActivity {
 							String   str   =   formatter.format(curDate);     
 							ChatMsgEntity entity=new ChatMsgEntity();
 							entity.setDate(str);
+//							entity.setName(username);
 							entity.setImage(imagurl);
 							entity.setMessage(content);
 							entity.setUserId(userid);
@@ -538,16 +540,17 @@ public class ChatRoomActivity extends BasicActivity {
 		@Override
 		protected void onPostExecute(List<User> result) {
 			// TODO Auto-generated method stub
-			if(ChatRoomTypeUtil.getInstance().getUser().getUserid().equals(userid)){			
+			if(ChatRoomTypeUtil.getInstance().getTopic().getUser().getUserid().equals(userid)){			
 				ToMypersonalpage();
-			}else if(!result.isEmpty()){				
-
+			}else if(!result.isEmpty()){
+				PersonpageUtil.getInstance().setShouldRefresh(true);
 					PersonpageUtil.getInstance().setUser(ChatRoomTypeUtil.getInstance().getTopic().getUser());
 					Intent topersonalpage=new Intent(ChatRoomActivity.this,PersonalPageActivity.class);
 					startActivity(topersonalpage);				
 			}else{
 //				PersonpageUtil.getInstance().setPersonid(ChatRoomTypeUtil.getInstance().getUser().getUserid());
 //				PersonpageUtil.getInstance().setPersonpagetype(Constant.UNFRIENDSPAGE);
+				PersonpageUtil.getInstance().setShouldRefresh(true);
 				PersonpageUtil.getInstance().setUser(ChatRoomTypeUtil.getInstance().getTopic().getUser());
 				Intent topersonalpage=new Intent(ChatRoomActivity.this,PersonalPageActivity.class);
 				startActivity(topersonalpage);	
@@ -579,6 +582,7 @@ public class ChatRoomActivity extends BasicActivity {
 		user.setUserid(userid);
 		user.setHuangxin_username(huangxin_username);
 		user.setLabels(labels);
+		PersonpageUtil.getInstance().setShouldRefresh(false);
 		PersonpageUtil.getInstance().setUser(user);
 		Intent topersonalpage=new Intent(ChatRoomActivity.this,PersonalPageActivity.class);
 		startActivity(topersonalpage);
@@ -599,13 +603,16 @@ public class ChatRoomActivity extends BasicActivity {
 			// 如果是群聊消息，获取到group id
 			String image=null;
 			String fromuserid=null;
+			String nickname=null;
 			try {
 				if(ChatRoomTypeUtil.getInstance().getChatroomtype()==Constant.MULTICHAT){
 					image=Constant.WEB_SERVER_ADDRESS+message.getStringAttribute(Constant.IMAGEURL);
+					nickname=message.getStringAttribute(Constant.NICKNAME);
 				}else{
-					 image=message.getStringAttribute(Constant.IMAGEURL);
+					image=message.getStringAttribute(Constant.IMAGEURL);
 				}				
 				fromuserid=message.getStringAttribute(Constant.USERID);
+				
 			} catch (EaseMobException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -620,6 +627,7 @@ public class ChatRoomActivity extends BasicActivity {
 			ChatMsgEntity entity=new ChatMsgEntity();		
 			entity.setUserId(fromuserid);
 			entity.setImage(image);
+			entity.setName(nickname);
 			entity.setDate(str);
 			entity.setMessage(msg);
 			entity.setMsgType(Constant.OTHER);					

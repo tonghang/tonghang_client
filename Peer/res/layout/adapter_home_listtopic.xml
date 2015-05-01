@@ -26,7 +26,7 @@
             android:lines="1"
             android:ellipsize="end"
             android:textSize="@dimen/textsize_middle"
-            android:text="标题"
+            
             android:textColor="@color/black"
             />
 
@@ -37,7 +37,8 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:ellipsize="end"
-            android:text="   内容内容内容内容内容内容内容内容内容内容内容内容内容内容内内容内容"
+            android:maxLines="3"
+            
             android:textColor="@color/deepgray"
             android:textSize="@dimen/textsize_smallmiddle" />
 
@@ -52,7 +53,7 @@
             android:layout_alignParentRight="true"
             android:textSize="@dimen/textsize_smallmiddle"
             android:layout_marginRight="8dp"
-            android:text="2015-1-1" />
+             />
   
             </RelativeLayout>      
     </LinearLayout>
