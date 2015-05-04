@@ -22,6 +22,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import android.os.RemoteException;
+import android.util.Log;
 
 import com.peer.client.ISessionListener;
 import com.peer.client.ISessionManager;
@@ -795,7 +796,7 @@ public class SessionManager extends ISessionManager.Stub {
 						Map m=(Map)recomend.get(i).get("user");						
 						User user=new User();
 //						user.setIs_friends((Boolean)recomend.get(i).get("is_friend"));						
-						user.setImage(Constant.WEB_SERVER_ADDRESS+(String)m.get("image"));
+						user.setImage(Constant.WEB_SERVER_ADDRESS+m.get("image"));
 						user.setUserid(String.valueOf(m.get("id")));
 						user.setUsername((String)m.get("username"));					
 						user.setLabels((List<String>)m.get("labels"));
@@ -830,7 +831,7 @@ public class SessionManager extends ISessionManager.Stub {
 			
 		}catch(Exception e){
 			message=Constant.CALLBACKFAIL;
-			e.printStackTrace();			
+			e.printStackTrace();
 		}
 		callback.onCallBack(code, message);
 		return mlist;

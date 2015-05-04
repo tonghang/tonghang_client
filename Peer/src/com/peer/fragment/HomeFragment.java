@@ -27,6 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class HomeFragment extends BasicFragment{
 	private TextView createtopic;
@@ -34,7 +35,7 @@ public class HomeFragment extends BasicFragment{
 	private PullToRefreshListView mPullrefreshlistview;	
 	public RelativeLayout errorItem;
 	public TextView errorText;	
-	private List list;
+	private List list=new ArrayList();
 	HomepageAdapter adapter;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -147,9 +148,7 @@ public class HomeFragment extends BasicFragment{
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
 			if(result!=null&&result.equals(Constant.CALLBACKSUCCESS)){
-//				mPullrefreshlistview.invalidate();
 				adapter.notifyDataSetChanged();
-//				adapter=new HomepageAdapter(getActivity(),list);
 				mPullrefreshlistview.onRefreshComplete();
 			}else{
 				mPullrefreshlistview.onRefreshComplete();
@@ -164,12 +163,13 @@ public class HomeFragment extends BasicFragment{
 			SessionListener callback=new SessionListener();
          
             try {
-            	list=PeerUI.getInstance().getISessionManager().recommend(1, callback);
-			} catch (RemoteException e) {
+            List listrecommend=PeerUI.getInstance().getISessionManager().recommend(1, callback);
+			list.clear();
+			list.addAll(listrecommend);
+            } catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-           
 			return list;
 		}
 		@Override

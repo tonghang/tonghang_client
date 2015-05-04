@@ -149,9 +149,13 @@ public class MySkillActivity extends BasicActivity {
 		event.getPosition();
 		event.getLabel();
 		if(event.isIsdelete()){
-			mlist.remove(event.getPosition());
-			changLabelsTask task=new changLabelsTask();
-			task.execute();	
+			if(Hadtag<3){
+				ShowMessage("至少需要保留两个行业标签");	
+			}else{
+				mlist.remove(event.getPosition());
+				changLabelsTask task=new changLabelsTask();
+				task.execute();	
+			}				
 		}else{
 			mlist.remove(event.getPosition());
 			mlist.add(event.getLabel());		

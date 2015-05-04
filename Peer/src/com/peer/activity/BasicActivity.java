@@ -99,7 +99,7 @@ public class BasicActivity extends FragmentActivity implements OnClickListener{
 	    int hours=c.get(Calendar.HOUR_OF_DAY); 
 		int munite=c.get(Calendar.MINUTE);
 	    //构建一个通知对象(需要传递的参数有三个,分别是图标,标题和 时间)
-	    Notification notification = new Notification(R.drawable.titlelogo,"同行",System.currentTimeMillis());	    
+	    Notification notification = new Notification(R.drawable.logo,"同行",System.currentTimeMillis());	    
 	    Intent intent = new Intent(BasicActivity.this,MainActivity.class);
 	     
 	      

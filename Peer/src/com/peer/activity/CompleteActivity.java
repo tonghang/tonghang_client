@@ -165,6 +165,7 @@ public class CompleteActivity extends BasicActivity{
 					SessionListener callback=new SessionListener();
 					try {
 						PeerUI.getInstance().getISessionManager().registerLabel(tags,callback);
+						callback.onCallBack(0, null);
 						PeerUI.getInstance().getISessionManager().profileUpdate("",birthday.getText().toString(), cityselect.getText().toString(), sex.getText().toString(),IMAGE_FILE_NAME, img, callback);										
 					} catch (RemoteException e) {
 						// TODO Auto-generated catch block

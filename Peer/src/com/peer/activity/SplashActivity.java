@@ -190,6 +190,10 @@ public class SplashActivity extends BasicActivity {
 						status!=null&&status.equals(Constant.LOGINED)){
 					LoginTask task=new LoginTask();
 					task.execute(email,password);
+				}else{
+					Intent intent=new Intent(SplashActivity.this,LoginActivity.class);
+					startActivity(intent);
+					finish();
 				}
 			}else{
 				Intent intent=new Intent(SplashActivity.this,LoginActivity.class);
