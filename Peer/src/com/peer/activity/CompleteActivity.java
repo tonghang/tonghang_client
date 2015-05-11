@@ -19,6 +19,8 @@ import com.peer.constant.Constant;
 import com.peer.localDB.LocalStorage;
 import com.peer.localDB.UserDao;
 import com.peer.util.Tools;
+import com.peer.widgetutil.FxService;
+
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -27,6 +29,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -35,6 +38,7 @@ import android.os.RemoteException;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -158,63 +162,8 @@ public class CompleteActivity extends BasicActivity{
 			return;
 		}else{
 			pd = ProgressDialog.show(CompleteActivity.this,"", getResources().getString(R.string.committing));
-			Thread t=new Thread(){
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					SessionListener callback=new SessionListener();
-					try {
-						PeerUI.getInstance().getISessionManager().registerLabel(tags,callback);
-						callback.onCallBack(0, null);
-						PeerUI.getInstance().getISessionManager().profileUpdate("",birthday.getText().toString(), cityselect.getText().toString(), sex.getText().toString(),IMAGE_FILE_NAME, img, callback);										
-					} catch (RemoteException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}								
-					if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
-						pd.dismiss();
-						SessionListener callback2=new SessionListener();
-						String email=LocalStorage.getString(CompleteActivity.this, Constant.EMAIL);
-						UserDao userdao=new UserDao(CompleteActivity.this);
-						userdao.UpdateUserStatus(Constant.LOGINED, email);
-						String password=userdao.getPassord(email);											
-						try {
-							User u=PeerUI.getInstance().getISessionManager().login(email, password, callback2);
-							if(callback2.getMessage().equals(Constant.CALLBACKSUCCESS)){
-								String huanxinid=PeerUI.getInstance().getISessionManager().getHuanxingUser();
-								JPushInterface.setAlias(getApplication(), u.getHuangxin_username(), new TagAliasCallback() {
-									
-									@Override
-									public void gotResult(int code, String arg1, Set<String> arg2) {
-										// TODO Auto-generated method stub
-										System.out.println("code"+code);
-										Log.i("注册极光结果放回", String.valueOf(code));
-//										Toast.makeText(RegisterAcountActivity.this, code, 0).show();
-									}
-								});
-								easemobchatImp.getInstance().login(huanxinid, password);
-								easemobchatImp.getInstance().loadConversationsandGroups();
-								
-								com.peer.localDBbean.UserBean userbean=new com.peer.localDBbean.UserBean();
-								 userbean.setEmail(u.getEmail());
-								 userbean.setAge(u.getBirthday());
-								 userbean.setCity(u.getCity());
-								 userbean.setNikename(u.getUsername());
-								 userbean.setImage(u.getImage());
-								 userbean.setSex(u.getSex());
-								 userdao.updateUser(userbean);	
-								 Intent intent=new Intent(CompleteActivity.this,MainActivity.class);
-								 startActivity(intent);																
-							}
-							
-						} catch (RemoteException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-				}
-			};
-			t.start();
+			CompleteTask task=new CompleteTask();
+			task.execute();
 		}				
 	}
 	private void SexSelect() {
@@ -396,5 +345,88 @@ public class CompleteActivity extends BasicActivity{
 		// TODO Auto-generated method st
 		Intent intent=new Intent(CompleteActivity.this, GetAddressInfoActivity.class);
 		startActivityForResult(intent,CYTYSELECT);
+	}
+	private void updateMsg(UserDao userdao,User u){
+		com.peer.localDBbean.UserBean userbean=new com.peer.localDBbean.UserBean();
+		 userbean.setEmail(u.getEmail());
+		 userbean.setAge(u.getBirthday());
+		 userbean.setCity(u.getCity());
+		 userbean.setNikename(u.getUsername());
+		 userbean.setImage(u.getImage());
+		 userbean.setSex(u.getSex());
+		 userdao.updateUser(userbean);
+	}
+	private class CompleteTask extends AsyncTask<String, String, SessionListener>{
+
+		@Override
+		protected SessionListener doInBackground(String... arg0) {
+			// TODO Auto-generated method stub
+			SessionListener callback=new SessionListener();
+			try {
+				PeerUI.getInstance().getISessionManager().registerLabel(tags,callback);
+				PeerUI.getInstance().getISessionManager().profileUpdate("",birthday.getText().toString(), cityselect.getText().toString(), sex.getText().toString(),IMAGE_FILE_NAME, img, callback);										
+				if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
+					callback.onCallBack(0, null);
+					String email=LocalStorage.getString(CompleteActivity.this, Constant.EMAIL);
+					UserDao userdao=new UserDao(CompleteActivity.this);
+					String password=userdao.getPassord(email);	
+					
+					User u = PeerUI.getInstance().getISessionManager().login(email, password, callback);
+					if(callback.getMessage().equals(Constant.CALLBACKSUCCESS)){
+						userdao.UpdateUserStatus(Constant.LOGINED, email);
+						updateMsg(userdao,u);
+						String huanxinid=PeerUI.getInstance().getISessionManager().getHuanxingUser();
+						easemobchatImp.getInstance().login(huanxinid, password);
+						easemobchatImp.getInstance().loadConversationsandGroups();
+						JPushInterface.setAlias(getApplication(), u.getHuangxin_username(), new TagAliasCallback() {
+							
+							@Override
+							public void gotResult(int code, String arg1, Set<String> arg2) {
+								// TODO Auto-generated method stub
+								System.out.println("code"+code);
+								Log.i("注册极光结果返回", String.valueOf(code));
+							}
+						});
+					}else{
+						callback.onCallBack(0, "登录失败，请重试！");
+						return callback;
+					}	
+				}else{
+					callback.onCallBack(0, "数据提交失败");
+					return callback;
+				}
+					
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return callback;
+		}
+		@Override
+		protected void onPostExecute(SessionListener result) {
+			// TODO Auto-generated method stub
+			if(pd.isShowing()){
+				pd.dismiss();
+			}
+			if(result.getMessage().equals(Constant.CALLBACKSUCCESS)){ 
+				Intent intent=new Intent(CompleteActivity.this,MainActivity.class);
+				startActivity(intent);
+				finish();				
+			}else{
+				ShowMessage(result.getMessage());
+			}
+		}
+		
+	}
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+		  if (keyCode == KeyEvent.KEYCODE_BACK) {
+			 if(pd.isShowing()){
+				 pd.dismiss();
+			 }
+		     return true;
+		    }
+		    return super.onKeyDown(keyCode, event);
 	}
 }

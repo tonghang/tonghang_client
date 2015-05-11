@@ -162,7 +162,6 @@ public class MySkillActivity extends BasicActivity {
 			changLabelsTask task=new changLabelsTask();
 			task.execute();	
 		}
-		Hadtag=mlist.size();
 	}
 	public class changLabelsTask extends  AsyncTask<String, String, String>{
 
@@ -183,6 +182,7 @@ public class MySkillActivity extends BasicActivity {
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
 			if(result.equals(Constant.CALLBACKSUCCESS)){
+				Hadtag=mlist.size();
 				adapter=new SkillAdapter(MySkillActivity.this,mlist);
 				mytaglistview.setAdapter(adapter);
 			}

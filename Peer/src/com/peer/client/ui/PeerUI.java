@@ -1,6 +1,6 @@
 package com.peer.client.ui;
 
-import com.peer.application.Peerapplication;
+import com.peer.application.PeerApplication;
 import com.peer.client.ISessionManager;
 import com.peer.client.ServiceAction;
 import android.content.ComponentName;
@@ -17,7 +17,7 @@ public class PeerUI {
 	 private ServiceProxy serviceProxy;
 	
 	private PeerUI() {
-		Context appContext = Peerapplication.getInstance();
+		Context appContext = PeerApplication.getInstance();
 		serviceProxy = new ServiceProxy(appContext);
 		Intent intent=new Intent(ServiceAction.ACTION_SESSION_SERVICE);
         appContext.bindService(intent, serviceProxy, Context.BIND_AUTO_CREATE);

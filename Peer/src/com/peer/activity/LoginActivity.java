@@ -207,6 +207,8 @@ public class LoginActivity extends BasicActivity{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} 
+			}else{
+				login_remind.setText("登录失败，请重试！");
 			}
 		}
 	}

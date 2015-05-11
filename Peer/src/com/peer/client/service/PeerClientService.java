@@ -24,4 +24,10 @@ public class PeerClientService extends Service {
         }
         return null;
     }
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+    	// TODO Auto-generated method stub
+    	 flags = START_STICKY;
+    	return super.onStartCommand(intent, flags, startId);
+    }
 }

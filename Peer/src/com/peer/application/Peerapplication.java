@@ -5,6 +5,7 @@ import java.util.List;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import cn.jpush.android.api.JPushInterface;
 import cn.sharesdk.framework.ShareSDK;
@@ -12,12 +13,13 @@ import cn.sharesdk.framework.ShareSDK;
 import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMChatOptions;
-import com.peer.activitymain.CreatTopicActivity;
+import com.easemob.chat.EMChatService;
 import com.peer.client.ServiceAction;
+import com.peer.client.service.ListenBroadcastReceiver;
 import com.peer.client.ui.PeerUI;
 
-public class Peerapplication extends Application {
-	private static Peerapplication instance=null;
+public class PeerApplication extends Application {
+	private static PeerApplication instance=null;
 	@Override
 	public void onCreate() {
 		// TODO Auto-generated method stub	
@@ -27,14 +29,25 @@ public class Peerapplication extends Application {
 		JPushInterface.setDebugMode(false);
 		JPushInterface.init(this);		
 		ShareSDK.initSDK(this);
+		IntentFilter filter=new IntentFilter();
+		filter.addAction(Intent.ACTION_TIME_TICK);
+		ListenBroadcastReceiver receiver=new ListenBroadcastReceiver();
+		registerReceiver(receiver, filter);
 	}	
+	@Override
+	public void onTerminate() {
+		// TODO Auto-generated method stub
+		Intent serviceIntent = new Intent(this,EMChatService.class);
+		 startService(serviceIntent);
+		super.onTerminate();
+	}
 	private void initwebsevice() {
 		// TODO Auto-generated method stub
 		 Intent serviceIntent = new Intent(ServiceAction.ACTION_SERVICE);
 		 startService(serviceIntent);
 		 PeerUI.getInstance();
 	}
-	public static Peerapplication getInstance() {
+	public static PeerApplication getInstance() {
 		return instance;
 	}
 	/*初始化环信sdk*/
@@ -72,4 +85,5 @@ public class Peerapplication extends Application {
 		}
 		return processName;
 	}
+	
 }
